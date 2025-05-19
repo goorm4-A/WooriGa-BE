@@ -23,10 +23,14 @@ public class FamilyMotto {
 
     @Enumerated(EnumType.STRING)
     private RuleType ruleType;
-
+/*
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User user;*/
+
+    @ManyToOne
+    @JoinColumn(name = "family_id")
+    private Family family;
 
     @ManyToOne
     @JoinColumn(name = "familyMember_id")

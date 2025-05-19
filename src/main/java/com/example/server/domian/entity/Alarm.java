@@ -1,7 +1,7 @@
 package com.example.server.domian.entity;
 
 import com.example.server.domian.enums.AlarmType;
-import com.example.server.domian.enums.From;
+import com.example.server.domian.enums.FromType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,7 +22,7 @@ public class Alarm {
     private AlarmType alarmType;
 
     @Enumerated(EnumType.STRING)
-    private From from;
+    private FromType fromType;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
