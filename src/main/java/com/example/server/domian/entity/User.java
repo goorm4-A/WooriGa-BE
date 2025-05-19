@@ -1,7 +1,6 @@
 package com.example.server.domian.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +11,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
 
     @Id
@@ -21,12 +19,16 @@ public class User {
 
     private String email;
     private String name;
+    private String nickname;
     private String password;
     private String phone;
     private String image;
 
     private String birthPlace;
     private LocalDateTime birthDate;
+
+    private String accessToken;
+    private String refreshToken;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FamilyMember> familyMembers = new ArrayList<>();
@@ -48,4 +50,15 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Alarm> alarms = new ArrayList<>();
+
+    public User(String email, String nickname, String image) {
+        this.email = email;
+        this.nickname = nickname;
+        this.image = image;
+    }
+
+    public void setTokens(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 }
