@@ -3,6 +3,7 @@ package com.example.server.domian.entity;
 import com.example.server.domian.enums.RuleType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "familyMotto")
 public class FamilyMotto {
 
@@ -17,7 +19,7 @@ public class FamilyMotto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private String title; // 좌우명 & 규칙
 
     private String description;
 

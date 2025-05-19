@@ -16,7 +16,10 @@ public enum ErrorStatus implements BaseErrorCode {
     COMMON_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON_4002", "인증이 필요합니다."),
 
     // 유저 에러
-    USER_INVALID_PROVIDER(HttpStatus.BAD_REQUEST, "USER_4005", "로그인 경로가 규칙에 맞지 않습니다.");
+    USER_INVALID_PROVIDER(HttpStatus.BAD_REQUEST, "USER_4005", "로그인 경로가 규칙에 맞지 않습니다."),
+    // Family ERROR
+    FAMILY_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_4001", "가족을 찾을 수 없습니다." ),
+    FAMILYMEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMEMBER_4001", "가족 구성원에서 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

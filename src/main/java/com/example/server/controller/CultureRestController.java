@@ -1,6 +1,7 @@
 package com.example.server.controller;
 
 
+import com.example.server.domian.entity.User;
 import com.example.server.dto.culture.CultureRequestDTO;
 import com.example.server.global.ApiResponse;
 import com.example.server.service.culture.CultureService;
@@ -27,9 +28,9 @@ public class CultureRestController {
      * : 사용자 로그인 권한 추가 필요
      * */
     @PostMapping("/motto")
-    public ApiResponse<MottoResponseDTO> createMotto(@Valid @RequestBody CultureRequestDTO.MottoRequestDTO mottoRequestDTO) {
-        cultureService.createMotto(mottoRequestDTO);
-
+    public ApiResponse<String> createMotto(@Valid @RequestBody CultureRequestDTO.MottoRequestDTO mottoRequestDTO, Long userId) { // 임의 생성
+        cultureService.createMotto(mottoRequestDTO, userId);
+        return ApiResponse.onSuccess("좌우명이 생성되었습니다.");
     }
 
 }
