@@ -1,9 +1,7 @@
-package com.example.server.domian.entity;
+package com.example.server.domain.entity;
 
-import com.example.server.domian.enums.MoodType;
-import com.example.server.domian.enums.RuleType;
+import com.example.server.domain.enums.MoodType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,16 +11,14 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "familyMood")
 public class FamilyMood {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private MoodType moodType;
+//    @Enumerated(EnumType.STRING)
+//    private MoodType moodType;
 
     @OneToMany(mappedBy = "familyMood", cascade = CascadeType.ALL)
     private List<MoodTag> moodTags = new ArrayList<>();
@@ -32,7 +28,7 @@ public class FamilyMood {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "familyMember_id")
+    @JoinColumn(name = "family_member_id")
     private FamilyMember familyMember;
 }
 

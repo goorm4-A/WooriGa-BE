@@ -1,8 +1,7 @@
-package com.example.server.domian.entity;
+package com.example.server.domain.entity;
 
-import com.example.server.domian.enums.ContentType;
+import com.example.server.domain.enums.ContentType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,8 +13,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "familyDiary")
 public class FamilyDiary {
 
     @Id
@@ -30,8 +27,8 @@ public class FamilyDiary {
 
     private LocalDateTime writtenDate;
 
-    @Enumerated(EnumType.STRING)
-    private ContentType contentType;
+//    @Enumerated(EnumType.STRING)
+//    private ContentType contentType;
 
     @OneToMany(mappedBy = "familyDiary", cascade = CascadeType.ALL)
     private List<DiaryParticipant> diaryParticipants = new ArrayList<>();
@@ -40,7 +37,7 @@ public class FamilyDiary {
     private List<DiaryTag> diaryTags = new ArrayList<>();
 
     @ManyToOne
-    @JoinColumn(name = "familyMember_id")
+    @JoinColumn(name = "family_member_id")
     private FamilyMember familyMember;
 }
 

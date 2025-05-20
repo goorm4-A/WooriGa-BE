@@ -1,7 +1,6 @@
-package com.example.server.domian.entity;
+package com.example.server.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +10,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "familyMember")
 public class FamilyMember {
 
     @Id

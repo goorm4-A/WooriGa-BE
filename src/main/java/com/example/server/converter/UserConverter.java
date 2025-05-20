@@ -1,7 +1,7 @@
 package com.example.server.converter;
 
-import com.example.server.domian.entity.FamilyMember;
-import com.example.server.domian.entity.User;
+import com.example.server.domain.entity.FamilyMember;
+import com.example.server.domain.entity.User;
 import com.example.server.dto.FamilyDTO;
 import com.example.server.dto.LoginDTO;
 import com.example.server.dto.UserDTO;

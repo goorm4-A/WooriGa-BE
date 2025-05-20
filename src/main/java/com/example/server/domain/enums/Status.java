@@ -1,4 +1,4 @@
-package com.example.server.domian.enums;
+package com.example.server.domain.enums;
 
 public enum Status {
     ACTIVE, INACTIVE

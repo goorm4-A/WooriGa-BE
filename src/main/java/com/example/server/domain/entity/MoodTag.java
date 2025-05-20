@@ -1,16 +1,13 @@
-package com.example.server.domian.entity;
+package com.example.server.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "diaryTag")
-public class DiaryTag {
+public class MoodTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +18,6 @@ public class DiaryTag {
     private Tag tag;
 
     @ManyToOne
-    @JoinColumn(name = "familyDiary_id")
-    private FamilyDiary familyDiary;
+    @JoinColumn(name = "family_mood_id")
+    private FamilyMood familyMood;
 }

@@ -1,7 +1,7 @@
 package com.example.server.service.login;
 
 import com.example.server.converter.UserConverter;
-import com.example.server.domian.entity.User;
+import com.example.server.domain.entity.User;
 import com.example.server.dto.LoginDTO;
 import com.example.server.dto.UserDTO;
 import com.example.server.repository.UserRepository;

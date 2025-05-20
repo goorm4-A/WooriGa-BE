@@ -1,16 +1,14 @@
-package com.example.server.domian.entity;
+package com.example.server.domain.entity;
 
+import com.example.server.domain.enums.RuleType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "familyRecipe")
-public class FamilyRecipe {
+public class FamilyMotto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,16 +16,17 @@ public class FamilyRecipe {
 
     private String title;
 
-    private String description; // 설명
+    private String description;
 
-    private String Ingredient; // 재료
+//    @Enumerated(EnumType.STRING)
+//    private RuleType ruleType;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "familyMember_id")
+    @JoinColumn(name = "family_member_id")
     private FamilyMember familyMember;
 }
 

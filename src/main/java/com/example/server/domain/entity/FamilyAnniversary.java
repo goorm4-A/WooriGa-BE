@@ -1,8 +1,7 @@
-package com.example.server.domian.entity;
+package com.example.server.domain.entity;
 
-import com.example.server.domian.enums.AnniversaryType;
+import com.example.server.domain.enums.AnniversaryType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,8 +12,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "familyAnniversary")
 public class FamilyAnniversary {
 
     @Id
@@ -25,8 +22,8 @@ public class FamilyAnniversary {
 
     private String description;
 
-    @Enumerated(EnumType.STRING)
-    private AnniversaryType anniversaryType;
+//    @Enumerated(EnumType.STRING)
+//    private AnniversaryType anniversaryType;
 
     private LocalDateTime date;
 
@@ -40,7 +37,7 @@ public class FamilyAnniversary {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "familyMember_id")
+    @JoinColumn(name = "family_member_id")
     private FamilyMember familyMember;
 }
 
