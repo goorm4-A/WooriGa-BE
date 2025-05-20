@@ -36,7 +36,7 @@ public class CultureService {
     private final UserRepository userRepository;
     private static final int PAGE_SIZE = 10; // 한 번에 조회할 데이터 수
     @Transactional
-    public void createMotto(CultureRequestDTO.MottoRequestDTO mottoRequestDTO, Long userId) {
+    public FamilyMotto createMotto(CultureRequestDTO.MottoRequestDTO mottoRequestDTO, Long userId) {
         /*
         * TODO
         *  유저 사용자 조회 = 가족 구성원 조회
@@ -49,7 +49,7 @@ public class CultureService {
                 .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
 
         FamilyMotto familyMotto = FamilyConverter.toFamilyMotto(mottoRequestDTO, familyMember, family);
-        familyMottoRepository.save(familyMotto);
+        return familyMottoRepository.save(familyMotto);
     }
 
     @Transactional
@@ -105,5 +105,20 @@ public class CultureService {
 
         return CultureConverter.toMottoListResponseDTO(responseMottos, hasNext, nextCursor);
     }
-
+    @Transactional
+    public CultureResponseDTO.MottoResponseDTO updateMotto(Long mottoId, CultureRequestDTO.MottoRequestDTO requestDTO, Long userId) {
+        FamilyMotto familyMotto = familyMottoRepository.findById(mottoId)
+                .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
+        FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, familyMotto.getFamily())
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+        // 만약 가족 정보를 수정한 경우
+        if (!familyMotto.getFamily().getName().equals(requestDTO.getFamilyName())) {
+            FamilyMotto newFamilyMotto = createMotto(requestDTO, userId);
+            deleteMotto(mottoId, userId);
+            return CultureConverter.toMottoResponseDTO(newFamilyMotto);
+        } else {
+            familyMotto.updateMotto(requestDTO.getMotto());
+            return CultureConverter.toMottoResponseDTO(familyMotto);
+        }
+    }
 }

@@ -38,8 +38,17 @@ public class CultureRestController {
         CultureResponseDTO.MottoListResponseDTO mottoList = cultureService.getMottoList(familyId, cursor, userId);
         return ApiResponse.onSuccess(mottoList);
     }
+    @PatchMapping("/motto/{mottoId}")
+    public  ApiResponse<CultureResponseDTO.MottoResponseDTO> updateMotto(
+            @PathVariable Long mottoId,
+            @Valid @RequestBody CultureRequestDTO.MottoRequestDTO requestDTO,
+            Long userId) {
+        CultureResponseDTO.MottoResponseDTO responseDTO = cultureService.updateMotto(mottoId, requestDTO, userId);
+        return ApiResponse.onSuccess(responseDTO);
+    }
 
-    @DeleteMapping("/motto/{mottoId}")
+
+        @DeleteMapping("/motto/{mottoId}")
     public ApiResponse<String> deleteMotto(@PathVariable Long mottoId, Long userId) {
         cultureService.deleteMotto(mottoId, userId);
         return ApiResponse.onSuccess("좌우명이 삭제되었습니다.");

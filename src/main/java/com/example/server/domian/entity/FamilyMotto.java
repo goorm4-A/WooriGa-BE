@@ -37,5 +37,9 @@ public class FamilyMotto extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "familyMember_id")
     private FamilyMember familyMember;
+
+    public void updateMotto(String title) {
+        this.title = title;
+    }
 }
 
