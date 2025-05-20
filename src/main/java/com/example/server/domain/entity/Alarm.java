@@ -1,0 +1,32 @@
+package com.example.server.domain.entity;
+
+import com.example.server.domain.enums.AlarmType;
+import com.example.server.domain.enums.From;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+
+@Entity
+@Getter
+@NoArgsConstructor
+public class Alarm {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+//    @Enumerated(EnumType.STRING)
+//    private AlarmType alarmType;
+
+//    @Enumerated(EnumType.STRING)
+//    private From from;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+}
+
+
+
+
