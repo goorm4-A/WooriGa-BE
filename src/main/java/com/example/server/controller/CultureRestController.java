@@ -35,4 +35,6 @@ public class CultureRestController {
         cultureService.deleteMotto(mottoId, userId);
         return ApiResponse.onSuccess("좌우명이 삭제되었습니다.");
     }
+
+
 }

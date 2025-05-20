@@ -47,10 +47,10 @@ public class CultureService {
 
         FamilyMotto familyMotto = familyMottoRepository.findById(mottoId)
                 .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
-        // 현재 유저가 작성한 좌우명인지 확인
-        if (!familyMotto.getFamilyMember().getUser().getId().equals(userId)) {
-            throw new CustomException(ErrorStatus.COMMON_UNAUTHORIZED);
-        }
+        // 현재 유저가 가족 구성원 내에 포함되어있는지 확인
+        FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, family)
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+
         familyMottoRepository.delete(familyMotto);
     }
 }
