@@ -5,8 +5,10 @@ import com.example.server.domian.entity.Family;
 import com.example.server.domian.entity.FamilyMember;
 import com.example.server.domian.entity.FamilyMotto;
 import com.example.server.dto.culture.CultureRequestDTO;
+import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.code.exception.handler.FamilyHandler;
 import com.example.server.global.code.exception.handler.FamilyMemberHandler;
+import com.example.server.global.code.exception.handler.FamilyMottoHandler;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.repository.FamilyMemberRepository;
 import com.example.server.repository.FamilyMottoRepository;
@@ -38,5 +40,17 @@ public class CultureService {
 
         FamilyMotto familyMotto = FamilyConverter.toFamilyMotto(mottoRequestDTO, familyMember, family);
         return familyMottoRepository.save(familyMotto);
+    }
+
+    @Transactional
+    public void deleteMotto(Long mottoId, Long userId) {
+
+        FamilyMotto familyMotto = familyMottoRepository.findById(mottoId)
+                .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
+        // 현재 유저가 작성한 좌우명인지 확인
+        if (!familyMotto.getFamilyMember().getUser().getId().equals(userId)) {
+            throw new CustomException(ErrorStatus.COMMON_UNAUTHORIZED);
+        }
+        familyMottoRepository.delete(familyMotto);
     }
 }

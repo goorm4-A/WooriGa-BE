@@ -19,7 +19,10 @@ public enum ErrorStatus implements BaseErrorCode {
     USER_INVALID_PROVIDER(HttpStatus.BAD_REQUEST, "USER_4005", "로그인 경로가 규칙에 맞지 않습니다."),
     // Family ERROR
     FAMILY_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_4001", "가족을 찾을 수 없습니다." ),
-    FAMILYMEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMEMBER_4001", "가족 구성원에서 찾을 수 없습니다.");
+
+    FAMILYMEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMEMBER_4001", "가족 구성원에서 찾을 수 없습니다."),
+
+    FAMILYMOTTO_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMOTTO_4001", "좌우명을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
