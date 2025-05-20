@@ -1,8 +1,7 @@
 package com.example.server.controller;
 
-
-import com.example.server.domian.entity.User;
 import com.example.server.dto.culture.CultureRequestDTO;
+import com.example.server.dto.culture.CultureResponseDTO;
 import com.example.server.global.ApiResponse;
 import com.example.server.service.culture.CultureService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Validated
 @RequestMapping("/culture")
 @Slf4j
-@Tag(name = "Culture", description = "")
+@Tag(name = "Culture", description = "좌우명, 요리법, 약속, 가족 분위기 등이 포함된 기능")
 public class CultureRestController {
     private final CultureService cultureService;
 
@@ -28,6 +27,16 @@ public class CultureRestController {
     public ApiResponse<String> createMotto(@Valid @RequestBody CultureRequestDTO.MottoRequestDTO mottoRequestDTO, Long userId) { // 임의 생성
         cultureService.createMotto(mottoRequestDTO, userId);
         return ApiResponse.onSuccess("좌우명이 생성되었습니다.");
+    }
+
+    @GetMapping("/motto")
+    public ApiResponse<CultureResponseDTO.MottoListResponseDTO> getMottoList(
+            @RequestParam Long familyId,
+            @RequestParam(required = false) String cursor,
+            Long userId
+    ) {
+        CultureResponseDTO.MottoListResponseDTO mottoList = cultureService.getMottoList(familyId, cursor, userId);
+        return ApiResponse.onSuccess(mottoList);
     }
 
     @DeleteMapping("/motto/{mottoId}")
