@@ -25,4 +25,6 @@ public class Family {
     @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
     private List<FamilyMember> familyMembers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
+    private List<FamilyMotto> familyMottos = new ArrayList<>();
 }

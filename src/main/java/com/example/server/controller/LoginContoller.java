@@ -44,7 +44,12 @@ public class LoginContoller {
     @Operation(summary = "카카오 로그인 API",
             description = "유저 정보, Access Token, Refresh Token 응답")
     public ApiResponse<?> loginWithKakao(@RequestParam String code) {
-        LoginDTO.LoginResponse loginResponse =  loginService.getKakaoAccessToken(code);
+        LoginDTO.LoginResponse loginResponse = getLoginResponse(code);
         return ApiResponse.onSuccess(SuccessStatus.LOGIN_SUCCESSFUL,loginResponse);
+    }
+
+    private LoginDTO.LoginResponse getLoginResponse(String code) {
+        LoginDTO.LoginResponse loginResponse =  loginService.getKakaoAccessToken(code);
+        return loginResponse;
     }
 }

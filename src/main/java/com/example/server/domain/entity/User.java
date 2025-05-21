@@ -32,9 +32,9 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FamilyMember> familyMembers = new ArrayList<>();
-
+/*
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<FamilyMotto> familyMottos = new ArrayList<>();
+    private List<FamilyMotto> familyMottos = new ArrayList<>();*/
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FamilyEvent> familyEvents = new ArrayList<>();

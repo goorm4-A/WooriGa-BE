@@ -1,6 +1,5 @@
 package com.example.server.domain.entity;
 
-import com.example.server.domain.enums.EventType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
