@@ -2,10 +2,10 @@ package com.example.server.service.culture;
 
 import com.example.server.converter.CultureConverter;
 import com.example.server.converter.FamilyConverter;
-import com.example.server.domian.entity.Family;
-import com.example.server.domian.entity.FamilyMember;
-import com.example.server.domian.entity.FamilyMotto;
-import com.example.server.domian.entity.User;
+import com.example.server.domain.entity.Family;
+import com.example.server.domain.entity.FamilyMember;
+import com.example.server.domain.entity.FamilyMotto;
+import com.example.server.domain.entity.User;
 import com.example.server.dto.culture.CultureRequestDTO;
 import com.example.server.dto.culture.CultureResponseDTO;
 import com.example.server.global.code.exception.CustomException;
@@ -34,7 +34,7 @@ public class CultureService {
     private final FamilyMemberRepository familyMemberRepository;
     private final FamilyMottoRepository familyMottoRepository;
     private final UserRepository userRepository;
-    private static final int PAGE_SIZE = 10; // 한 번에 조회할 데이터 수
+    private static final int PAGE_SIZE = 8; // 한 번에 조회할 데이터 수
     @Transactional
     public FamilyMotto createMotto(CultureRequestDTO.MottoRequestDTO mottoRequestDTO, Long userId) {
         /*

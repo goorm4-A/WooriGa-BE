@@ -20,6 +20,6 @@ public class TestController {
     @GetMapping
     ApiResponse<TestDTO> geteTest(@RequestParam Integer id) {
         TestDTO result = testService.getTestById(id);
-        return ApiResponse.of(SuccessStatus._OK, result);
+        return ApiResponse.onSuccess(SuccessStatus._OK, result);
     }
 }

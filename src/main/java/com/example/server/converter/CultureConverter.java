@@ -1,6 +1,6 @@
 package com.example.server.converter;
 
-import com.example.server.domian.entity.FamilyMotto;
+import com.example.server.domain.entity.FamilyMotto;
 import com.example.server.dto.culture.CultureResponseDTO;
 
 import java.util.List;

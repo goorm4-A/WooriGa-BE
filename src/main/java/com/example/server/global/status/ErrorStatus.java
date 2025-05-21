@@ -16,7 +16,12 @@ public enum ErrorStatus implements BaseErrorCode {
     COMMON_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "COMMON_4002", "인증이 필요합니다."),
 
     // 유저 에러
-    USER_INVALID_PROVIDER(HttpStatus.BAD_REQUEST, "USER_4005", "로그인 경로가 규칙에 맞지 않습니다."),
+    USER_INVALID_PROVIDER(HttpStatus.UNAUTHORIZED, "USER", "잘못된 로그인 접근 경로 입니다."),
+
+    JWT_INVALID(HttpStatus.UNAUTHORIZED, "JWT4001", "유효하지 않은 JWT 토큰입니다."),
+    JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT4002", "JWT 토큰이 만료되었습니다."),
+    JWT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT4003", "Authorization 헤더에 토큰이 존재하지 않습니다."),
+    JWT_UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "JWT5001", "토큰 처리 중 예기치 않은 오류가 발생했습니다."),
     // Family ERROR
     FAMILY_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_4001", "가족을 찾을 수 없습니다." ),
 

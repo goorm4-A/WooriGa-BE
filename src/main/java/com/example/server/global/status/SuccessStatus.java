@@ -11,8 +11,10 @@ import org.springframework.http.HttpStatus;
 public enum SuccessStatus implements BaseCode {
 
     // 공통 성공
-    _OK(HttpStatus.OK, "COMMON_200", "성공입니다.");
-
+    _OK(HttpStatus.OK, "COMMON_200", "성공입니다."),
+    LOGIN_SUCCESSFUL(HttpStatus.OK, "LOGIN_2001", "로그인 성공입니다."),
+    // 문화 API
+    CREATE_MOTTO_SUCCESSFUL(HttpStatus.OK, "CULTURE_2001", "로그인 성공입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
