@@ -1,7 +1,7 @@
 package com.example.server.domain.entity;
 
 import com.example.server.domain.enums.AlarmType;
-import com.example.server.domian.enums.FromType;
+import com.example.server.domain.enums.FromType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

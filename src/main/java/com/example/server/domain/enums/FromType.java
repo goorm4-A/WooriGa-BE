@@ -1,4 +1,7 @@
-package com.example.server.domian.enums;
+package com.example.server.domain.enums;
+
 public enum FromType {
-    DEFALUT
+
+    DIARY,
+    SCHEDULE
 }
