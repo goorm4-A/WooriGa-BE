@@ -1,6 +1,6 @@
 package com.example.server.repository;
 
-import com.example.server.domian.entity.DiaryParticipant;
+import com.example.server.domain.entity.DiaryParticipant;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 

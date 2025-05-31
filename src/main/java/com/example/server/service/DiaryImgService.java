@@ -1,7 +1,7 @@
 package com.example.server.service;
 
-import com.example.server.domian.entity.DiaryImg;
-import com.example.server.domian.entity.FamilyDiary;
+import com.example.server.domain.entity.DiaryImg;
+import com.example.server.domain.entity.FamilyDiary;
 import com.example.server.repository.DiaryImgRepository;
 import com.example.server.repository.FamilyDiaryRepository;
 import org.springframework.stereotype.Service;

@@ -1,16 +1,15 @@
 package com.example.server.dto.familyDiary;
 
-import com.example.server.domian.entity.DiaryParticipant;
-import com.example.server.domian.entity.DiaryTag;
-import com.example.server.domian.entity.Family;
-import com.example.server.domian.entity.FamilyDiary;
-import com.example.server.domian.enums.ContentType;
+import com.example.server.domain.entity.FamilyDiary;
+import com.example.server.domain.entity.DiaryParticipant;
+import com.example.server.domain.entity.DiaryTag;
+import com.example.server.domain.entity.Family;
+import com.example.server.domain.entity.FamilyDiary;
+import com.example.server.domain.enums.ContentType;
+import com.example.server.domain.enums.FromType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class FamilyDiaryDto {
     private List<Long> diaryParticipants; //participant ID만받기
     private String location;
     private String description;
-    private ContentType contentType;
+    private FromType contentType;
 
 
 

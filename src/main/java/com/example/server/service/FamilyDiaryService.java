@@ -1,12 +1,11 @@
 package com.example.server.service;
 
-import com.example.server.domian.entity.*;
-import com.example.server.domian.enums.ContentType;
+import com.example.server.domain.entity.*;
 import com.example.server.dto.familyDiary.FamilyDiaryDto;
-import com.example.server.dto.familyDiary.FamilyDiaryListDto;
 import com.example.server.dto.familyDiary.FamilyDiaryResponseDto;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
+import com.example.server.domain.entity.FamilyDiary;
 import com.example.server.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,9 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
-import static com.example.server.global.status.ErrorStatus.IMAGE_UPLOAD_ERROR;
 
 @Service
 @Slf4j

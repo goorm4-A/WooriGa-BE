@@ -26,8 +26,20 @@ public enum ErrorStatus implements BaseErrorCode {
 
     //FamilyMember관련 에러
     FAMILY_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_MEMBER_404", "해당 유저는 해당 가족의 구성원이 아닙니다."),
-    DIARY_PARTICIPANTS_ERROR(HttpStatus.BAD_REQUEST,"PARTICIPANTS_404","DiaryParticipants 필드 저장에 실패했어요");
+    DIARY_PARTICIPANTS_ERROR(HttpStatus.BAD_REQUEST,"PARTICIPANTS_404","DiaryParticipants 필드 저장에 실패했어요"),
 
+
+
+    JWT_INVALID(HttpStatus.UNAUTHORIZED, "JWT4001", "유효하지 않은 JWT 토큰입니다."),
+    JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT4002", "JWT 토큰이 만료되었습니다."),
+    JWT_NOT_FOUND(HttpStatus.UNAUTHORIZED, "JWT4003", "Authorization 헤더에 토큰이 존재하지 않습니다."),
+    JWT_UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "JWT5001", "토큰 처리 중 예기치 않은 오류가 발생했습니다."),
+    // Family ERROR
+    FAMILY_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_4001", "가족을 찾을 수 없습니다." ),
+
+    FAMILYMEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMEMBER_4001", "가족 구성원에서 찾을 수 없습니다."),
+
+    FAMILYMOTTO_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMOTTO_4001", "좌우명을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

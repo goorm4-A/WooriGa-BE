@@ -1,6 +1,6 @@
 package com.example.server.controller;
 
-import com.example.server.domian.entity.FamilyDiary;
+
 import com.example.server.dto.familyDiary.FamilyDiaryDto;
 import com.example.server.dto.familyDiary.FamilyDiaryListDto;
 import com.example.server.dto.familyDiary.FamilyDiaryResponseDto;
@@ -27,7 +27,7 @@ public class FamilyDiaryController {
     public ApiResponse<FamilyDiaryResponseDto> createDiary(@RequestPart FamilyDiaryDto familyDiaryDto,
                                                            @RequestPart(value="image",required=false) List<MultipartFile> image) {
         FamilyDiaryResponseDto result=familyDiaryService.createDiary(familyDiaryDto,image);
-        return ApiResponse.of(SuccessStatus._OK,result);
+        return ApiResponse.onSuccess(SuccessStatus._OK,result);
 
     }
 

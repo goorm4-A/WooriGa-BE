@@ -5,7 +5,7 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.example.server.domian.entity.DiaryImg;
+import com.example.server.domain.entity.DiaryImg;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.repository.DiaryImgRepository;
