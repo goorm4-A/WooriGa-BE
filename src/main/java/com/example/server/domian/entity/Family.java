@@ -28,4 +28,8 @@ public class Family {
     @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
     private List<FamilyMember> familyMembers = new ArrayList<>();
 
+    //추가(민서)
+    @OneToMany(mappedBy="family",cascade=CascadeType.ALL)
+    private List<FamilyDiary> familyDiaries = new ArrayList<>();
+
 }

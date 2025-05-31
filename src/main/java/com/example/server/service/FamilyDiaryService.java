@@ -3,13 +3,11 @@ package com.example.server.service;
 import com.example.server.domian.entity.*;
 import com.example.server.domian.enums.ContentType;
 import com.example.server.dto.familyDiary.FamilyDiaryDto;
+import com.example.server.dto.familyDiary.FamilyDiaryListDto;
 import com.example.server.dto.familyDiary.FamilyDiaryResponseDto;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
-import com.example.server.repository.DiaryParticipantRepository;
-import com.example.server.repository.FamilyDiaryRepository;
-import com.example.server.repository.FamilyMemberRepository;
-import com.example.server.repository.UserRepository;
+import com.example.server.repository.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.example.server.global.status.ErrorStatus.IMAGE_UPLOAD_ERROR;
 
@@ -30,18 +29,20 @@ public class FamilyDiaryService {
     private final FamilyMemberRepository familyMemberRepository;
     private final DiaryParticipantRepository diaryParticipantRepository;
     private final UserRepository userRepository;
+    private final FamilyRepository familyRepository;
 
-    public FamilyDiaryService(FamilyDiaryRepository familyDiaryRepository, S3Service s3Service, DiaryImgService diaryImgService, FamilyMemberRepository familyMemberRepository, DiaryParticipantRepository diaryParticipantRepository,UserRepository userRepository) {
+    public FamilyDiaryService(FamilyDiaryRepository familyDiaryRepository, S3Service s3Service, DiaryImgService diaryImgService, FamilyMemberRepository familyMemberRepository, DiaryParticipantRepository diaryParticipantRepository, UserRepository userRepository, FamilyRepository familyRepository) {
         this.familyDiaryRepository = familyDiaryRepository;
         this.s3Service = s3Service;
         this.diaryImgService = diaryImgService;
         this.familyMemberRepository = familyMemberRepository;
         this.diaryParticipantRepository = diaryParticipantRepository;
         this.userRepository = userRepository;
+        this.familyRepository = familyRepository;
     }
 
 
-    //다이어리 생성
+    ///다이어리 생성
     public FamilyDiaryResponseDto createDiary(FamilyDiaryDto dto, List<MultipartFile> image) {
 
         
@@ -153,6 +154,20 @@ public class FamilyDiaryService {
     private FamilyDiary findDiary(Long diaryId){
         return familyDiaryRepository.findById(diaryId).orElse(null);
     }
+
+
+    ///가족별 추억일기 조회
+//    public List<FamilyDiaryListDto> getDiaryList(Long familyId){
+//        Family family=familyRepository.findById(familyId).orElse(null);
+//
+//        //family가 null이면 안됨
+//        List<FamilyDiary> diaryList= Objects.requireNonNull(family).getFamilyDiaries();
+//
+//        List<FamilyDiaryListDto> familyDiaryListDtos=diaryList.stream()
+//                .map(diaryLi)
+//
+//
+//    }
 
 
 

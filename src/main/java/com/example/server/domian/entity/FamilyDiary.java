@@ -52,6 +52,12 @@ public class FamilyDiary {
     @JoinColumn(name = "familyMember_id")
     private FamilyMember familyMember;
 
+    @ManyToOne
+    @JoinColumn(name="family_id")
+    private Family family;
+
+
+
     public FamilyDiary(String title, List<DiaryTag> diaryTags, List<DiaryParticipant> diaryParticipants, String location, String description, ContentType contentType) {
         this.title=title;
         this.diaryTags = diaryTags;
