@@ -5,12 +5,14 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "diaryParticipant")
@@ -20,23 +22,16 @@ public class DiaryParticipant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-
-    private String description;
-
-    private String location;
-
-    private LocalDateTime writtenDate;
-
-    @Enumerated(EnumType.STRING)
-    private ContentType contentType;
-
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "familyMember_id")
+    private FamilyMember familyMember;
 
     @ManyToOne
     @JoinColumn(name = "familyDiary_id")
     private FamilyDiary familyDiary;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }
 
