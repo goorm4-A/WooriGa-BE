@@ -4,8 +4,7 @@ networks:
 
 services:
   wooriga-app:
-    build:
-      context: .       # Dockerfile이 있는 디렉토리 (현재 디렉토리)
+    image: ljyeon12/wooriga-be_wooriga-app:latest
     container_name: wooriga-app
     ports:
       - "8081:8080"
