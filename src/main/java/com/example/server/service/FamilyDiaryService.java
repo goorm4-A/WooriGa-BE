@@ -27,7 +27,8 @@ public class FamilyDiaryService {
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
 
-    public FamilyDiaryService(FamilyDiaryRepository familyDiaryRepository, S3Service s3Service, DiaryImgService diaryImgService, FamilyMemberRepository familyMemberRepository, DiaryParticipantRepository diaryParticipantRepository, UserRepository userRepository, FamilyRepository familyRepository) {
+    public FamilyDiaryService(FamilyDiaryRepository familyDiaryRepository, S3Service s3Service,
+                              DiaryImgService diaryImgService, FamilyMemberRepository familyMemberRepository, DiaryParticipantRepository diaryParticipantRepository, UserRepository userRepository, FamilyRepository familyRepository) {
         this.familyDiaryRepository = familyDiaryRepository;
         this.s3Service = s3Service;
         this.diaryImgService = diaryImgService;

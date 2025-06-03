@@ -89,11 +89,31 @@ public class S3Service {
         return idxFileName;
     }
 
+    /**
+     * S3에 이미지 업로드 하기
+     */
+    ////////// TEST 용
+    public String uploadImage(MultipartFile image) throws IOException {
+        String fileName = UUID.randomUUID() + "_" + image.getOriginalFilename(); // 고유한 파일 이름 생성
 
+        // 메타데이터 설정
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentType(image.getContentType());
+        metadata.setContentLength(image.getSize());
 
+        // S3에 파일 업로드 요청 생성
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucket, fileName, image.getInputStream(), metadata);
 
+        // S3에 파일 업로드
+        s3Client.putObject(putObjectRequest);
 
+        return getPublicUrl(fileName);
+    }
 
+    private String getPublicUrl(String fileName) {
+        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucket, s3Client.getRegionName(), fileName);
+    }
+    ///////////
 
 
     //일기 삭제 -> 버킷에서 이미지 삭제
