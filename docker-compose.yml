@@ -1,0 +1,16 @@
+networks:
+  wooriga-network:
+    driver: bridge
+
+services:
+  wooriga-app:
+    build:
+      context: .       # Dockerfile이 있는 디렉토리 (현재 디렉토리)
+    container_name: wooriga-app
+    ports:
+      - "8081:8080"
+    env_file:
+      - .env
+
+volumes:
+  db_data:
