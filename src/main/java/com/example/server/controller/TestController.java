@@ -5,10 +5,7 @@ import com.example.server.global.ApiResponse;
 import com.example.server.global.status.SuccessStatus;
 import com.example.server.service.TestService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/test")
@@ -19,6 +16,12 @@ public class TestController {
 
     @GetMapping
     ApiResponse<TestDTO> geteTest(@RequestParam Integer id) {
+        TestDTO result = testService.getTestById(id);
+        return ApiResponse.onSuccess(SuccessStatus._OK, result);
+    }
+
+    @PostMapping
+    ApiResponse<TestDTO> postTest(@RequestParam Integer id) {
         TestDTO result = testService.getTestById(id);
         return ApiResponse.onSuccess(SuccessStatus._OK, result);
     }
