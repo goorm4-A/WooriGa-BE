@@ -28,6 +28,11 @@ public enum ErrorStatus implements BaseErrorCode {
     FAMILY_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_MEMBER_404", "해당 유저는 해당 가족의 구성원이 아닙니다."),
     DIARY_PARTICIPANTS_ERROR(HttpStatus.BAD_REQUEST,"PARTICIPANTS_404","DiaryParticipants 필드 저장에 실패했어요"),
 
+    //Family Diary 관련 에러
+    FAMILY_DIARY_NOT_FOUND(HttpStatus.NOT_FOUND,"FAMILY_DIARY_404","해당 일기를 찾을 수 없습니다."),
+    TAG_NOT_FOUND(HttpStatus.NOT_FOUND,"TAG_404","해당 태그를 찾을 수 없어요"),
+    DIARY_TAG_ERROR(HttpStatus.BAD_REQUEST,"TAG_4005","태그 설정에 오류가 발생했어요."),
+
 
 
     JWT_INVALID(HttpStatus.UNAUTHORIZED, "JWT4001", "유효하지 않은 JWT 토큰입니다."),

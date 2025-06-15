@@ -22,7 +22,7 @@ public class FamilyDiaryDto {
 
 //    private List<MultipartFile> image;
     private String title;
-//    private List<Long> diaryTags; //객체 대신 문자열로 받기
+    private List<String> diaryTags; //객체 대신 문자열로 받기
     private List<Long> diaryParticipants; //participant ID만받기
     private String location;
     private String description;

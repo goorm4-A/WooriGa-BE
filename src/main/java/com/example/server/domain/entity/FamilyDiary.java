@@ -2,6 +2,7 @@ package com.example.server.domain.entity;
 
 import com.example.server.domain.enums.FromType;
 
+import com.example.server.dto.familyDiary.DiaryTagDto;
 import com.example.server.dto.familyDiary.FamilyDiaryResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -81,13 +82,23 @@ public class FamilyDiary {
                 .map(DiaryParticipant::getId)
                 .collect(Collectors.toList());
 
+        List<String> images=diary.getImages().stream()
+                .map(DiaryImg::getImgUrl)
+                .collect(Collectors.toList());
+
+        List<DiaryTagDto> diaryTagDtos=diary.getDiaryTags().stream()
+               .map(DiaryTagDto::new).toList();
+
+
         return new FamilyDiaryResponseDto(
                 diary.getId(),
                 diary.getTitle(),
                 diary.getLocation(),
                 diary.getDescription(),
                 diary.getContentType(),
-                participantIds
+                diaryTagDtos,
+                participantIds,
+                images
         );
     }
 

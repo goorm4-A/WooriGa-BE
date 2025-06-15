@@ -1,12 +1,15 @@
-package com.example.server.service;
+package com.example.server.service.diary;
 
 import com.example.server.domain.entity.*;
+import com.example.server.dto.familyDiary.DiaryTagDto;
 import com.example.server.dto.familyDiary.FamilyDiaryDto;
+import com.example.server.dto.familyDiary.FamilyDiaryListDto;
 import com.example.server.dto.familyDiary.FamilyDiaryResponseDto;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.domain.entity.FamilyDiary;
 import com.example.server.repository.*;
+import com.example.server.service.S3Service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Slf4j
@@ -25,10 +29,13 @@ public class FamilyDiaryService {
     private final FamilyMemberRepository familyMemberRepository;
     private final DiaryParticipantRepository diaryParticipantRepository;
     private final UserRepository userRepository;
+    private final DiaryTagService diaryTagService;
     private final FamilyRepository familyRepository;
 
     public FamilyDiaryService(FamilyDiaryRepository familyDiaryRepository, S3Service s3Service,
-                              DiaryImgService diaryImgService, FamilyMemberRepository familyMemberRepository, DiaryParticipantRepository diaryParticipantRepository, UserRepository userRepository, FamilyRepository familyRepository) {
+                              DiaryImgService diaryImgService, FamilyMemberRepository familyMemberRepository,
+                              DiaryParticipantRepository diaryParticipantRepository, UserRepository userRepository,
+                              FamilyRepository familyRepository,DiaryTagService diaryTagService) {
         this.familyDiaryRepository = familyDiaryRepository;
         this.s3Service = s3Service;
         this.diaryImgService = diaryImgService;
@@ -36,7 +43,9 @@ public class FamilyDiaryService {
         this.diaryParticipantRepository = diaryParticipantRepository;
         this.userRepository = userRepository;
         this.familyRepository = familyRepository;
+        this.diaryTagService=diaryTagService;
     }
+
 
 
     ///다이어리 생성
@@ -66,13 +75,14 @@ public class FamilyDiaryService {
             throw new CustomException(ErrorStatus.DIARY_PARTICIPANTS_ERROR);
         }
 
-//        //DiaryTag 매핑
-//        try{
-//            List<DiaryTag> tags=getDiaryTags(dto,id);
-//            familyDiary.setDiaryParticipants(participants);
-//        }catch(Exception e){
-//            throw new CustomException(ErrorStatus.DIARY_PARTICIPANTS_ERROR);
-//        }
+        //DiaryTag 매핑
+        try{
+            List<DiaryTag> diaryTags=getDiaryTags(dto,id);
+            System.out.println("🧹diaryTag 서비스 시작");
+            familyDiary.setDiaryTags(diaryTags);
+        }catch(Exception e){
+            throw new CustomException(ErrorStatus.DIARY_TAG_ERROR);
+        }
 
 
         //s3에 이미지 업로드
@@ -107,14 +117,29 @@ public class FamilyDiaryService {
     }
 
     //DiaryTag 객체 생성+저장 //Tag 작성 방식에 따라 변경
-//    private List<DiaryTag> getDiaryTags(FamilyDiaryDto dto,Long id){
-//
-//        List<DiaryTag> tagList=new ArrayList<>();
-//        FamilyDiary diary=findDiary(id);
-//
-//
-//
-//    }
+    private List<DiaryTag> getDiaryTags(FamilyDiaryDto dto,Long id){
+        System.out.println("🧹getDiaryTags 호출");
+        List<String> tags=dto.getDiaryTags();
+        System.out.println("🧹tags:"+tags);
+
+        //이미 존재하는 tag인지 아닌지 판단(존재O -> id, 존재X-> null)
+        List<Map<String,Long>> tagExistences=diaryTagService.getTagExistenceOrId(tags);
+        System.out.println("🧹tagExistence:"+tagExistences);
+
+        //null인 tag들에 대해 새로운 Tag 객체 생성 후 Id와 함꼐 반환
+        List<Map<String,Long>> newVersionTagList=diaryTagService.getNewVersionTagList(tagExistences);
+        System.out.println("🍒newVersionTagList:"+newVersionTagList);
+
+        //DiaryTag entity에 저장
+        List<DiaryTag> diaryTagDtos=diaryTagService.saveDiaryTag(newVersionTagList,id);
+        System.out.println("✅DiaryTag에 대한 모든 과정 완료!!");
+
+        return diaryTagDtos;
+
+    }
+
+
+
 
     //DiaryParticipant 객체 생성+저장
     private List<DiaryParticipant> getDiaryParticipants(FamilyDiaryDto dto,Long diaryId){
@@ -164,6 +189,34 @@ public class FamilyDiaryService {
 //                .map(diaryLi)
 //
 //
+//    }
+
+
+    //특정 가족일기 조회
+    public FamilyDiaryResponseDto getFamilyDiaryDto(Long diaryId){
+        FamilyDiary diary=familyDiaryRepository.findById(diaryId)
+                .orElseThrow(()-> new CustomException(ErrorStatus.FAMILY_DIARY_NOT_FOUND));
+        return FamilyDiary.toDto(diary);
+    }
+
+    //추억 목록 조회
+    public List<FamilyDiaryListDto> getFamilyDiaryListDto(Long familyId){
+        List<FamilyDiary> diaryList=familyDiaryRepository.findByFamilyId(familyId);
+        System.out.println("✅diaryList="+diaryList); //비어 있음
+        if(diaryList==null){
+            return null;
+        }
+        List<FamilyDiaryListDto> dtoList=FamilyDiaryListDto.toDto(diaryList);
+        System.out.println("✅dtoList="+dtoList); //비어 있음
+        return dtoList;
+    }
+
+//    //가족일기 수정
+//    public FamilyDiaryResponseDto updateDiary(FamilyDiaryResponseDto dto, List<MultipartFile> image){
+//        Long diaryId=dto.getDiaryId();
+//        familyDiaryRepository.findById(diaryId)
+//                .orElseThrow(()-> new CustomException(ErrorStatus.FAMILY_DIARY_NOT_FOUND));
+//        if(dto.)
 //    }
 
 
