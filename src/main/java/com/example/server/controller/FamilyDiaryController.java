@@ -1,6 +1,7 @@
 package com.example.server.controller;
 
 
+import com.example.server.dto.familyDiary.CommentDto;
 import com.example.server.dto.familyDiary.FamilyDiaryDto;
 import com.example.server.dto.familyDiary.FamilyDiaryListDto;
 import com.example.server.dto.familyDiary.FamilyDiaryResponseDto;
@@ -53,6 +54,21 @@ public class FamilyDiaryController {
         familyDiaryService.deleteDiary(diaryId);
         return ApiResponse.onSuccess(SuccessStatus._OK);
     }
+
+
+    //✏️페이징 or 무한 스크롤 방식 결정 후 수정해야 함
+    @GetMapping("/search")
+    @Operation(summary="일기 제목으로 검색")
+    public ApiResponse<List<FamilyDiaryListDto>> searchDiary(@RequestParam Long familyId,@RequestParam String keyword) {
+        List<FamilyDiaryListDto> results=familyDiaryService.searchFamilyDiary(keyword,familyId);
+        return ApiResponse.onSuccess(SuccessStatus._OK,results);
+    }
+
+//    @PostMapping("/comment")
+//    @Operation(summary="가족 일기에 댓글 달기")
+//    public ApiResponse<CommentDto> addComment(@RequestParam Long diaryId, @RequestParam String comment) {
+//
+//    }
 
 
 

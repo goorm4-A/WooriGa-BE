@@ -10,4 +10,5 @@ import java.util.List;
 public interface FamilyDiaryRepository extends JpaRepository<FamilyDiary, Long> {
 
     List<FamilyDiary> findByFamilyId(Long familyId);
+    List<FamilyDiary> findByFamilyIdAndTitleContaining(Long familyId, String title);
 }

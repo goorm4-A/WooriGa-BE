@@ -249,6 +249,15 @@ public class FamilyDiaryService {
 
     }
 
+    //가족일기 검색
+    public List<FamilyDiaryListDto> searchFamilyDiary(String keyword,Long familyId){
+        List<FamilyDiary> diaryList=familyDiaryRepository.findByFamilyIdAndTitleContaining(familyId,keyword);
+        if(diaryList==null){
+            return null;
+        }
+        return FamilyDiaryListDto.toDto(diaryList);
+    }
+
 //    //가족일기 수정
 //    public FamilyDiaryResponseDto updateDiary(FamilyDiaryResponseDto dto, List<MultipartFile> image){
 //        Long diaryId=dto.getDiaryId();
