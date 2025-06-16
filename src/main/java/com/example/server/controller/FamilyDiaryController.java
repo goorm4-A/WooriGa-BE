@@ -47,6 +47,13 @@ public class FamilyDiaryController {
         return ApiResponse.onSuccess(SuccessStatus._OK,result);
     }
 
+    @DeleteMapping("")
+    @Operation(summary = "특정 가족 일기 삭제")
+    public ApiResponse deleteDiary(@RequestParam Long diaryId) {
+        familyDiaryService.deleteDiary(diaryId);
+        return ApiResponse.onSuccess(SuccessStatus._OK);
+    }
+
 
 
 //    @PutMapping("")

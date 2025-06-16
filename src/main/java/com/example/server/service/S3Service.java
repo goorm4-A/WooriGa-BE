@@ -1,5 +1,6 @@
 package com.example.server.service;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
@@ -43,7 +44,8 @@ public class S3Service {
         for (MultipartFile multipartFile : multipartFiles) {
 
             String fileName=createFileName(multipartFile.getOriginalFilename());
-            String key="/post/image"+fileName; //객체 키(파일 경로)
+            //수정
+            String key="post/image"+fileName; //객체 키(파일 경로)
 
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(multipartFile.getContentType());
@@ -117,4 +119,11 @@ public class S3Service {
 
 
     //일기 삭제 -> 버킷에서 이미지 삭제
+    public void deleteFile(String filename){
+        try{
+            s3Client.deleteObject(bucket,filename);
+        }catch(SdkClientException e){
+            throw new CustomException(ErrorStatus.S3_DELETE_ERROR);
+        }
+    }
 }

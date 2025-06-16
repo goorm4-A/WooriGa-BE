@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -209,6 +210,43 @@ public class FamilyDiaryService {
         List<FamilyDiaryListDto> dtoList=FamilyDiaryListDto.toDto(diaryList);
         System.out.println("✅dtoList="+dtoList); //비어 있음
         return dtoList;
+    }
+
+    //가족일기 삭제
+    public void deleteDiary(Long familyDiaryId){
+        FamilyDiary diary=familyDiaryRepository.findById(familyDiaryId)
+                .orElseThrow(()-> new CustomException(ErrorStatus.FAMILY_DIARY_NOT_FOUND));
+
+        //S3 이미지 삭제 기능
+        //일기 하나에 저장된 여러 개 이미지의 imgUrl List로 만들기
+        List<String> images=diary.getImages().stream()
+                        .map(DiaryImg::getImgUrl)
+                        .toList();
+        System.out.println("🪧images:"+images);
+        //images 리스트에 저장된 파일명 가져오기
+        List<String> fileNames=images.stream()
+                        .map(filename->filename.split("/")[3]) //imgUrl에서 4번째 부분(인덱스 3)을 추출
+                        .toList();
+        System.out.println("🪧file names:"+fileNames);
+
+        try{
+            //S3에서 이미지 삭제하는 메서드 호출
+            fileNames.forEach(s3Service::deleteFile);
+        }catch(Exception e){
+            log.error("🚨S3이미지 삭제 실패",e);
+            throw new CustomException(ErrorStatus.IMAGE_DELETE_FAILED);
+        }
+
+
+        //DB에서 삭제
+        try{
+            familyDiaryRepository.delete(diary);
+        }catch(Exception e){
+            log.error("🚨가족 일기 db 삭제 실패",e);
+            throw new CustomException(ErrorStatus.IMAGE_DELETE_FAILED);
+        }
+
+
     }
 
 //    //가족일기 수정

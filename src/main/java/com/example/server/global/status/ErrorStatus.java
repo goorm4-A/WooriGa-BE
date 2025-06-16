@@ -23,6 +23,8 @@ public enum ErrorStatus implements BaseErrorCode {
     WRONG_INPUT_IMAGE(HttpStatus.BAD_REQUEST,"IMAGE_4001","파일이 비어있습니다."),
     WRONG_IMAGE_FORMAT(HttpStatus.BAD_REQUEST,"IMAGE_4002","업로드한 이미지 형식이 잘못되었습니다."),
     IMAGE_UPLOAD_ERROR(HttpStatus.BAD_REQUEST,"IMAGE_4004","이미지 업로드 중 오류가 발생했습니다."),
+    IMAGE_DELETE_FAILED(HttpStatus.INTERNAL_SERVER_ERROR,"IMAGE_4006","이미지 삭제 중 오류가 발생했습니다."),
+    S3_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"IMAGE_4005","s3상에서 이미지를 삭제하는 중 오류가 발생했습니다."),
 
     //FamilyMember관련 에러
     FAMILY_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_MEMBER_404", "해당 유저는 해당 가족의 구성원이 아닙니다."),
@@ -32,6 +34,7 @@ public enum ErrorStatus implements BaseErrorCode {
     FAMILY_DIARY_NOT_FOUND(HttpStatus.NOT_FOUND,"FAMILY_DIARY_404","해당 일기를 찾을 수 없습니다."),
     TAG_NOT_FOUND(HttpStatus.NOT_FOUND,"TAG_404","해당 태그를 찾을 수 없어요"),
     DIARY_TAG_ERROR(HttpStatus.BAD_REQUEST,"TAG_4005","태그 설정에 오류가 발생했어요."),
+
 
 
 
