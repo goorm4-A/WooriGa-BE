@@ -2,8 +2,8 @@ package com.example.server.service.diary;
 
 import com.example.server.domain.entity.DiaryImg;
 import com.example.server.domain.entity.FamilyDiary;
-import com.example.server.repository.DiaryImgRepository;
-import com.example.server.repository.FamilyDiaryRepository;
+import com.example.server.repository.diary.DiaryImgRepository;
+import com.example.server.repository.diary.FamilyDiaryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

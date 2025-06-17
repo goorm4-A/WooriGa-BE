@@ -1,15 +1,15 @@
 package com.example.server.controller;
 
 
-import com.example.server.dto.familyDiary.CommentDto;
-import com.example.server.dto.familyDiary.FamilyDiaryDto;
-import com.example.server.dto.familyDiary.FamilyDiaryListDto;
-import com.example.server.dto.familyDiary.FamilyDiaryResponseDto;
+import com.example.server.dto.familyDiary.*;
 import com.example.server.global.ApiResponse;
 import com.example.server.global.status.SuccessStatus;
 import com.example.server.service.diary.FamilyDiaryService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,8 +43,11 @@ public class FamilyDiaryController {
 
     @GetMapping("/list")
     @Operation(summary="추억 목록 조회")
-    public ApiResponse<List<FamilyDiaryListDto>> getDiaryList(@RequestParam Long familyId) {
-        List<FamilyDiaryListDto> result=familyDiaryService.getFamilyDiaryListDto(familyId);
+    //familyDiaryId:마지막으로 조회한 다이어리 id, familyId: 쿼리문의 where 절을 위해
+    public ApiResponse<FamilyDiaryScrollResponse> getDiaryList(@Parameter(description="무한 스크롤") @PageableDefault(size=6) Pageable pageable,
+                                                               @RequestParam(value="familyId")Long familyId,
+                                                               @Parameter(description = "조회한 마지막 diaryId") @RequestParam(value="familyDiaryId",required = false) Long familyDiaryId) {
+        FamilyDiaryScrollResponse result=familyDiaryService.getFamilyDiaryListDto(familyId,familyDiaryId,pageable);
         return ApiResponse.onSuccess(SuccessStatus._OK,result);
     }
 

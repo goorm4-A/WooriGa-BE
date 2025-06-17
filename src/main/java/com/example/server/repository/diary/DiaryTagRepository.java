@@ -1,4 +1,4 @@
-package com.example.server.repository;
+package com.example.server.repository.diary;
 
 import com.example.server.domain.entity.DiaryTag;
 import org.springframework.data.jpa.repository.JpaRepository;

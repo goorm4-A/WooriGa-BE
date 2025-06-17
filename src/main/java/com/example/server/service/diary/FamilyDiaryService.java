@@ -1,16 +1,20 @@
 package com.example.server.service.diary;
 
 import com.example.server.domain.entity.*;
-import com.example.server.dto.familyDiary.DiaryTagDto;
 import com.example.server.dto.familyDiary.FamilyDiaryDto;
 import com.example.server.dto.familyDiary.FamilyDiaryListDto;
 import com.example.server.dto.familyDiary.FamilyDiaryResponseDto;
+import com.example.server.dto.familyDiary.FamilyDiaryScrollResponse;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.domain.entity.FamilyDiary;
 import com.example.server.repository.*;
+import com.example.server.repository.diary.DiaryParticipantRepository;
+import com.example.server.repository.diary.FamilyDiaryRepository;
+import com.example.server.repository.diary.query.FamilyDiaryQueryRepository;
 import com.example.server.service.S3Service;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,7 +22,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -31,19 +34,19 @@ public class FamilyDiaryService {
     private final DiaryParticipantRepository diaryParticipantRepository;
     private final UserRepository userRepository;
     private final DiaryTagService diaryTagService;
-    private final FamilyRepository familyRepository;
+
 
     public FamilyDiaryService(FamilyDiaryRepository familyDiaryRepository, S3Service s3Service,
                               DiaryImgService diaryImgService, FamilyMemberRepository familyMemberRepository,
                               DiaryParticipantRepository diaryParticipantRepository, UserRepository userRepository,
-                              FamilyRepository familyRepository,DiaryTagService diaryTagService) {
+                              DiaryTagService diaryTagService) {
         this.familyDiaryRepository = familyDiaryRepository;
         this.s3Service = s3Service;
         this.diaryImgService = diaryImgService;
         this.familyMemberRepository = familyMemberRepository;
         this.diaryParticipantRepository = diaryParticipantRepository;
         this.userRepository = userRepository;
-        this.familyRepository = familyRepository;
+
         this.diaryTagService=diaryTagService;
     }
 
@@ -201,15 +204,20 @@ public class FamilyDiaryService {
     }
 
     //추억 목록 조회
-    public List<FamilyDiaryListDto> getFamilyDiaryListDto(Long familyId){
-        List<FamilyDiary> diaryList=familyDiaryRepository.findByFamilyId(familyId);
-        System.out.println("✅diaryList="+diaryList); //비어 있음
-        if(diaryList==null){
-            return null;
+    public FamilyDiaryScrollResponse getFamilyDiaryListDto(Long familyId, Long lastDiaryId, Pageable pageable){
+
+        // 커서 기반 페이징
+        List<FamilyDiary> results=familyDiaryRepository.findByFamilyIdWithCursor(familyId,lastDiaryId,pageable);
+        List<FamilyDiaryListDto> dtoList=FamilyDiaryListDto.toDto(results);
+
+        //무한 스크롤 로직
+        boolean hasNext=false;
+        if(dtoList.size()>pageable.getPageSize()){ //요청한 사이즈보다 1개 더 조회해서 다음 페이지 있는지 판단
+            hasNext=true; //클라이언트 다음 요청 가능
+            dtoList.remove(pageable.getPageSize()); //마지막 1개는 제거하여 응답하지 않음
         }
-        List<FamilyDiaryListDto> dtoList=FamilyDiaryListDto.toDto(diaryList);
-        System.out.println("✅dtoList="+dtoList); //비어 있음
-        return dtoList;
+
+        return new FamilyDiaryScrollResponse(dtoList,hasNext);
     }
 
     //가족일기 삭제

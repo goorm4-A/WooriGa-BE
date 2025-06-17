@@ -3,20 +3,17 @@ package com.example.server.service.diary;
 import com.example.server.domain.entity.DiaryTag;
 import com.example.server.domain.entity.FamilyDiary;
 import com.example.server.domain.entity.Tag;
-import com.example.server.dto.familyDiary.DiaryTagDto;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
-import com.example.server.repository.DiaryTagRepository;
-import com.example.server.repository.FamilyDiaryRepository;
+import com.example.server.repository.diary.DiaryTagRepository;
+import com.example.server.repository.diary.FamilyDiaryRepository;
 import com.example.server.repository.TagRepository;
 import com.example.server.service.TagService;
-import io.netty.channel.unix.Errors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
