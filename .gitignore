@@ -44,3 +44,4 @@ out/
 .env.development.local
 .env.test.local
 .env.production.local
+bfg-1.15.0.jar
