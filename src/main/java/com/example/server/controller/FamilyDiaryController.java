@@ -1,7 +1,6 @@
 package com.example.server.controller;
 
 
-import com.example.server.domain.entity.Comment;
 import com.example.server.dto.AddCommentRequest;
 import com.example.server.dto.familyDiary.*;
 import com.example.server.global.ApiResponse;
