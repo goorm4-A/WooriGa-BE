@@ -1,15 +1,14 @@
 package com.example.server.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Table(name="diaryImg")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class DiaryImg {
 

@@ -1,0 +1,111 @@
+package com.example.server.service;
+
+import com.example.server.domain.entity.Comment;
+import com.example.server.domain.entity.FamilyDiary;
+import com.example.server.domain.entity.FamilyMember;
+import com.example.server.dto.AddCommentRequest;
+import com.example.server.dto.familyDiary.CommentDto;
+import com.example.server.dto.familyDiary.CommentResponse;
+import com.example.server.global.code.exception.CustomException;
+import com.example.server.global.status.ErrorStatus;
+import com.example.server.repository.comment.CommentRepository;
+import com.example.server.repository.FamilyMemberRepository;
+import com.example.server.repository.diary.FamilyDiaryRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class CommentService {
+
+    private final CommentRepository commentRepository;
+    private final FamilyMemberRepository familyMemberRepository;
+    private final FamilyDiaryRepository familyDiaryRepository;
+
+    //댓글 추가 메서드
+    public CommentDto save(AddCommentRequest request, Long diaryId, Long familyMemberId) {
+        FamilyMember member = familyMemberRepository.findById(familyMemberId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
+
+        FamilyDiary diary = familyDiaryRepository.findById(diaryId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_DIARY_NOT_FOUND));
+
+        //✏️Spring Security 이용 방식으로 변경해야. SecurityContext
+        String username=member.getUser().getName();
+
+        Comment comment = request.toEntity(member, diary,username);
+        commentRepository.save(comment);
+
+        return CommentDto.builder()
+                .content(comment.getContent())
+                .createdAt(comment.getCreatedAt())
+                .username(username)
+                .familyMemberId(member.getId())
+                .familyDiaryId(diary.getId())
+                .build();
+    }
+
+    //대댓글 추가 메서드
+    public CommentDto saveRecomment(AddCommentRequest request, Long commentId, Long familyMemberId) {
+        FamilyMember member = familyMemberRepository.findById(familyMemberId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
+        String username=member.getUser().getName();
+
+
+        Comment comment=commentRepository.findById(commentId)
+                .orElseThrow(()-> new CustomException(ErrorStatus.COMMENT_NOT_FOUND));
+        FamilyDiary diary=comment.getFamilyDiary();
+
+        Comment childComment=request.toEntity(member,diary,username);
+        childComment.setParentComment(comment); //부모 댓글 추가
+        commentRepository.save(childComment);
+
+        return CommentDto.builder()
+                .content(comment.getContent())
+                .createdAt(comment.getCreatedAt())
+                .username(username)
+                .familyMemberId(member.getId())
+                .familyDiaryId(diary.getId())
+                .build();
+
+    }
+
+    //댓글 삭제 메서드
+    public void deleteComment(Long commentId){
+        Comment comment=commentRepository.findById(commentId)
+                .orElseThrow(()-> new CustomException(ErrorStatus.COMMENT_NOT_FOUND));
+        commentRepository.delete(comment);
+    }
+
+    //댓글 조회 메서드 (대댓글 제외)
+    public CommentResponse showComments(Long familyDiaryId, Long commentId, Pageable pageable){
+        List<Comment> commentList=commentRepository.findByDiaryIdWithCursor(familyDiaryId,commentId,pageable);
+        List<CommentDto> dtoList=CommentDto.toDto(commentList);
+
+        //무한 스크롤 로직
+        boolean hasNext=false;
+        if(dtoList.size()>pageable.getPageSize()){
+            hasNext=true;
+            dtoList.remove(pageable.getPageSize());
+        }
+        return new CommentResponse(dtoList,hasNext);
+    }
+
+    //대댓글 조회 메서드
+    public CommentResponse showReComments(Long commentId, Long reCommentId, Pageable pageable){
+        List<Comment> commentList=commentRepository.findByCommentIdWithCursor(commentId,reCommentId,pageable);
+        List<CommentDto> dtoList=CommentDto.toDto(commentList);
+
+        //무한 스크롤 로직
+        boolean hasNext=false;
+        if(dtoList.size()>pageable.getPageSize()){
+            hasNext=true;
+            dtoList.remove(pageable.getPageSize());
+        }
+        return new CommentResponse(dtoList,hasNext);
+
+    }
+}
