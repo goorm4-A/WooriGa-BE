@@ -258,12 +258,17 @@ public class FamilyDiaryService {
     }
 
     //가족일기 검색
-    public List<FamilyDiaryListDto> searchFamilyDiary(String keyword,Long familyId){
-        List<FamilyDiary> diaryList=familyDiaryRepository.findByFamilyIdAndTitleContaining(familyId,keyword);
-        if(diaryList==null){
-            return null;
+    public FamilyDiaryScrollResponse searchFamilyDiaryWithScroll(String keyword,Long familyId,Long lastDiaryId,Pageable pageable){
+        List<FamilyDiary> diaryList=familyDiaryRepository.searchByTitleWithCursor(familyId,keyword,lastDiaryId,pageable);
+        List<FamilyDiaryListDto> dtoList=FamilyDiaryListDto.toDto(diaryList);
+
+        boolean hasNext=false;
+        if(dtoList.size()>pageable.getPageSize()){
+            hasNext=true;
+            dtoList.remove(pageable.getPageSize()); //마지막 항목 제거
         }
-        return FamilyDiaryListDto.toDto(diaryList);
+
+        return new FamilyDiaryScrollResponse(dtoList,hasNext);
     }
 
 //    //가족일기 수정

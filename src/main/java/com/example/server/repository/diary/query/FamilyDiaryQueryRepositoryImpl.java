@@ -1,12 +1,11 @@
 package com.example.server.repository.diary.query;
 
-import com.example.server.domain.entity.Family;
+
 import com.example.server.domain.entity.FamilyDiary;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import com.example.server.domain.entity.QFamilyDiary;
 
@@ -37,6 +36,24 @@ public class FamilyDiaryQueryRepositoryImpl implements FamilyDiaryQueryRepositor
                 .limit(pageable.getPageSize()+1) //프론트가 요청한 사이즈보다 1크게 설정 -> 다음 페이지 존재 여부에 활용
                 .fetch();
         return results;
+    }
+
+    @Override
+    public List<FamilyDiary> searchByTitleWithCursor(Long familyId, String keyword, Long lastDiaryId, Pageable pageable) {
+        QFamilyDiary diary=QFamilyDiary.familyDiary;
+
+        return queryFactory
+                .selectFrom(diary)
+                .where(
+                        diary.family.id.eq(familyId),
+                        diary.title.containsIgnoreCase(keyword),
+                        ltLastDiaryId(lastDiaryId,diary)
+                )
+                .orderBy(diary.id.desc())
+                .limit(pageable.getPageSize()+1)
+                .fetch();
+
+
     }
 
     //lastDiaryId 보다 ID가 작은 데이터만 조회 (동적 조건)

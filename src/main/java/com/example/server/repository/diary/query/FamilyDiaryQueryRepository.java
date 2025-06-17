@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface FamilyDiaryQueryRepository {
     List<FamilyDiary> findByFamilyIdWithCursor(Long familyId, Long lastDiaryId, Pageable pageable);
+    List<FamilyDiary> searchByTitleWithCursor(Long familyId, String keyword, Long lastDiaryId, Pageable pageable);
+
 }

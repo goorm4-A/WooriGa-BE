@@ -16,6 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+
+
 @RestController
 @RequestMapping("/family-diary")
 @RequiredArgsConstructor
@@ -59,11 +61,14 @@ public class FamilyDiaryController {
     }
 
 
-    //✏️페이징 or 무한 스크롤 방식 결정 후 수정해야 함
     @GetMapping("/search")
     @Operation(summary="일기 제목으로 검색")
-    public ApiResponse<List<FamilyDiaryListDto>> searchDiary(@RequestParam Long familyId,@RequestParam String keyword) {
-        List<FamilyDiaryListDto> results=familyDiaryService.searchFamilyDiary(keyword,familyId);
+    public ApiResponse<FamilyDiaryScrollResponse> searchDiary(
+            @RequestParam Long familyId,
+            @RequestParam String keyword,
+            @RequestParam(required=false) Long lastDiaryId,
+            @PageableDefault(size=6) Pageable pageable) {
+        FamilyDiaryScrollResponse results=familyDiaryService.searchFamilyDiaryWithScroll(keyword,familyId,lastDiaryId,pageable);
         return ApiResponse.onSuccess(SuccessStatus._OK,results);
     }
 
