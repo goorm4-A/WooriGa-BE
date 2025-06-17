@@ -231,11 +231,11 @@ public class FamilyDiaryService {
                         .map(DiaryImg::getImgUrl)
                         .toList();
         System.out.println("🪧images:"+images);
-        //images 리스트에 저장된 파일명 가져오기
+        // S3 key: imgUrl에서 "https://...amazonaws.com/" 이후 경로만 추출
         List<String> fileNames=images.stream()
-                        .map(filename->filename.split("/")[3]) //imgUrl에서 4번째 부분(인덱스 3)을 추출
+                        .map(filename->filename.substring(filename.indexOf(".com/")+5)) //imgUrl에서 4번째 부분(인덱스 3)을 추출
                         .toList();
-        System.out.println("🪧file names:"+fileNames);
+        System.out.println("🪧S3 keys:"+fileNames);
 
         try{
             //S3에서 이미지 삭제하는 메서드 호출
