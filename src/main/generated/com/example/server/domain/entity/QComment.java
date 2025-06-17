@@ -22,7 +22,7 @@ public class QComment extends EntityPathBase<Comment> {
 
     public static final QComment comment = new QComment("comment");
 
-    public final QFamilyMember author;
+    public final ListPath<Comment, QComment> childComments = this.<Comment, QComment>createList("childComments", Comment.class, QComment.class, PathInits.DIRECT2);
 
     public final StringPath content = createString("content");
 
@@ -30,7 +30,13 @@ public class QComment extends EntityPathBase<Comment> {
 
     public final QFamilyDiary familyDiary;
 
+    public final QFamilyMember familyMember;
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final QComment parentComment;
+
+    public final StringPath username = createString("username");
 
     public QComment(String variable) {
         this(Comment.class, forVariable(variable), INITS);
@@ -50,8 +56,9 @@ public class QComment extends EntityPathBase<Comment> {
 
     public QComment(Class<? extends Comment> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.author = inits.isInitialized("author") ? new QFamilyMember(forProperty("author"), inits.get("author")) : null;
         this.familyDiary = inits.isInitialized("familyDiary") ? new QFamilyDiary(forProperty("familyDiary"), inits.get("familyDiary")) : null;
+        this.familyMember = inits.isInitialized("familyMember") ? new QFamilyMember(forProperty("familyMember"), inits.get("familyMember")) : null;
+        this.parentComment = inits.isInitialized("parentComment") ? new QComment(forProperty("parentComment"), inits.get("parentComment")) : null;
     }
 
 }

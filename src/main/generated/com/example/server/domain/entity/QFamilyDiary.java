@@ -22,6 +22,8 @@ public class QFamilyDiary extends EntityPathBase<FamilyDiary> {
 
     public static final QFamilyDiary familyDiary = new QFamilyDiary("familyDiary");
 
+    public final ListPath<Comment, QComment> comments = this.<Comment, QComment>createList("comments", Comment.class, QComment.class, PathInits.DIRECT2);
+
     public final EnumPath<com.example.server.domain.enums.FromType> contentType = createEnum("contentType", com.example.server.domain.enums.FromType.class);
 
     public final StringPath description = createString("description");

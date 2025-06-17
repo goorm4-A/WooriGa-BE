@@ -59,6 +59,11 @@ public class FamilyDiary {
     @JoinColumn(name="family_id")
     private Family family;
 
+    @OneToMany(mappedBy="familyDiary",fetch=FetchType.EAGER,cascade=CascadeType.REMOVE)
+    @OrderBy("id asc") //댓글 정렬
+    private List<Comment> comments;
+
+
 
 
     public FamilyDiary(String title, List<DiaryTag> diaryTags, List<DiaryParticipant> diaryParticipants, String location, String description, FromType contentType) {

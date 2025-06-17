@@ -35,6 +35,8 @@ public enum ErrorStatus implements BaseErrorCode {
     TAG_NOT_FOUND(HttpStatus.NOT_FOUND,"TAG_404","해당 태그를 찾을 수 없어요"),
     DIARY_TAG_ERROR(HttpStatus.BAD_REQUEST,"TAG_4005","태그 설정에 오류가 발생했어요."),
 
+    //댓글 관련 에러
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND,"COMMENT_404","해당 댓글을 찾을 수 없어요."),
 
 
 

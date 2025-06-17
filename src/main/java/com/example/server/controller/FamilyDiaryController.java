@@ -1,9 +1,12 @@
 package com.example.server.controller;
 
 
+import com.example.server.domain.entity.Comment;
+import com.example.server.dto.AddCommentRequest;
 import com.example.server.dto.familyDiary.*;
 import com.example.server.global.ApiResponse;
 import com.example.server.global.status.SuccessStatus;
+import com.example.server.service.CommentService;
 import com.example.server.service.diary.FamilyDiaryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,6 +27,7 @@ import java.util.List;
 public class FamilyDiaryController {
 
     private final FamilyDiaryService familyDiaryService;
+    private final CommentService commentService;
 
 
     //swagger 상에서 작동하도록 수정해야..
@@ -72,11 +76,50 @@ public class FamilyDiaryController {
         return ApiResponse.onSuccess(SuccessStatus._OK,results);
     }
 
-//    @PostMapping("/comment")
-//    @Operation(summary="가족 일기에 댓글 달기")
-//    public ApiResponse<CommentDto> addComment(@RequestParam Long diaryId, @RequestParam String comment) {
-//
-//    }
+    @GetMapping("/comment")
+    @Operation(summary="댓글 조회")
+    public ApiResponse<CommentResponse> getComment(
+            @RequestParam Long familyDiaryId,
+            @RequestParam(required=false) Long commentId,
+            @PageableDefault(size=6) Pageable pageable) {
+        CommentResponse response=commentService.showComments(familyDiaryId,commentId,pageable);
+        return ApiResponse.onSuccess(SuccessStatus._OK,response);
+    }
+
+
+    @GetMapping("/re-comment")
+    @Operation(summary="대댓글 조회")
+    public ApiResponse<CommentResponse> getReComment(
+            @RequestParam Long commentId,
+            @RequestParam(required=false) Long reCommentId,
+            @PageableDefault(size=6) Pageable pageable){
+        CommentResponse response=commentService.showReComments(commentId,reCommentId,pageable);
+        return ApiResponse.onSuccess(SuccessStatus._OK,response);
+    }
+
+
+
+    @PostMapping("/comment")
+    @Operation(summary="가족 일기에 댓글 달기")
+    public ApiResponse<CommentDto> addComment(@RequestParam Long diaryId,@RequestParam Long familyMemberId, @RequestBody AddCommentRequest request) {
+        CommentDto response=commentService.save(request,diaryId,familyMemberId);
+        return ApiResponse.onSuccess(SuccessStatus._OK,response);
+    }
+
+    @PostMapping("/re-comment")
+    @Operation(summary="대댓글 달기")
+    public ApiResponse addReComment(@RequestParam Long familyMemberId, @RequestParam Long commentId, @RequestBody AddCommentRequest request) {
+        CommentDto response=commentService.saveRecomment(request,commentId,familyMemberId);
+        return ApiResponse.onSuccess(SuccessStatus._OK,response);
+    }
+
+    @DeleteMapping("/comment/delete")
+    @Operation(summary="댓글 삭제하기")
+    public ApiResponse deleteComment(@RequestParam Long commentId) {
+        commentService.deleteComment(commentId);
+        return ApiResponse.onSuccess(SuccessStatus._OK);
+    }
+
 
 
 
