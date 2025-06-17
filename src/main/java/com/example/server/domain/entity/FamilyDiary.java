@@ -2,6 +2,7 @@ package com.example.server.domain.entity;
 
 import com.example.server.domain.enums.FromType;
 
+import com.example.server.dto.familyDiary.DiaryTagDto;
 import com.example.server.dto.familyDiary.FamilyDiaryResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -58,6 +59,11 @@ public class FamilyDiary {
     @JoinColumn(name="family_id")
     private Family family;
 
+    @OneToMany(mappedBy="familyDiary",fetch=FetchType.EAGER,cascade=CascadeType.REMOVE)
+    @OrderBy("id asc") //댓글 정렬
+    private List<Comment> comments;
+
+
 
 
     public FamilyDiary(String title, List<DiaryTag> diaryTags, List<DiaryParticipant> diaryParticipants, String location, String description, FromType contentType) {
@@ -81,13 +87,23 @@ public class FamilyDiary {
                 .map(DiaryParticipant::getId)
                 .collect(Collectors.toList());
 
+        List<String> images=diary.getImages().stream()
+                .map(DiaryImg::getImgUrl)
+                .collect(Collectors.toList());
+
+        List<DiaryTagDto> diaryTagDtos=diary.getDiaryTags().stream()
+               .map(DiaryTagDto::new).toList();
+
+
         return new FamilyDiaryResponseDto(
                 diary.getId(),
                 diary.getTitle(),
                 diary.getLocation(),
                 diary.getDescription(),
                 diary.getContentType(),
-                participantIds
+                diaryTagDtos,
+                participantIds,
+                images
         );
     }
 

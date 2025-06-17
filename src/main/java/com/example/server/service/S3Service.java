@@ -1,15 +1,12 @@
 package com.example.server.service;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.example.server.domain.entity.DiaryImg;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
-import com.example.server.repository.DiaryImgRepository;
-import org.hibernate.bytecode.internal.bytebuddy.PrivateAccessorException;
+import com.example.server.repository.diary.DiaryImgRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +16,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import com.example.server.config.S3Config;
 
 @Service
 public class S3Service {
@@ -43,7 +39,8 @@ public class S3Service {
         for (MultipartFile multipartFile : multipartFiles) {
 
             String fileName=createFileName(multipartFile.getOriginalFilename());
-            String key="/post/image"+fileName; //객체 키(파일 경로)
+            //수정
+            String key="post/image"+fileName; //객체 키(파일 경로)
 
             ObjectMetadata objectMetadata = new ObjectMetadata();
             objectMetadata.setContentType(multipartFile.getContentType());
@@ -117,4 +114,11 @@ public class S3Service {
 
 
     //일기 삭제 -> 버킷에서 이미지 삭제
+    public void deleteFile(String filename){
+        try{
+            s3Client.deleteObject(bucket,filename);
+        }catch(SdkClientException e){
+            throw new CustomException(ErrorStatus.S3_DELETE_ERROR);
+        }
+    }
 }
