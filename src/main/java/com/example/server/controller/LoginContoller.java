@@ -1,6 +1,6 @@
 package com.example.server.controller;
 
-import com.example.server.dto.LoginDTO;
+import com.example.server.dto.user.LoginResponse;
 import com.example.server.global.ApiResponse;
 import com.example.server.global.status.SuccessStatus;
 import com.example.server.service.login.LoginService;
@@ -31,6 +31,8 @@ public class LoginContoller {
     // 1. 카카오 로그인 창으로 이동
     // 로그인 성공 후 리다이렉트 URI로 인가 코드 보내줌
     @GetMapping("/kakao")
+    @Operation(summary = "카카오 로그인 API - 스웨거에서 테스트 X",
+            description = "~/success에서 유저 정보, Access Token, Refresh Token 응답 반환")
     public void redirectToKakao(HttpServletResponse response) throws IOException {
         String kakaoUrl = "https://kauth.kakao.com/oauth/authorize"
                 + "?client_id=" + client_id
@@ -41,15 +43,14 @@ public class LoginContoller {
 
     // 2. 인가코드 받아 로그인 진행
     @GetMapping("/success")
-    @Operation(summary = "카카오 로그인 API",
-            description = "유저 정보, Access Token, Refresh Token 응답")
+    @Operation(summary = "카카오 로그인 리다이렉트 API - 스웨거에서 테스트 X")
     public ApiResponse<?> loginWithKakao(@RequestParam String code) {
-        LoginDTO.LoginResponse loginResponse = getLoginResponse(code);
+        LoginResponse loginResponse = getLoginResponse(code);
         return ApiResponse.onSuccess(SuccessStatus.LOGIN_SUCCESSFUL,loginResponse);
     }
 
-    private LoginDTO.LoginResponse getLoginResponse(String code) {
-        LoginDTO.LoginResponse loginResponse =  loginService.getKakaoAccessToken(code);
+    private LoginResponse getLoginResponse(String code) {
+        LoginResponse loginResponse =  loginService.getKakaoAccessToken(code);
         return loginResponse;
     }
 }
