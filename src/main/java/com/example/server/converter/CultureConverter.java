@@ -28,4 +28,26 @@ public class CultureConverter {
                 .createdAt(familyMotto.getCreatedAt())
                 .build();
     }
+
+    public static CultureResponseDTO.RuleListResponseDTO toRuleListResponseDTO(List<FamilyMotto> responseRules, boolean hasNext, Long nextCursor) {
+        List<CultureResponseDTO.RuleResponseDTO> ruleListResponseDTO = responseRules.stream()
+                .map(CultureConverter::toRuleResponseDTO)
+                .collect(Collectors.toList());
+        return CultureResponseDTO.RuleListResponseDTO.builder()
+                .rules(ruleListResponseDTO)
+                .hasNext(hasNext)
+                .nextCursor(nextCursor != null ? nextCursor.toString() : null)
+                .build();
+
+    }
+
+    public static CultureResponseDTO.RuleResponseDTO toRuleResponseDTO(FamilyMotto familyMotto) {
+        return CultureResponseDTO.RuleResponseDTO.builder()
+                .id(familyMotto.getId())
+                .title(familyMotto.getTitle())
+                .familyName(familyMotto.getFamily().getName())
+                .ruleType(familyMotto.getRuleType())
+                .createdAt(familyMotto.getCreatedAt())
+                .build();
+    }
 }
