@@ -14,7 +14,7 @@ public class CultureRequestDTO {
     }
 
     @Getter
-    public static class CreateRuleRequestDTO {
+    public static class RuleRequestDTO {
         String familyName;
         RuleType ruleType;
         String title;

@@ -15,7 +15,7 @@ public class FamilyConverter {
                 .build();
     }
 
-    public static FamilyMotto toFamilyRule(CultureRequestDTO.@Valid CreateRuleRequestDTO requestDTO, FamilyMember familyMember, Family family) {
+    public static FamilyMotto toFamilyRule(CultureRequestDTO.@Valid RuleRequestDTO requestDTO, FamilyMember familyMember, Family family) {
         return new FamilyMotto().builder()
                 .title(requestDTO.getTitle())
                 .familyMember(familyMember)
