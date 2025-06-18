@@ -38,6 +38,9 @@ public enum ErrorStatus implements BaseErrorCode {
     //댓글 관련 에러
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND,"COMMENT_404","해당 댓글을 찾을 수 없어요."),
 
+    //기념일 관련 에러
+    ANNIVERSARY_NOT_FOUND(HttpStatus.NOT_FOUND,"ANNIVERSARY_404","해당 기념일을 찾을 수 없어요."),
+
 
 
     JWT_INVALID(HttpStatus.UNAUTHORIZED, "JWT4001", "유효하지 않은 JWT 토큰입니다."),
