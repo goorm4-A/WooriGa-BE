@@ -25,6 +25,7 @@ public class UserController {
                     응답 형식
                     - "userId": 2 - 유저 아이디
                     - "name": "남유민" - 유저 이름
+                    - "status": "ACTIVE" - 계정 상태
                     - "image": "https://~" - 프로필 이미지
                     - "phone": "010-xxxx-xxxx(첫 로그인 유저 null 반환 가능)" - 휴대폰 번호
                     - "userFamilies": [ \n

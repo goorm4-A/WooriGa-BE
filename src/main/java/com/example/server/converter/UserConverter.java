@@ -16,6 +16,7 @@ public class UserConverter {
         return UserInfoResponse.builder()
                 .userId(user.getId())
                 .name(user.getName())
+                .status(user.getStatus())
                 .image(user.getImage())
                 .phone(user.getPhone())
                 .birthDateTime(user.getBirthDateTime())
