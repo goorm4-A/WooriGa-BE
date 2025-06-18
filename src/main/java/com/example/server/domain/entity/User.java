@@ -68,4 +68,10 @@ public class User {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
+
+    public void updateInfo(String name, String phone, LocalDateTime birthDateTime) {
+        this.name = name;
+        this.phone = phone;
+        this.birthDateTime = birthDateTime;
+    }
 }
