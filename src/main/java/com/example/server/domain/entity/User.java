@@ -1,6 +1,7 @@
 package com.example.server.domain.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,15 +18,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Column(unique = true, nullable = false)
     private String email;
+
+    @NotNull
+    @Column(nullable = false)
     private String name;
+
     private String nickname;
     private String password;
     private String phone;
     private String image;
 
     private String birthPlace;
-    private LocalDateTime birthDate;
+    private LocalDateTime birthDateTime;
 
     private String accessToken;
     private String refreshToken;
@@ -53,7 +60,7 @@ public class User {
 
     public User(String email, String nickname, String image) {
         this.email = email;
-        this.nickname = nickname;
+        this.name = nickname; // 카카오 닉네임 > 우리가 이름
         this.image = image;
     }
 
