@@ -6,17 +6,30 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
 public class JwtUtil {
 
-    private final SecretKey key = Jwts.SIG.HS256.key().build();
+    @Value("${jwt.secret}")
+    private String secretKey;
+
+    private SecretKey key;
+
+    @PostConstruct
+    public void init() {
+        // 의존성 주입된 secretKey로 실제 사용할 key 객체 생성
+        this.key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+    }
 
     private static final Long ACCESS_TOKEN_EXPIRATION =  60 * 60 * 1000L; // 1시간
     private static final Long REFRESH_TOKEN_EXPIRATION = 7 * 24 * 60 * 60 * 1000L;  // 7일
@@ -48,15 +61,12 @@ public class JwtUtil {
                     .parseSignedClaims(token)
                     .getPayload();
             return Long.parseLong(claims.getSubject());
-        }
-        catch(ExpiredJwtException e){
+        } catch (ExpiredJwtException e){
             throw new CustomException(ErrorStatus.JWT_EXPIRED);
-        }
-        catch (JwtException e) {
-            throw new CustomException(ErrorStatus.JWT_EXPIRED);
-        }
-        catch (Exception e) {
-            throw new CustomException(ErrorStatus.JWT_UNKNOWN_ERROR);
+        } catch (JwtException e) {
+            throw new CustomException(ErrorStatus.JWT_INVALID);
+        } catch (Exception e) {
+            throw new CustomException(ErrorStatus.JWT_UNKNOWN_ERROR); // 그외 예외
         }
     }
 }
