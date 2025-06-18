@@ -127,7 +127,7 @@ public class CultureService {
     }
 
     @Transactional
-    public FamilyMotto createRule(CultureRequestDTO.@Valid CreateRuleRequestDTO requestDTO, Long userId) {
+    public FamilyMotto createRule(CultureRequestDTO.@Valid RuleRequestDTO requestDTO, Long userId) {
         Family family = familyRepository.findByName(requestDTO.getFamilyName())
                 .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
         // TODO : 유저가 해당 가족 구성원으로 포함되어 있는 지 확인
@@ -185,5 +185,31 @@ public class CultureService {
         FamilyMotto familyRule = familyMottoRepository.findById(ruleId)
                 .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
         return CultureConverter.toRuleResponseDTO(familyRule);
+    }
+    @Transactional
+    public CultureResponseDTO.RuleResponseDTO updateRule(Long ruleId, CultureRequestDTO.@Valid RuleRequestDTO requestDTO, Long userId) {
+        FamilyMotto familyRule = familyMottoRepository.findById(ruleId)
+                .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
+        FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, familyRule.getFamily())
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+        // 만약 가족 정보를 수정한 경우
+        if (!familyRule.getFamily().getName().equals(requestDTO.getFamilyName())) {
+            FamilyMotto newFamilyRule = createRule(requestDTO, userId);
+            deleteMotto(ruleId, userId);
+            return CultureConverter.toRuleResponseDTO(newFamilyRule);
+        } else {
+            familyRule.updateRule(requestDTO);
+            return CultureConverter.toRuleResponseDTO(familyRule);
+        }
+    }
+    @Transactional
+    public void deleteRule(Long ruleId, Long userId) {
+        FamilyMotto familyRule = familyMottoRepository.findById(ruleId)
+                .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
+        // FamilyMotto가 현재 유저가 포함되어 있는지 확인
+        FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, familyRule.getFamily())
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+
+        familyMottoRepository.delete(familyRule);
     }
 }

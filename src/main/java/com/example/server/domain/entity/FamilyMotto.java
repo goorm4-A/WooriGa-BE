@@ -1,6 +1,8 @@
 package com.example.server.domain.entity;
 
 import com.example.server.domain.enums.RuleType;
+import com.example.server.dto.culture.CultureRequestDTO;
+import com.example.server.dto.culture.CultureResponseDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,6 +42,12 @@ public class FamilyMotto extends BaseEntity {
 
     public void updateMotto(String title) {
         this.title = title;
+    }
+
+    public void updateRule(CultureRequestDTO.RuleRequestDTO ruleRequestDTO) {
+        this.ruleType = ruleRequestDTO.getRuleType();
+        this.description = ruleRequestDTO.getDescription();
+        this.title = ruleRequestDTO.getTitle();
     }
 }
 
