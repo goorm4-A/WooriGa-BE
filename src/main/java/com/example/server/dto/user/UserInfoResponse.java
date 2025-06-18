@@ -1,5 +1,6 @@
 package com.example.server.dto.user;
 
+import com.example.server.domain.enums.UserStatus;
 import com.example.server.dto.FamilyInfoResponse;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +14,7 @@ import java.util.List;
 public class UserInfoResponse {
     private Long userId;
     private String name;
+    private UserStatus status;
     private String image;
     private String phone;
     private LocalDateTime birthDateTime;

@@ -1,5 +1,6 @@
 package com.example.server.domain.entity;
 
+import com.example.server.domain.enums.UserStatus;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -37,6 +38,12 @@ public class User {
     private String accessToken;
     private String refreshToken;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserStatus status;
+
+    private LocalDateTime inactiveDateTime;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FamilyMember> familyMembers = new ArrayList<>();
 /*
@@ -62,6 +69,8 @@ public class User {
         this.email = email;
         this.name = nickname; // 카카오 닉네임 > 우리가 이름
         this.image = image;
+
+        status = UserStatus.ACTIVE;
     }
 
     public void setTokens(String accessToken, String refreshToken) {
@@ -73,5 +82,17 @@ public class User {
         this.name = name;
         this.phone = phone;
         this.birthDateTime = birthDateTime;
+    }
+
+    // 활성 > 비활성
+    public void setInactiveStatus() {
+        this.status = UserStatus.INACTIVE;
+        this.inactiveDateTime = LocalDateTime.now();
+    }
+
+    // 비활성 > 활성
+    public void setActiveStatus() {
+        this.status = UserStatus.ACTIVE;
+        this.inactiveDateTime = null;
     }
 }
