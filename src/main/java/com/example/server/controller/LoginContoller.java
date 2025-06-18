@@ -30,7 +30,7 @@ public class LoginContoller {
 
     // 1. 카카오 로그인 창으로 이동
     // 로그인 성공 후 리다이렉트 URI로 인가 코드 보내줌
-    @GetMapping("/redirect")
+    @GetMapping("/kakao")
     public void redirectToKakao(HttpServletResponse response) throws IOException {
         String kakaoUrl = "https://kauth.kakao.com/oauth/authorize"
                 + "?client_id=" + client_id
@@ -40,7 +40,7 @@ public class LoginContoller {
     }
 
     // 2. 인가코드 받아 로그인 진행
-    @GetMapping("/kakao")
+    @GetMapping("/success")
     @Operation(summary = "카카오 로그인 API",
             description = "유저 정보, Access Token, Refresh Token 응답")
     public ApiResponse<?> loginWithKakao(@RequestParam String code) {
