@@ -14,7 +14,8 @@ public enum SuccessStatus implements BaseCode {
     _OK(HttpStatus.OK, "COMMON_200", "성공입니다."),
     LOGIN_SUCCESSFUL(HttpStatus.OK, "LOGIN_2001", "로그인 성공입니다."),
     // 문화 API
-    CREATE_MOTTO_SUCCESSFUL(HttpStatus.OK, "CULTURE_2001", "로그인 성공입니다.");
+    CREATE_MOTTO_SUCCESSFUL(HttpStatus.OK, "CULTURE_2001", "좌우명을 생성하였습니다."),
+    CREATE_RULE_SUCCESSFUL(HttpStatus.OK, "CULTURE_2002", "약속/규칙을 생성하였습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
