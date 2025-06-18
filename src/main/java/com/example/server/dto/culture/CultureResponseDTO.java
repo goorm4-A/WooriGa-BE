@@ -1,5 +1,6 @@
 package com.example.server.dto.culture;
 
+import com.example.server.domain.enums.RuleType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,6 +27,28 @@ public class CultureResponseDTO {
         private Long id;
         private String title;
         private String familyName;
+        private LocalDateTime createdAt;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class RuleListResponseDTO {
+        List<RuleResponseDTO> rules;
+        boolean hasNext;
+        String nextCursor;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class RuleResponseDTO {
+        private Long id;
+        private String title;
+        private String familyName;
+        private RuleType ruleType;
         private LocalDateTime createdAt;
     }
 }

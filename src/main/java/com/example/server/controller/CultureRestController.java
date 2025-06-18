@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class CultureRestController {
     private final CultureService cultureService;
 
-    /*Todo 가훈 좌우명 등록
+    /*Todo 가훈 좌우명
      * : 사용자 로그인 권한 추가 필요
      * */
     @PostMapping("/motto")
@@ -32,15 +32,16 @@ public class CultureRestController {
 
     @GetMapping("/motto")
     public ApiResponse<CultureResponseDTO.MottoListResponseDTO> getMottoList(
-            @RequestParam Long familyId,
+            @RequestParam(required = false) Long familyId,
             @RequestParam(required = false) String cursor,
             Long userId
     ) {
         CultureResponseDTO.MottoListResponseDTO mottoList = cultureService.getMottoList(familyId, cursor, userId);
         return ApiResponse.onSuccess(mottoList);
     }
+
     @PatchMapping("/motto/{mottoId}")
-    public  ApiResponse<CultureResponseDTO.MottoResponseDTO> updateMotto(
+    public ApiResponse<CultureResponseDTO.MottoResponseDTO> updateMotto(
             @PathVariable Long mottoId,
             @Valid @RequestBody CultureRequestDTO.MottoRequestDTO requestDTO,
             Long userId) {
@@ -49,11 +50,41 @@ public class CultureRestController {
     }
 
 
-        @DeleteMapping("/motto/{mottoId}")
+    @DeleteMapping("/motto/{mottoId}")
     public ApiResponse<String> deleteMotto(@PathVariable Long mottoId, Long userId) {
         cultureService.deleteMotto(mottoId, userId);
         return ApiResponse.onSuccess("좌우명이 삭제되었습니다.");
     }
 
+    @PostMapping("/rule")
+    public ApiResponse<?> createRule(@Valid @RequestBody CultureRequestDTO.CreateRuleRequestDTO requestDTO, Long userId) {
+        cultureService.createRule(requestDTO, userId);
+        return ApiResponse.onSuccess(SuccessStatus.CREATE_RULE_SUCCESSFUL);
+    }
 
+    @GetMapping("/rule")
+    public ApiResponse<CultureResponseDTO.RuleListResponseDTO> getRuleList(
+            @RequestParam(required = false) Long familyId,
+            @RequestParam(required = false) String cursor,
+            Long userId
+    ) {
+        return ApiResponse.onSuccess(cultureService.getRuleList(familyId, cursor, userId));
+    }
+
+    /*
+    * TODO : 약속 /규칙 상세 조회
+    */
+    @GetMapping("/rule/{ruleId}")
+    public ApiResponse<CultureResponseDTO.RuleResponseDTO> getRule(@PathVariable Long ruleId, Long userId) {
+        return ApiResponse.onSuccess(cultureService.getRule(ruleId, userId));
+    }
+    @PatchMapping("rule/{ruleId}")
+    public ApiResponse<?> updateRule() {
+        return null;
+    }
+
+    @DeleteMapping("rule/{ruleId}")
+    public ApiResponse<String> deleteRule(@PathVariable Long ruleId, Long userId) {
+        return null;
+    }
 }

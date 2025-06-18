@@ -23,6 +23,7 @@ public class FamilyMotto extends BaseEntity {
     private String description;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "rule_type", length = 20)
     private RuleType ruleType;
 /*
     @ManyToOne
