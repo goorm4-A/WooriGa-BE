@@ -22,11 +22,9 @@ public class QFamilyAnniversary extends EntityPathBase<FamilyAnniversary> {
 
     public static final QFamilyAnniversary familyAnniversary = new QFamilyAnniversary("familyAnniversary");
 
-    public final BooleanPath alarmOn = createBoolean("alarmOn");
+    public final EnumPath<com.example.server.domain.enums.AnniversaryType> anniversaryType = createEnum("anniversaryType", com.example.server.domain.enums.AnniversaryType.class);
 
-    public final ListPath<AnniversaryTag, QAnniversaryTag> anniversaryTags = this.<AnniversaryTag, QAnniversaryTag>createList("anniversaryTags", AnniversaryTag.class, QAnniversaryTag.class, PathInits.DIRECT2);
-
-    public final DateTimePath<java.time.LocalDateTime> date = createDateTime("date", java.time.LocalDateTime.class);
+    public final DatePath<java.time.LocalDate> date = createDate("date", java.time.LocalDate.class);
 
     public final StringPath description = createString("description");
 
@@ -34,7 +32,9 @@ public class QFamilyAnniversary extends EntityPathBase<FamilyAnniversary> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath name = createString("name");
+    public final StringPath location = createString("location");
+
+    public final StringPath title = createString("title");
 
     public final QUser user;
 
