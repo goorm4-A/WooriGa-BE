@@ -4,8 +4,10 @@ package com.example.server.service.anniversary;
 import com.example.server.domain.entity.FamilyAnniversary;
 import com.example.server.domain.entity.FamilyMember;
 import com.example.server.domain.entity.User;
+import com.example.server.domain.enums.AnniversaryType;
 import com.example.server.dto.anniversary.AnniversaryRequest;
 import com.example.server.dto.anniversary.AnniversaryResponse;
+import com.example.server.dto.anniversary.AnniversaryResponseList;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.repository.FamilyMemberRepository;
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -65,6 +69,50 @@ public class AnniversaryService {
         return AnniversaryResponse.toDto(anniversary);
 
     }
+
+
+    /// 가족 기념일 캘린더에서 보기 ///무한 스크롤 도입? ///d-day에 가까운 기념일부터 정렬
+    public List<AnniversaryResponseList> getMonthSchedule(Long userId,int year,int month){
+        User user=userRepository.findById(userId)
+                .orElseThrow(()->new CustomException(ErrorStatus.USER_NOT_FOUND));
+        System.out.println("✅user:"+user.getName());
+
+        List<FamilyAnniversary> anniversaries=user.getFamilyAnniversaries();
+
+        //dto로 변환
+        List<AnniversaryResponseList> filtered=anniversaries.stream()
+                .filter(m->m.getDate().getYear()==year && m.getDate().getMonthValue()==month)
+                .map(AnniversaryResponseList::toDto)
+                .toList();
+
+        return filtered;
+    }
+
+
+    /// 가족 기념일 상세 보기
+    public AnniversaryResponse getAnniversaryDetail(Long anniversaryId){
+        FamilyAnniversary anniversary = familyAnniversaryRepository.findById(anniversaryId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.ANNIVERSARY_NOT_FOUND));
+
+        return AnniversaryResponse.toDto(anniversary);
+    }
+
+    ///기념일 타입으로 검색
+    public List<AnniversaryResponseList> searchAnniversary(String typeName,Long userId) {
+
+        User user=userRepository.findById(userId)
+                .orElseThrow(()->new CustomException(ErrorStatus.USER_NOT_FOUND));
+        System.out.println("✅user:"+user.getName());
+
+
+        AnniversaryType type = AnniversaryType.fromDisplayName(typeName);
+        List<FamilyAnniversary> list = familyAnniversaryRepository.findByAnniversaryType(type);
+        return list.stream()
+                .filter(m->m.getUser().equals(user))
+                .map(AnniversaryResponseList::toDto)
+                .collect(Collectors.toList());
+    }
+
 
 }
 

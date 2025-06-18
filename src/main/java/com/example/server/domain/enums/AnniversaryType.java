@@ -21,4 +21,13 @@ public enum AnniversaryType {
         return displayName;
     }
 
+    public static AnniversaryType fromDisplayName(String displayname) {
+        for (AnniversaryType type:AnniversaryType.values()){
+            if(type.getDisplayName().equals(displayname)){
+                return type;
+            }
+        }
+        throw new IllegalStateException("존재하지 않은 기념일 유형입니다:"+displayname);
+    }
+
 }
