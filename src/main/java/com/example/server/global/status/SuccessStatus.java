@@ -13,6 +13,11 @@ public enum SuccessStatus implements BaseCode {
     // 공통 성공
     _OK(HttpStatus.OK, "COMMON_200", "성공입니다."),
     LOGIN_SUCCESSFUL(HttpStatus.OK, "LOGIN_2001", "로그인 성공입니다."),
+
+    // 유저 관련 API
+    USER_RETRIEVAL_SUCCESSFUL(HttpStatus.OK, "USER_2001", "유저 정보 조회 성공입니다."),
+    USER_UPDATE_SUCCESSFUL(HttpStatus.OK, "USER_2002", "유저 정보 수정 성공입니다."),
+
     // 문화 API
     CREATE_MOTTO_SUCCESSFUL(HttpStatus.OK, "CULTURE_2001", "로그인 성공입니다.");
 

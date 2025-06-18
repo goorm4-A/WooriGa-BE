@@ -7,7 +7,7 @@ import lombok.Getter;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+// 정보 조회
 @Builder
 @Getter
 public class UserInfoResponse {
