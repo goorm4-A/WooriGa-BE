@@ -20,6 +20,8 @@ public class QUser extends EntityPathBase<User> {
 
     public static final QUser user = new QUser("user");
 
+    public final QBaseEntity _super = new QBaseEntity(this);
+
     public final StringPath accessToken = createString("accessToken");
 
     public final ListPath<Alarm, QAlarm> alarms = this.<Alarm, QAlarm>createList("alarms", Alarm.class, QAlarm.class, PathInits.DIRECT2);
@@ -27,6 +29,9 @@ public class QUser extends EntityPathBase<User> {
     public final DateTimePath<java.time.LocalDateTime> birthDateTime = createDateTime("birthDateTime", java.time.LocalDateTime.class);
 
     public final StringPath birthPlace = createString("birthPlace");
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final ListPath<DiaryParticipant, QDiaryParticipant> diaryParticipants = this.<DiaryParticipant, QDiaryParticipant>createList("diaryParticipants", DiaryParticipant.class, QDiaryParticipant.class, PathInits.DIRECT2);
 
@@ -57,6 +62,9 @@ public class QUser extends EntityPathBase<User> {
     public final StringPath refreshToken = createString("refreshToken");
 
     public final EnumPath<com.example.server.domain.enums.UserStatus> status = createEnum("status", com.example.server.domain.enums.UserStatus.class);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public QUser(String variable) {
         super(User.class, forVariable(variable));
