@@ -47,8 +47,16 @@ public class UserController {
                     - "phone": "010-xxxx-xxxx(첫 로그인 유저 null 반환 가능)" - 휴대폰 번호
                     - "birthDateTime": "2025-06-18T20:39:59.886Z" - 출생 날짜 및 시각
                     """)
-    public ApiResponse<?> updateUserInfo(@AuthenticationPrincipal User PrincipalUser,
+    public ApiResponse<?> updateUserInfo(@AuthenticationPrincipal User principalUser,
                                          @Valid @RequestBody UserInfoRequest request) {
-        return ApiResponse.onSuccess(SuccessStatus.USER_UPDATE_SUCCESSFUL, userService.updateUserInfo(PrincipalUser, request));
+        return ApiResponse.onSuccess(SuccessStatus.USER_UPDATE_SUCCESSFUL, userService.updateUserInfo(principalUser, request));
+    }
+
+    // 사용자 상태 변결
+    @PatchMapping("/me/status")
+    @Operation(summary = "사용자 status 변경",
+            description = "변경된 status 상태: ")
+    public ApiResponse<?> updateUserStatus(@AuthenticationPrincipal User principalUser) {
+        return ApiResponse.onSuccess(SuccessStatus.USER_UPDATE_SUCCESSFUL, userService.updateUserStatus(principalUser));
     }
 }
