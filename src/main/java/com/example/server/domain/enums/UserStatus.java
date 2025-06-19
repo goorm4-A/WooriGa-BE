@@ -1,5 +1,5 @@
 package com.example.server.domain.enums;
 
-public enum Status {
+public enum UserStatus {
     ACTIVE, INACTIVE
 }
