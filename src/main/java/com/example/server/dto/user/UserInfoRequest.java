@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 // 정보 수정
 @Getter
@@ -16,5 +16,5 @@ public class UserInfoRequest {
     private String phone;
 
     @NotNull
-    private LocalDateTime birthDateTime;
+    private LocalDate birthDate;
 }

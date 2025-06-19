@@ -36,7 +36,7 @@ public class UserService {
         User user = userRepository.findById(PrincipalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
-        user.updateInfo(infoRequest.getName(), infoRequest.getPhone(), infoRequest.getBirthDateTime());
+        user.updateInfo(infoRequest.getName(), infoRequest.getPhone(), infoRequest.getBirthDate());
         return UserConverter.toUserInfoResponse(user);
     }
 
