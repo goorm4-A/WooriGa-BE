@@ -3,11 +3,11 @@ package com.example.server.service.login;
 import com.example.server.converter.UserConverter;
 import com.example.server.domain.entity.User;
 import com.example.server.dto.user.LoginResponse;
-import com.example.server.dto.user.UserInfoResponse;
 import com.example.server.repository.UserRepository;
 import com.example.server.utils.jwt.JwtManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.netty.handler.codec.http.HttpHeaderValues;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +17,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
+@Tag(name = "Login", description = "로그인 관련 기능")
 public class LoginService {
 
     @Value("${kakao.client_id}")
