@@ -7,12 +7,14 @@ import com.example.server.dto.user.UserInfoResponse;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.repository.UserRepository;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Tag(name = "User", description = "유저 관련 기능")
 public class UserService {
 
     private final UserRepository userRepository;
