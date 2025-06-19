@@ -19,7 +19,7 @@ public class UserConverter {
                 .status(user.getStatus())
                 .image(user.getImage())
                 .phone(user.getPhone())
-                .birthDateTime(user.getBirthDateTime())
+                .birthDate(user.getBirthDate())
                 .userFamilies(toFamilyInfoListResponse(user.getFamilyMembers()))
                 .build();
     }
