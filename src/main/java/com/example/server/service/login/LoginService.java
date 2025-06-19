@@ -53,8 +53,7 @@ public class LoginService {
         String nickname = userInfoNode.get("properties").get("nickname").asText();
         String profileImage = userInfoNode.get("properties").get("profile_image").asText();
 
-        System.out.println("nickname:"+nickname);
-        // 우리 db에 유저 없으면 유저 생성
+        // db에 유저 없으면 유저 생성
         User user = userRepository.findByEmail(email);
         if (user == null) {
             user = userRepository.save(new User(email, nickname, profileImage));

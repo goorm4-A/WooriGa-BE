@@ -44,13 +44,16 @@ public class LoginContoller {
     // 2. 인가코드 받아 로그인 진행
     @GetMapping("/success")
     @Operation(summary = "카카오 로그인 리다이렉트 API - 스웨거에서 테스트 X")
-    public ApiResponse<?> loginWithKakao(@RequestParam String code) {
-        LoginResponse loginResponse = getLoginResponse(code);
-        return ApiResponse.onSuccess(SuccessStatus.LOGIN_SUCCESSFUL,loginResponse);
-    }
+    public void loginWithKakao(@RequestParam String code,
+                               HttpServletResponse response) throws IOException {
+        LoginResponse loginResponse = loginService.getKakaoAccessToken(code);
 
-    private LoginResponse getLoginResponse(String code) {
-        LoginResponse loginResponse =  loginService.getKakaoAccessToken(code);
-        return loginResponse;
+        // 앱으로 리디렉트
+        String redirectToApp = "wooriga://oauth/kakao"
+                + "?user_id=" + loginResponse.getUserId()
+                + "&accessToken=" + loginResponse.getAccessToken()
+                + "&refreshToken=" + loginResponse.getRefreshToken();
+
+        response.sendRedirect(redirectToApp);
     }
 }
