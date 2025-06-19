@@ -100,6 +100,7 @@ public class FamilyDiary {
                 diary.getTitle(),
                 diary.getLocation(),
                 diary.getDescription(),
+                diary.getWrittenDate(),
                 diary.getContentType(),
                 diaryTagDtos,
                 participantIds,

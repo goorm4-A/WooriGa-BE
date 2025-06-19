@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -20,6 +21,7 @@ public class FamilyDiaryResponseDto {
     private String title;
     private String location;
     private String description;
+    private LocalDateTime writtenDate;
     private FromType contentType;
     private List<DiaryTagDto> diaryTags;
     private List<Long> participantIds;
