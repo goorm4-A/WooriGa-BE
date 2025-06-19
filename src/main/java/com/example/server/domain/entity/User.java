@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class User extends BaseEntity {
     private String image;
 
     private String birthPlace;
-    private LocalDateTime birthDateTime;
+    private LocalDate birthDate;
 
     private String accessToken;
     private String refreshToken;
@@ -78,10 +79,10 @@ public class User extends BaseEntity {
         this.refreshToken = refreshToken;
     }
 
-    public void updateInfo(String name, String phone, LocalDateTime birthDateTime) {
+    public void updateInfo(String name, String phone, LocalDate birthDate) {
         this.name = name;
         this.phone = phone;
-        this.birthDateTime = birthDateTime;
+        this.birthDate = birthDate;
     }
 
     // 활성 > 비활성

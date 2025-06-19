@@ -5,7 +5,7 @@ import com.example.server.dto.FamilyInfoResponse;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 // 정보 조회
@@ -17,6 +17,6 @@ public class UserInfoResponse {
     private UserStatus status;
     private String image;
     private String phone;
-    private LocalDateTime birthDateTime;
+    private LocalDate birthDate;
     private List<FamilyInfoResponse> userFamilies;
 }

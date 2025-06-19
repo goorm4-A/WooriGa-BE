@@ -26,7 +26,7 @@ public class QUser extends EntityPathBase<User> {
 
     public final ListPath<Alarm, QAlarm> alarms = this.<Alarm, QAlarm>createList("alarms", Alarm.class, QAlarm.class, PathInits.DIRECT2);
 
-    public final DateTimePath<java.time.LocalDateTime> birthDateTime = createDateTime("birthDateTime", java.time.LocalDateTime.class);
+    public final DatePath<java.time.LocalDate> birthDate = createDate("birthDate", java.time.LocalDate.class);
 
     public final StringPath birthPlace = createString("birthPlace");
 
