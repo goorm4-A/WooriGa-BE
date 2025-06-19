@@ -55,7 +55,11 @@ public class UserController {
     // 사용자 상태 변결
     @PatchMapping("/me/status")
     @Operation(summary = "사용자 status 변경",
-            description = "변경된 status 상태: ")
+            description = """
+                    응답 형식
+                    - 변경된 status 상태: ACTIVE 또는 INACTIVE(30일 후 유저 삭제)
+                    
+                    INACTIVE의 경우 30일 후 자동 삭제""")
     public ApiResponse<?> updateUserStatus(@AuthenticationPrincipal User principalUser) {
         return ApiResponse.onSuccess(SuccessStatus.USER_UPDATE_SUCCESSFUL, userService.updateUserStatus(principalUser));
     }
