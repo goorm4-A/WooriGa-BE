@@ -24,10 +24,11 @@ public class UserController {
             description = """
                     응답 형식
                     - "userId": 2 - 유저 아이디
-                    - "name": "남유민" - 유저 이름
+                    - "name": "김박수" - 유저 이름
                     - "status": "ACTIVE" - 계정 상태
                     - "image": "https://~" - 프로필 이미지
                     - "phone": "010-xxxx-xxxx(첫 로그인 유저 null 반환 가능)" - 휴대폰 번호
+                    - "birthDate": "2025-06-18" - 출생 날짜
                     - "userFamilies": [ \n
                         "familyId" : 1, \n
                         "name" : "가족그룹이름" \n
@@ -45,7 +46,7 @@ public class UserController {
                     
                     - "name": "남유민" - 유저 이름
                     - "phone": "010-xxxx-xxxx(첫 로그인 유저 null 반환 가능)" - 휴대폰 번호
-                    - "birthDateTime": "2025-06-18T20:39:59.886Z" - 출생 날짜 및 시각
+                    - "birthDate": "2025-06-18" - 출생 날짜
                     """)
     public ApiResponse<?> updateUserInfo(@AuthenticationPrincipal User principalUser,
                                          @Valid @RequestBody UserInfoRequest request) {
