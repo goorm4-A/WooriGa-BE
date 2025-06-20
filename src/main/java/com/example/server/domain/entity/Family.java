@@ -11,7 +11,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Family {
 
     @Id
@@ -32,4 +31,10 @@ public class Family {
 
     @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
     private List<FamilyMotto> familyMottos = new ArrayList<>();
+
+    public Family(String name, Integer inviteCode, String image) {
+        this.name = name;
+        this.inviteCode = inviteCode;
+        this.image = image;
+    }
 }

@@ -40,4 +40,10 @@ public class FamilyMember {
 
     @OneToMany(mappedBy = "familyMember", cascade = CascadeType.ALL)
     private List<FamilyDiary> familyDiaries = new ArrayList<>();
+
+    public FamilyMember(User user, Family family, String relation) {
+        this.user = user;
+        this.family = family;
+        this.relation = relation;
+    }
 }

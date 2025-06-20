@@ -6,6 +6,7 @@ import com.example.server.global.ApiResponse;
 import com.example.server.global.status.SuccessStatus;
 import com.example.server.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Tag(name = "User", description = "유저 관련 기능")
 public class UserController {
 
     private final UserService userService;

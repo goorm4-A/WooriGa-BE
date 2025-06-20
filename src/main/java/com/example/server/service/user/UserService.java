@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-@Tag(name = "User", description = "유저 관련 기능")
 public class UserService {
 
     private final UserRepository userRepository;
