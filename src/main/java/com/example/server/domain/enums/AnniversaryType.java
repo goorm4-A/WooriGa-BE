@@ -1,5 +1,6 @@
 package com.example.server.domain.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
@@ -7,7 +8,7 @@ import lombok.Getter;
 public enum AnniversaryType {
     EVENTS("경조사"),
     BIRTHDAY("생일"),
-    PROMISE("약속"),
+    PROMISE("모임/약속"),
     ETC("기타");
 
     private final String displayName; //한글 이름을 저장하는 필드
@@ -21,6 +22,7 @@ public enum AnniversaryType {
         return displayName;
     }
 
+    @JsonCreator
     public static AnniversaryType fromDisplayName(String displayname) {
         for (AnniversaryType type:AnniversaryType.values()){
             if(type.getDisplayName().equals(displayname)){

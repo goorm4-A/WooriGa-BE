@@ -34,9 +34,9 @@ public class JwtManager {
 
     // Authorization 헤더에서 토큰 추출
     public String getToken(HttpServletRequest request) {
-        String bearer = request.getHeader("Authorization");
-        if (bearer != null && bearer.startsWith("Bearer ")) {
-            return bearer.substring(7);
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            return token.substring(7);
         }
         throw new CustomException(ErrorStatus.JWT_NOT_FOUND);
     }

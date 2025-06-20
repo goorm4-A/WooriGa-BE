@@ -2,12 +2,12 @@ package com.example.server.service.login;
 
 import com.example.server.converter.UserConverter;
 import com.example.server.domain.entity.User;
-import com.example.server.dto.LoginDTO;
-import com.example.server.dto.UserDTO;
+import com.example.server.dto.user.LoginResponse;
 import com.example.server.repository.UserRepository;
 import com.example.server.utils.jwt.JwtManager;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.netty.handler.codec.http.HttpHeaderValues;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +17,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
 @RequiredArgsConstructor
+@Tag(name = "Login", description = "로그인 관련 기능")
 public class LoginService {
 
     @Value("${kakao.client_id}")
@@ -29,7 +30,7 @@ public class LoginService {
     private final JwtManager jwtManager;
 
     // 인가코드로부터 카카오 액세스 토큰 발급
-    public LoginDTO.LoginResponse getKakaoAccessToken(String code) {
+    public LoginResponse getKakaoAccessToken(String code) {
 
         // 카카오 로그인 api 이용하므로 WebClient 이용
         JsonNode tokenNode = WebClient.create("https://kauth.kakao.com")
@@ -53,7 +54,7 @@ public class LoginService {
         String nickname = userInfoNode.get("properties").get("nickname").asText();
         String profileImage = userInfoNode.get("properties").get("profile_image").asText();
 
-        // 우리 db에 유저 없으면 유저 생성
+        // db에 유저 없으면 유저 생성
         User user = userRepository.findByEmail(email);
         if (user == null) {
             user = userRepository.save(new User(email, nickname, profileImage));
@@ -66,8 +67,7 @@ public class LoginService {
         user.setTokens(accessToken, refreshToken);
         userRepository.save(user);
 
-        UserDTO.UserInfoResponse userInfo = UserConverter.toUserInfoResponse(user);
-        return UserConverter.toLoginResponse(userInfo, accessToken, refreshToken);
+        return UserConverter.toLoginResponse(userId, nickname, email, accessToken, refreshToken);
     }
 
     public JsonNode getKakaoUserInfo(String kAccessToken) {

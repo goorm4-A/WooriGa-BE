@@ -17,6 +17,7 @@ import com.example.server.repository.FamilyMemberRepository;
 import com.example.server.repository.FamilyMottoRepository;
 import com.example.server.repository.FamilyRepository;
 import com.example.server.repository.UserRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -82,14 +83,17 @@ public class CultureService {
         List<FamilyMotto> familyMottos;
         Pageable pageable = PageRequest.of(0, PAGE_SIZE + 1);
 
+        /*
+        * TODO : RULETYPE이 없는 객체 조회
+        */
         if (familyId == null) { // familyId가 없을 경우 사용자의 모든 가족 좌우명 조회
-            familyMottos = familyMottoRepository.findByUserIdAndIdLessThan(userId, lastId, pageable);
+            familyMottos = familyMottoRepository.findMottosByUserIdAndRuleTypeIsNull(userId, lastId, pageable);
         } else {
             Family family = familyRepository.findById(familyId)
                     .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
             familyMemberRepository.findByUserIdAndFamily(userId, family)
                     .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
-            familyMottos = familyMottoRepository.findByFamilyIdAndIdLessThan(familyId, lastId, pageable);
+            familyMottos = familyMottoRepository.findMottosByFamilyIdAndRuleTypeIsNull(familyId, lastId, pageable);
         }
 
         // 다음 페이지 존재 여부 확인
@@ -120,5 +124,92 @@ public class CultureService {
             familyMotto.updateMotto(requestDTO.getMotto());
             return CultureConverter.toMottoResponseDTO(familyMotto);
         }
+    }
+
+    @Transactional
+    public FamilyMotto createRule(CultureRequestDTO.@Valid RuleRequestDTO requestDTO, Long userId) {
+        Family family = familyRepository.findByName(requestDTO.getFamilyName())
+                .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
+        // TODO : 유저가 해당 가족 구성원으로 포함되어 있는 지 확인
+        FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, family)
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+
+        FamilyMotto familyMotto = FamilyConverter.toFamilyRule(requestDTO, familyMember, family);
+        return familyMottoRepository.save(familyMotto);
+    }
+
+    public CultureResponseDTO.RuleListResponseDTO getRuleList(Long familyId, String cursor, Long userId) {
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.COMMON_UNAUTHORIZED));
+
+        Long lastId = null;
+        if (cursor != null && !cursor.isEmpty()) {
+            try {
+                lastId = Long.parseLong(cursor);
+            } catch (NumberFormatException e) {
+                throw new CustomException(ErrorStatus.COMMON_BAD_REQUEST);
+            }
+        }
+
+        List<FamilyMotto> familyMottos;
+        Pageable pageable = PageRequest.of(0, PAGE_SIZE + 1);
+        /*
+        * TODO : RuleType이 존재하는 객체만 조회
+        * */
+        if (familyId == null) { // familyId가 없을 경우 사용자의 모든 가족 좌우명 조회
+            familyMottos = familyMottoRepository.findRulesByUserIdAndRuleTypeIsNotNull(userId, lastId, pageable);
+        } else {
+            Family family = familyRepository.findById(familyId)
+                    .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
+            familyMemberRepository.findByUserIdAndFamily(userId, family)
+                    .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+            familyMottos = familyMottoRepository.findRulesByFamilyIdAndRuleTypeIsNotNull(familyId, lastId, pageable);
+        }
+
+        // 다음 페이지 존재 여부 확인
+        boolean hasNext = familyMottos.size() > PAGE_SIZE;
+
+        List<FamilyMotto> responseRules = hasNext
+                ? familyMottos.subList(0, PAGE_SIZE)
+                : familyMottos;
+
+        Long nextCursor = hasNext && !responseRules.isEmpty()
+                ? responseRules.get(responseRules.size() - 1).getId()
+                : null;
+
+        return CultureConverter.toRuleListResponseDTO(responseRules, hasNext, nextCursor);
+    }
+
+    public CultureResponseDTO.RuleResponseDTO getRule(Long ruleId, Long userId) {
+        FamilyMotto familyRule = familyMottoRepository.findById(ruleId)
+                .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
+        return CultureConverter.toRuleResponseDTO(familyRule);
+    }
+    @Transactional
+    public CultureResponseDTO.RuleResponseDTO updateRule(Long ruleId, CultureRequestDTO.@Valid RuleRequestDTO requestDTO, Long userId) {
+        FamilyMotto familyRule = familyMottoRepository.findById(ruleId)
+                .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
+        FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, familyRule.getFamily())
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+        // 만약 가족 정보를 수정한 경우
+        if (!familyRule.getFamily().getName().equals(requestDTO.getFamilyName())) {
+            FamilyMotto newFamilyRule = createRule(requestDTO, userId);
+            deleteMotto(ruleId, userId);
+            return CultureConverter.toRuleResponseDTO(newFamilyRule);
+        } else {
+            familyRule.updateRule(requestDTO);
+            return CultureConverter.toRuleResponseDTO(familyRule);
+        }
+    }
+    @Transactional
+    public void deleteRule(Long ruleId, Long userId) {
+        FamilyMotto familyRule = familyMottoRepository.findById(ruleId)
+                .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
+        // FamilyMotto가 현재 유저가 포함되어 있는지 확인
+        FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, familyRule.getFamily())
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+
+        familyMottoRepository.delete(familyRule);
     }
 }
