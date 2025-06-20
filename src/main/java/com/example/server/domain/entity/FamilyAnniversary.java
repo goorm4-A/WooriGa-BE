@@ -46,9 +46,9 @@ public class FamilyAnniversary {
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @ManyToOne
-//    @JoinColumn(name="family_id")
-//    private Family family;
+    @ManyToOne
+    @JoinColumn(name="family_id")
+    private Family family;
 
     @ManyToOne
     @JoinColumn(name = "family_member_id")
