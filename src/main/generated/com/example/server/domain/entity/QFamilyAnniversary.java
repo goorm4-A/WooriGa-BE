@@ -28,6 +28,8 @@ public class QFamilyAnniversary extends EntityPathBase<FamilyAnniversary> {
 
     public final StringPath description = createString("description");
 
+    public final QFamily family;
+
     public final QFamilyMember familyMember;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
@@ -56,6 +58,7 @@ public class QFamilyAnniversary extends EntityPathBase<FamilyAnniversary> {
 
     public QFamilyAnniversary(Class<? extends FamilyAnniversary> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.family = inits.isInitialized("family") ? new QFamily(forProperty("family")) : null;
         this.familyMember = inits.isInitialized("familyMember") ? new QFamilyMember(forProperty("familyMember"), inits.get("familyMember")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
