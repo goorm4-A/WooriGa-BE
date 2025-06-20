@@ -19,8 +19,6 @@ import java.time.LocalDate;
 public class AnniversaryResponse {
 
     private Long id;
-    private Long userId;
-    private Long familyMemberId; //? //가족 구성원 중 한명이 스케줄 등록-> 다른 가족 구성원들의 달력에도 스케줄이 나타나도록
     private Long familyId;
     private String title;
     private LocalDate date;
@@ -34,9 +32,8 @@ public class AnniversaryResponse {
                 .title(anniversary.getTitle())
                 .anniversaryType(anniversary.getAnniversaryType().getDisplayName())
                 .date(anniversary.getDate())
+                .description(anniversary.getDescription())
                 .location(anniversary.getLocation())
-                .userId(anniversary.getUser().getId())
-                .familyMemberId(anniversary.getFamilyMember().getId())
                 .familyId(anniversary.getFamilyMember().getFamily().getId())
                 .build();
 

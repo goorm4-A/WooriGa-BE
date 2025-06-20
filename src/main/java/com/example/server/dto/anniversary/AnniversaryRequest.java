@@ -1,5 +1,6 @@
 package com.example.server.dto.anniversary;
 
+import com.example.server.domain.entity.Family;
 import com.example.server.domain.entity.FamilyAnniversary;
 import com.example.server.domain.entity.FamilyMember;
 import com.example.server.domain.entity.User;
@@ -13,18 +14,20 @@ import java.time.LocalDate;
 @Setter
 public class AnniversaryRequest {
 
-    private Long userId;
-    private Long familyMemberId; //? //가족 구성원 중 한명이 스케줄 등록-> 다른 가족 구성원들의 달력에도 스케줄이 나타나도록
+    private Long familyId;
     private String title;
     private LocalDate date;
-    private AnniversaryType type; //태그
+    private String type; //태그
     private String location;
     private String description;
 
-    public FamilyAnniversary toEntity(AnniversaryRequest dto, User user, FamilyMember member){
+    public FamilyAnniversary toEntity(AnniversaryRequest dto, User user, FamilyMember member, Family family){
+        AnniversaryType typeEnum = AnniversaryType.fromDisplayName(type); // 직접 파싱
         return FamilyAnniversary.builder()
                 .title(dto.getTitle())
-                .anniversaryType(dto.getType())
+                .description(dto.getDescription())
+                .family(family)
+                .anniversaryType(typeEnum)
                 .date(dto.getDate())
                 .location(dto.getLocation())
                 .user(user)
