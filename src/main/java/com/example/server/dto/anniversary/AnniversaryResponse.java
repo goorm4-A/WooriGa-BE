@@ -18,19 +18,19 @@ import java.time.LocalDate;
 @Builder
 public class AnniversaryResponse {
 
-    private Long id;
+    private Long anniversaryId;
     private Long familyId;
     private String title;
     private LocalDate date;
-    private String anniversaryType; //태그
+    private String type; //태그
     private String location;
     private String description;
 
     public static AnniversaryResponse toDto(FamilyAnniversary anniversary) {
         return AnniversaryResponse.builder()
-                .id(anniversary.getId())
+                .anniversaryId(anniversary.getId())
                 .title(anniversary.getTitle())
-                .anniversaryType(anniversary.getAnniversaryType().getDisplayName())
+                .type(anniversary.getAnniversaryType().getDisplayName())
                 .date(anniversary.getDate())
                 .description(anniversary.getDescription())
                 .location(anniversary.getLocation())
