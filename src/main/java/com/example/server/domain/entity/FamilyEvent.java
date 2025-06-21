@@ -1,5 +1,6 @@
 package com.example.server.domain.entity;
 
+import com.example.server.domain.enums.EventType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +17,13 @@ public class FamilyEvent {
     private Long id;
 
     private String location;
+    private String latitude;
+    private String longitude;
 
     private String description;
 
-//    @Enumerated(EnumType.STRING)
-//    private EventType eventType;
+    @Enumerated(EnumType.STRING)
+    private EventType eventType;
 
     private LocalDateTime timeline;
 
