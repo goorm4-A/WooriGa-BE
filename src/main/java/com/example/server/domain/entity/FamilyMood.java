@@ -4,6 +4,7 @@ import com.example.server.domain.enums.MoodType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,14 +12,15 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
+@Setter
 public class FamilyMood {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @Enumerated(EnumType.STRING)
-//    private MoodType moodType;
+    @Enumerated(EnumType.STRING)
+    private MoodType moodType;
 
     @OneToMany(mappedBy = "familyMood", cascade = CascadeType.ALL)
     private List<MoodTag> moodTags = new ArrayList<>();

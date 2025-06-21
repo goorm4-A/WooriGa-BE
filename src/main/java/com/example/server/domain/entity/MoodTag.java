@@ -3,10 +3,12 @@ package com.example.server.domain.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@Setter
 public class MoodTag {
 
     @Id

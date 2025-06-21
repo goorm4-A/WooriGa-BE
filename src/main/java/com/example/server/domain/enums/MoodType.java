@@ -1,5 +1,6 @@
 package com.example.server.domain.enums;
 
 public enum MoodType {
-    DEFALUT
+    EMOTION, TRAIT, VALUE
+    // 감정, 성향, 가치
 }
