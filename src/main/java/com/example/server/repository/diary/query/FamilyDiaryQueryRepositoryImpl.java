@@ -2,6 +2,7 @@ package com.example.server.repository.diary.query;
 
 
 import com.example.server.domain.entity.FamilyDiary;
+import com.example.server.domain.entity.QDiaryTag;
 import com.querydsl.core.types.dsl.BooleanExpression;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -46,7 +47,7 @@ public class FamilyDiaryQueryRepositoryImpl implements FamilyDiaryQueryRepositor
                 .selectFrom(diary)
                 .where(
                         diary.family.id.eq(familyId),
-                        diary.title.containsIgnoreCase(keyword),
+//                        keywordContains(keyword,diary,tag),
                         ltLastDiaryId(lastDiaryId,diary)
                 )
                 .orderBy(diary.id.desc())
@@ -60,4 +61,8 @@ public class FamilyDiaryQueryRepositoryImpl implements FamilyDiaryQueryRepositor
     private BooleanExpression ltLastDiaryId(Long lastDiaryId,QFamilyDiary familyDiary) {
         return lastDiaryId!=null?familyDiary.id.lt(lastDiaryId):null;
     }
+
+//    private void keywordContains(String keyword, QFamilyDiary diary, QDiaryTag tag) {
+//        if(keyword==null||keyword.isEmpty())
+//    }
 }
