@@ -28,6 +28,8 @@ public class QFamilyMood extends EntityPathBase<FamilyMood> {
 
     public final ListPath<MoodTag, QMoodTag> moodTags = this.<MoodTag, QMoodTag>createList("moodTags", MoodTag.class, QMoodTag.class, PathInits.DIRECT2);
 
+    public final EnumPath<com.example.server.domain.enums.MoodType> moodType = createEnum("moodType", com.example.server.domain.enums.MoodType.class);
+
     public final QUser user;
 
     public QFamilyMood(String variable) {
