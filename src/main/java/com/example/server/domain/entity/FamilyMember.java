@@ -66,4 +66,12 @@ public class FamilyMember {
         this.Image = image;
         this.isUserAdded = true;
     }
+
+    public void updateFamilyMember(String name, String relation,
+                                   LocalDate birthDate, String imageUrl) {
+        this.memberName = name;
+        this.memberBirthDate = birthDate;
+        this.relation = relation;
+        this.Image = imageUrl;
+    }
 }

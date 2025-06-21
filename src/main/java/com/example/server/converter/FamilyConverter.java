@@ -5,10 +5,7 @@ import com.example.server.domain.entity.FamilyMember;
 import com.example.server.domain.entity.FamilyMotto;
 import com.example.server.domain.entity.User;
 import com.example.server.dto.culture.CultureRequestDTO;
-import com.example.server.dto.member.FamilyGroupDetailResponse;
-import com.example.server.dto.member.FamilyGroupResponse;
-import com.example.server.dto.member.FamilyResponse;
-import com.example.server.dto.member.FamilyMemberResponse;
+import com.example.server.dto.member.*;
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -65,7 +62,7 @@ public class FamilyConverter {
                 .familyMemberId(familyMember.getId())
                 .familyMemberName(user == null? familyMember.getMemberName() : user.getName())
                 .birthDate(user == null? familyMember.getMemberBirthDate() : user.getBirthDate())
-                .familyMemberImage(familyMember.getImage())
+                .familyMemberImage(user == null? familyMember.getImage() : user.getImage())
                 .relation(familyMember.getRelation())
                 .isUserAdded(familyMember.getIsUserAdded())
                 .build();
@@ -78,5 +75,16 @@ public class FamilyConverter {
                         .map(FamilyConverter::toFamilyMemberResponse)
                         .collect(Collectors.toList())
                 ).build();
+    }
+
+    public static FamilyMemberDetailResponse toFamilyMemberDetailResponse(FamilyMember familyMember) {
+        User user = familyMember.getUser();
+
+        return FamilyMemberDetailResponse.builder()
+                .memberName(user == null? familyMember.getMemberName() : user.getName())
+                .memberBirthDate(user == null? familyMember.getMemberBirthDate() : user.getBirthDate())
+                .memberImage(user == null? familyMember.getImage() : user.getImage())
+                .relation(familyMember.getRelation())
+                .build();
     }
 }

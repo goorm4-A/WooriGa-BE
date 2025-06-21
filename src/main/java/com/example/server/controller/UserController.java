@@ -57,7 +57,7 @@ public class UserController {
 
     // 사용자 상태 변결
     @PatchMapping("/me/status")
-    @Operation(summary = "사용자 status 변경",
+    @Operation(summary = "유저 status 변경 및 30일 후 삭제 API",
             description = """
                     응답 형식
                     - 변경된 status 상태: ACTIVE 또는 INACTIVE(30일 후 유저 삭제)
