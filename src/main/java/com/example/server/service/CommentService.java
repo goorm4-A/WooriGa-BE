@@ -111,6 +111,35 @@ public class CommentService {
                 .build();
 
     }
+    //대댓글 추가 메서드
+    public RecipeResponseDTO.recipeCommentDto saveRecipeRecomment(RecipeRequestDTO.addRecipeCommentRequest request, Long familyId, Long recipeId, Long commentId, User user) {
+
+        String username=user.getName();
+
+        FamilyRecipe recipe= familyRecipeRepository.findById(recipeId)
+                .orElseThrow(() -> new FamilyRecipeHandler(ErrorStatus.FAMILY_RECIPE_NOT_FOUND));
+
+        //Familymember 찾기
+        FamilyMember familyMember = recipe.getFamilyMember();
+        if (!familyMember.getFamily().getId().equals(familyId)) {
+            throw new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND);
+        }
+        Comment comment=commentRepository.findById(commentId)
+                .orElseThrow(()-> new CustomException(ErrorStatus.COMMENT_NOT_FOUND));
+
+        Comment childComment= RecipeConverter.toComment(familyMember,recipe,username,request);
+        childComment.setParentComment(comment); //부모 댓글 추가
+        commentRepository.save(childComment);
+
+        return RecipeResponseDTO.recipeCommentDto.builder()
+                .comment(childComment.getContent())
+                .author(username)
+                .commentDate(childComment.getCreatedAt())
+                .familyMemberId(familyMember.getId())
+                .recipeId(recipeId)
+                .parentCommentId(comment.getId())
+                .build();
+    }
 
     //댓글 삭제 메서드
     public void deleteComment(Long commentId){

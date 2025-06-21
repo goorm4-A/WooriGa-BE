@@ -1,6 +1,8 @@
 package com.example.server.controller;
 
 import com.example.server.domain.entity.User;
+import com.example.server.dto.AddCommentRequest;
+import com.example.server.dto.familyDiary.CommentDto;
 import com.example.server.dto.familyRecipe.RecipeRequestDTO;
 import com.example.server.dto.familyRecipe.RecipeResponseDTO;
 import com.example.server.global.ApiResponse;
@@ -89,5 +91,16 @@ public class FamilyRecipeRestController {
     ) {
         RecipeResponseDTO.recipeCommentDto result = commentService.save(familyId, recipeId, request, user);
         return ApiResponse.onSuccess(SuccessStatus._OK, result);
+    }
+
+    @PostMapping("/{recipeId}/re-comment")
+    @Operation(summary="대댓글 달기")
+    public ApiResponse<RecipeResponseDTO.recipeCommentDto> addReComment(
+            @PathVariable Long familyId,
+            @PathVariable Long recipeId,
+            @AuthenticationPrincipal User user, @RequestParam Long commentId,
+            @RequestBody RecipeRequestDTO.addRecipeCommentRequest request) {
+        RecipeResponseDTO.recipeCommentDto response=commentService.saveRecipeRecomment(request,familyId,recipeId,commentId,user);
+        return ApiResponse.onSuccess(SuccessStatus._OK,response);
     }
 }

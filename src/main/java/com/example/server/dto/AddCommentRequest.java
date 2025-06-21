@@ -19,7 +19,7 @@ public class AddCommentRequest {
 
 //    private Long id;
     private String content;
-    private LocalDateTime createdAt=LocalDateTime.now();
+//    private LocalDateTime createdAt=LocalDateTime.now();
 //    private Long familyMemberId;
 
 

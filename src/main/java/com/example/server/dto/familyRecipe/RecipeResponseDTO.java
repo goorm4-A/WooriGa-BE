@@ -62,5 +62,6 @@ public class RecipeResponseDTO {
         private String author;
         private Long familyMemberId;
         private Long recipeId;
+        private Long parentCommentId;
     }
 }
