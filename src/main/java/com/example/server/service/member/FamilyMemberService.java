@@ -4,10 +4,7 @@ import com.example.server.converter.FamilyConverter;
 import com.example.server.domain.entity.Family;
 import com.example.server.domain.entity.FamilyMember;
 import com.example.server.domain.entity.User;
-import com.example.server.dto.member.FamilyGroupDetailResponse;
-import com.example.server.dto.member.FamilyGroupResponse;
-import com.example.server.dto.member.FamilyMemberResponse;
-import com.example.server.dto.member.FamilyResponse;
+import com.example.server.dto.member.*;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.code.exception.handler.FamilyMemberHandler;
 import com.example.server.global.status.ErrorStatus;
@@ -104,9 +101,9 @@ public class FamilyMemberService {
         Family family = familyRepository.findById(groupId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_NOT_FOUND));
 
-        // 자신의 가족 그룹이 맞는지 확인
+        // 자신이 속한 가족 그룹이 맞는지 확인
         familyMemberRepository.findByUserIdAndFamilyId(user.getId(), family.getId())
-                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_INVALID));
 
 
         List<FamilyMember> familyMembers = family.getFamilyMembers();
@@ -127,7 +124,7 @@ public class FamilyMemberService {
 
         // 자신의 가족 그룹이 맞는지 확인
         familyMemberRepository.findByUserIdAndFamilyId(user.getId(), family.getId())
-                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_INVALID));
 
         // 이미지 업로드
         String imageUrl = null;
@@ -143,5 +140,28 @@ public class FamilyMemberService {
         FamilyMember newFamilyMember = familyMemberRepository.save(new FamilyMember(family, name, birthDate, relation, imageUrl));
 
         return FamilyConverter.toFamilyMemberResponse(newFamilyMember);
+    }
+
+    // 가족 구성원 상세 조회
+    public FamilyMemberDetailDTO getFamilyMemberDetail(User principalUser, Long groupId, Long memberId) {
+        User user = userRepository.findById(principalUser.getId())
+                .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
+
+        Family family = familyRepository.findById(groupId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_NOT_FOUND));
+
+        // 자신의 가족 그룹이 맞는지 확인
+        familyMemberRepository.findByUserIdAndFamilyId(user.getId(), family.getId())
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_INVALID));
+
+        FamilyMember familyMember = familyMemberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+
+        // 구성원의 가족 그룹이 맞는지 확인
+        if (!familyMember.getFamily().getId().equals(groupId)) {
+            throw new CustomException(ErrorStatus.FAMILY_MEMBER_INVALID);
+        }
+
+        return FamilyConverter.toFamilyMemberDetailDTO(familyMember);
     }
 }

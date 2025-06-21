@@ -23,7 +23,7 @@ public class FamilyMemberController {
     private final FamilyMemberService familyMemberService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "가족 그룹 생성",
+    @Operation(summary = "가족 그룹 생성 API",
             description = """
                     가족 그룹 생성 시, 생성한 사람이 memberId 1 이고 기본 구성원 6명 생성
                     
@@ -44,7 +44,7 @@ public class FamilyMemberController {
 
     // 가족 그룹 조회
     @GetMapping
-    @Operation(summary = "가족 그룹 조회",
+    @Operation(summary = "가족 그룹 조회 API",
     description = """
             응답
             
@@ -68,7 +68,7 @@ public class FamilyMemberController {
 
     // 가족 그룹 상세 조회 (가계도)
     @GetMapping("/{groupId}/tree")
-    @Operation(summary = "가족 그룹 상세 조회 (가계도 조회)",
+    @Operation(summary = "가족 그룹 상세 조회 API - 가계도 조회",
             description = """
             요청
             - groupId: 가족 그룹 아이디
@@ -88,7 +88,7 @@ public class FamilyMemberController {
     }
 
     @PostMapping(value ="/{groupId}/members", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Operation(summary = "가족 구성원 생성",
+    @Operation(summary = "가족 구성원 생성 API",
             description = """
                     새 구성원 반영된 전체 구성원 보려면 groups/{groupId}/tree 에서 확인
                     
@@ -118,5 +118,26 @@ public class FamilyMemberController {
 
         return ApiResponse.onSuccess(SuccessStatus._OK,
                 familyMemberService.createFamilyMember(principalUser, groupId, name, relation, birthDate, image));
+    }
+
+    // 가족 구성원 상세 조회
+    @GetMapping("/{groupId}/members/{memberId}")
+    @Operation(summary = "가족 구성원 상세 조회 API",
+            description = """
+            요청
+            - groupId: 가족 그룹 아이디
+            - memberId: 가족 구성원 아이디
+            
+            응답
+            - "familyMemberName": 가족 멤버 이름
+            - "familyMemberImage": 가족 멤버 이미지
+            - "relation": 관계 (큰엄마, 큰아빠, ...)
+            - "birthDate": 생년월일
+            """)
+    public ApiResponse<?> getFamilyMemberDetail(@AuthenticationPrincipal User principalUser,
+                                                @PathVariable Long groupId,
+                                                @PathVariable Long memberId) {
+        return ApiResponse.onSuccess(SuccessStatus._OK,
+                familyMemberService.getFamilyMemberDetail(principalUser, groupId, memberId));
     }
 }
