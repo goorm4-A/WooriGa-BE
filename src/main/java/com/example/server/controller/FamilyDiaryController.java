@@ -44,8 +44,8 @@ public class FamilyDiaryController {
 
     @GetMapping("")
     @Operation(summary="특정 추억일기 조회")
-    public ApiResponse<FamilyDiaryResponseDto> getDiary(@RequestParam Long diaryId){
-        FamilyDiaryResponseDto result=familyDiaryService.getFamilyDiaryDto(diaryId);
+    public ApiResponse<FamilyDiaryResponseDto> getDiary(@RequestParam Long diaryId,@AuthenticationPrincipal User user){
+        FamilyDiaryResponseDto result=familyDiaryService.getFamilyDiaryDto(diaryId,user);
         return ApiResponse.onSuccess(SuccessStatus._OK,result);
     }
 
@@ -53,9 +53,9 @@ public class FamilyDiaryController {
     @Operation(summary="추억 목록 조회")
     //familyDiaryId:마지막으로 조회한 다이어리 id, familyId: 쿼리문의 where 절을 위해
     public ApiResponse<FamilyDiaryScrollResponse> getDiaryList(@Parameter(description="무한 스크롤") @PageableDefault(size=6) Pageable pageable,
-                                                               @RequestParam(value="familyId")Long familyId,
+                                                               @RequestParam(value="familyId")Long familyId,@AuthenticationPrincipal User user,
                                                                @Parameter(description = "조회한 마지막 diaryId") @RequestParam(value="familyDiaryId",required = false) Long familyDiaryId) {
-        FamilyDiaryScrollResponse result=familyDiaryService.getFamilyDiaryListDto(familyId,familyDiaryId,pageable);
+        FamilyDiaryScrollResponse result=familyDiaryService.getFamilyDiaryListDto(user,familyId,familyDiaryId,pageable);
         return ApiResponse.onSuccess(SuccessStatus._OK,result);
     }
 

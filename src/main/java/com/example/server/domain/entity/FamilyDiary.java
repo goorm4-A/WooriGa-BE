@@ -82,7 +82,7 @@ public class FamilyDiary {
         this.contentType = contentType;
     }
 
-    public static FamilyDiaryResponseDto toDto(FamilyDiary diary) {
+    public static FamilyDiaryResponseDto toDto(FamilyDiary diary,User user) {
         List<Long> participantIds = diary.getDiaryParticipants().stream()
                 .map(DiaryParticipant::getId)
                 .collect(Collectors.toList());
@@ -96,6 +96,8 @@ public class FamilyDiary {
 
 
         return new FamilyDiaryResponseDto(
+                user.getName(),
+                user.getImage(),
                 diary.getId(),
                 diary.getTitle(),
                 diary.getLocation(),

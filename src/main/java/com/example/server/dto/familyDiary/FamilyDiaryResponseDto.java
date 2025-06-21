@@ -17,6 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 public class FamilyDiaryResponseDto {
 
+    //작성자 이름
+    private String username;
+    //프로필 이미지
+    private String profile;
+
     private Long diaryId;
     private String title;
     private String location;

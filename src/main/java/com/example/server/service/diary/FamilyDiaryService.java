@@ -108,7 +108,7 @@ public class FamilyDiaryService {
 
         //이미지 연관관계 반영 후 다시 저장
         familyDiaryRepository.save(familyDiary);
-        return FamilyDiary.toDto(familyDiary);
+        return FamilyDiary.toDto(familyDiary,user);
 
     }
 
@@ -199,14 +199,14 @@ public class FamilyDiaryService {
 
 
     //특정 가족일기 조회
-    public FamilyDiaryResponseDto getFamilyDiaryDto(Long diaryId){
+    public FamilyDiaryResponseDto getFamilyDiaryDto(Long diaryId,User user){
         FamilyDiary diary=familyDiaryRepository.findById(diaryId)
                 .orElseThrow(()-> new CustomException(ErrorStatus.FAMILY_DIARY_NOT_FOUND));
-        return FamilyDiary.toDto(diary);
+        return FamilyDiary.toDto(diary,user);
     }
 
     //추억 목록 조회
-    public FamilyDiaryScrollResponse getFamilyDiaryListDto(Long familyId, Long lastDiaryId, Pageable pageable){
+    public FamilyDiaryScrollResponse getFamilyDiaryListDto(User user,Long familyId, Long lastDiaryId, Pageable pageable){
 
         // 커서 기반 페이징
         List<FamilyDiary> results=familyDiaryRepository.findByFamilyIdWithCursor(familyId,lastDiaryId,pageable);
