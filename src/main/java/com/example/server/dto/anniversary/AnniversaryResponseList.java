@@ -20,6 +20,8 @@ public class AnniversaryResponseList {
     private Long familyId;
     private String title;
     private String location;
+    private String description;
+    private String type;
     private LocalDate date;
 
     public static AnniversaryResponseList toDto(FamilyAnniversary anniversary){
@@ -28,6 +30,8 @@ public class AnniversaryResponseList {
                 .familyId(anniversary.getFamily().getId())
                 .title(anniversary.getTitle())
                 .location(anniversary.getLocation())
+                .description(anniversary.getDescription())
+                .type(anniversary.getAnniversaryType().toString())
                 .date(anniversary.getDate())
                 .build();
     }
@@ -39,6 +43,8 @@ public class AnniversaryResponseList {
                         .familyId(ani.getFamily().getId())
                         .title(ani.getTitle())
                         .location(ani.getLocation())
+                        .description(ani.getDescription())
+                        .type(ani.getAnniversaryType().toString())
                         .date(ani.getDate())
                         .build()
                 )
