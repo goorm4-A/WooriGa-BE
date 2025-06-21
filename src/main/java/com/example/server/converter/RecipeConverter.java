@@ -5,6 +5,7 @@ import com.example.server.domain.entity.CookingStep;
 import com.example.server.domain.entity.FamilyMember;
 import com.example.server.domain.entity.FamilyRecipe;
 import com.example.server.dto.familyRecipe.RecipeRequestDTO;
+import com.example.server.dto.familyRecipe.RecipeResponseDTO;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +36,17 @@ public class RecipeConverter {
                 .imageUrl(url)
                 .step(step)
                 .recipe(recipe)
+                .build();
+    }
+
+    public static RecipeResponseDTO.RecipeInfoDTO toRecipeInfoDTO(FamilyRecipe recipe) {
+        String coverImage = recipe.getCoverImages().isEmpty() ? null :
+                recipe.getCoverImages().get(0).getImageUrl();
+        return RecipeResponseDTO.RecipeInfoDTO.builder()
+                .id(recipe.getId())
+                .title(recipe.getTitle())
+                .cookingTime(recipe.getCookingTime())
+                .coverImage(coverImage)
                 .build();
     }
 }

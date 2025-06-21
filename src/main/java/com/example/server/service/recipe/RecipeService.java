@@ -3,6 +3,7 @@ package com.example.server.service.recipe;
 import com.example.server.converter.RecipeConverter;
 import com.example.server.domain.entity.*;
 import com.example.server.dto.familyRecipe.RecipeRequestDTO;
+import com.example.server.dto.familyRecipe.RecipeResponseDTO;
 import com.example.server.global.code.exception.handler.FamilyHandler;
 import com.example.server.global.code.exception.handler.FamilyMemberHandler;
 import com.example.server.global.code.exception.handler.ImageHandler;
@@ -13,6 +14,8 @@ import com.example.server.repository.recipe.FamilyRecipeRepository;
 import com.example.server.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,5 +79,40 @@ public class RecipeService {
                 step.addImage(RecipeConverter.toCookingImage(stepUrls.get(urlIdx++), step, familyRecipe));
             }
         }
+    }
+
+    @Transactional(readOnly = true)
+    public RecipeResponseDTO.RecipeListResponse getRecipeList(
+            Long familyId,
+            User user,
+            Long lastRecipeId,
+            Pageable pageable
+    ) {
+        Family family = familyRepository.findById(familyId)
+                .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
+        familyMemberRepository.findByUserIdAndFamily(user.getId(), family)
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+
+        Pageable pageRequest = PageRequest.of(0, pageable.getPageSize() + 1);
+
+        List<FamilyRecipe> recipes =
+                familyRecipeRepository.findByFamilyId(familyId, lastRecipeId, pageRequest);
+
+        boolean hasNext = recipes.size() > pageable.getPageSize();
+        List<FamilyRecipe> responseRecipes = hasNext ? recipes.subList(0, pageable.getPageSize()) : recipes;
+
+        List<RecipeResponseDTO.RecipeInfoDTO> dtoList = responseRecipes.stream()
+                .map(RecipeConverter::toRecipeInfoDTO)
+                .collect(Collectors.toList());
+
+        Long nextCursor = hasNext && !responseRecipes.isEmpty()
+                ? responseRecipes.get(responseRecipes.size() - 1).getId()
+                : null;
+
+        return RecipeResponseDTO.RecipeListResponse.builder()
+                .recipes(dtoList)
+                .hasNext(hasNext)
+                .nextCursor(nextCursor != null ? nextCursor.toString() : null)
+                .build();
     }
 }
