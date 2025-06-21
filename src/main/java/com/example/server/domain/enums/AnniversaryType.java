@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 public enum AnniversaryType {
     EVENTS("경조사"),
-    BIRTHDAY("생일"),
+    ANNIVERSARY("기념일"),
     PROMISE("모임/약속"),
     ETC("기타");
 
