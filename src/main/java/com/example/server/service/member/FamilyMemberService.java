@@ -9,6 +9,7 @@ import com.example.server.dto.member.FamilyGroupResponse;
 import com.example.server.dto.member.FamilyMemberResponse;
 import com.example.server.dto.member.FamilyResponse;
 import com.example.server.global.code.exception.CustomException;
+import com.example.server.global.code.exception.handler.FamilyMemberHandler;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.repository.FamilyMemberRepository;
 import com.example.server.repository.FamilyRepository;
@@ -97,11 +98,16 @@ public class FamilyMemberService {
 
     // 가족 그룹 상세 조회
     public FamilyGroupDetailResponse getFamilyGroupDetail(User principalUser, Long groupId) {
-        userRepository.findById(principalUser.getId())
+        User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
         Family family = familyRepository.findById(groupId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_NOT_FOUND));
+
+        // 자신의 가족 그룹이 맞는지 확인
+        familyMemberRepository.findByUserIdAndFamilyId(user.getId(), family.getId())
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+
 
         List<FamilyMember> familyMembers = family.getFamilyMembers();
 
@@ -113,11 +119,15 @@ public class FamilyMemberService {
                                                    String name, String relation,
                                                    LocalDate birthDate, MultipartFile image) {
 
-        userRepository.findById(principalUser.getId())
+        User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
         Family family = familyRepository.findById(groupId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_NOT_FOUND));
+
+        // 자신의 가족 그룹이 맞는지 확인
+        familyMemberRepository.findByUserIdAndFamilyId(user.getId(), family.getId())
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
 
         // 이미지 업로드
         String imageUrl = null;
