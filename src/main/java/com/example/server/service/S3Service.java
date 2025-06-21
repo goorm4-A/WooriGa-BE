@@ -111,6 +111,18 @@ public class S3Service {
         return getPublicUrl(fileName);
     }
 
+    // 다중 이미지 업로드
+    public List<String> uploadImages(List<MultipartFile> files, String directory) throws IOException {
+        List<String> imageUrls = new ArrayList<>();
+        if (files == null) {
+            return imageUrls;
+        }
+        for (MultipartFile file : files) {
+            imageUrls.add(uploadImage(file, directory));
+        }
+        return imageUrls;
+    }
+
     /**
      * S3에 이미지 업로드 하기
      */

@@ -30,10 +30,11 @@ public class RecipeConverter {
 
     }
 
-    public static CookingImage toCookingImage(String url, CookingStep step) {
+    public static CookingImage toCookingImage(String url, CookingStep step, FamilyRecipe recipe) {
         return new CookingImage().builder()
                 .imageUrl(url)
                 .step(step)
+                .recipe(recipe)
                 .build();
     }
 }

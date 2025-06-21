@@ -27,6 +27,7 @@ public class CookingStep {
     private FamilyRecipe recipe;
 
     @OneToMany(mappedBy = "step", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<CookingImage> images = new ArrayList<>();
 
     public void setRecipe(FamilyRecipe familyRecipe) {
@@ -36,6 +37,7 @@ public class CookingStep {
     public void addImage(CookingImage image) {
         images.add(image);
         image.setStep(this);
+        image.setRecipe(this.recipe);
     }
 }
 

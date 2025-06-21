@@ -3,9 +3,14 @@ package com.example.server.controller;
 import com.example.server.domain.entity.User;
 import com.example.server.dto.familyRecipe.RecipeRequestDTO;
 import com.example.server.global.ApiResponse;
+import com.example.server.global.SwaggerBody;
 import com.example.server.global.status.SuccessStatus;
 import com.example.server.service.recipe.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -24,6 +29,9 @@ public class FamilyRecipeRestController {
 
     private final RecipeService recipeService;
 
+    @SwaggerBody(content = @Content(
+            encoding = @Encoding(name = "recipe", contentType = MediaType.APPLICATION_JSON_VALUE)
+    ))
     @PostMapping(value = "",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "가족 요리법 생성")
     public ApiResponse<?> createRecipe(

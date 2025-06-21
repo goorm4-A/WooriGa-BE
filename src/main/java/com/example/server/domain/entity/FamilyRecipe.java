@@ -31,6 +31,7 @@ public class FamilyRecipe {
     @ElementCollection
     @CollectionTable(name = "family_recipe_ingredient", joinColumns = @JoinColumn(name = "recipe_id"))
     @Column(name = "ingredient")
+    @Builder.Default
     private List<String> ingredients = new ArrayList<>();
 
 /*    @ManyToOne
@@ -42,9 +43,11 @@ public class FamilyRecipe {
     private FamilyMember familyMember;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<CookingStep> steps = new ArrayList<>();
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
     private List<CookingImage> coverImages = new ArrayList<>();
 
     public CookingStep addStep(int stepIndex, String description) {
@@ -57,6 +60,7 @@ public class FamilyRecipe {
     }
 
     public void addCoverImage(CookingImage cookingImage) {
+        cookingImage.setRecipe(this);
         coverImages.add(cookingImage);
     }
 }

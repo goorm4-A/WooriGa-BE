@@ -30,4 +30,8 @@ public class CookingImage {
     public void setStep(CookingStep cookingStep) {
         this.step = cookingStep;
     }
+
+    public void setRecipe(FamilyRecipe recipe) {
+        this.recipe = recipe;
+    }
 }
