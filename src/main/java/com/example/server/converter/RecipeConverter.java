@@ -1,11 +1,9 @@
 package com.example.server.converter;
 
-import com.example.server.domain.entity.CookingImage;
-import com.example.server.domain.entity.CookingStep;
-import com.example.server.domain.entity.FamilyMember;
-import com.example.server.domain.entity.FamilyRecipe;
+import com.example.server.domain.entity.*;
 import com.example.server.dto.familyRecipe.RecipeRequestDTO;
 import com.example.server.dto.familyRecipe.RecipeResponseDTO;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -81,6 +79,25 @@ public class RecipeConverter {
                 .coverImages(covers)
                 .ingredients(recipe.getIngredients())
                 .steps(steps)
+                .build();
+    }
+
+    public static Comment toComment(FamilyMember member, FamilyRecipe familyRecipe, @NotNull String name, RecipeRequestDTO.addRecipeCommentRequest request) {
+        return Comment.builder()
+                .content(request.getContent())
+                .username(name)
+                .familyMember(member)
+                .recipe(familyRecipe)
+                .build();
+    }
+
+    public static RecipeResponseDTO.recipeCommentDto toRecipeCommentDto(Comment comment) {
+        return RecipeResponseDTO.recipeCommentDto.builder()
+                .comment(comment.getContent())
+                .author(comment.getUsername())
+                .commentDate(comment.getCreatedAt())
+                .recipeId(comment.getRecipe().getId())
+                .familyMemberId(comment.getFamilyMember().getId())
                 .build();
     }
 }

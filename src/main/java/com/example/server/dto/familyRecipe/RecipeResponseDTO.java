@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class RecipeResponseDTO {
@@ -50,5 +51,16 @@ public class RecipeResponseDTO {
         private List<String> coverImages;
         private List<String> ingredients;
         private List<RecipeStepDTO> steps;
+    }
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class recipeCommentDto {
+        private String comment;
+        private LocalDateTime commentDate;
+        private String author;
+        private Long familyMemberId;
+        private Long recipeId;
     }
 }

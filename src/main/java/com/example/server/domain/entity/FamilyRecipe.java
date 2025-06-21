@@ -50,6 +50,11 @@ public class FamilyRecipe {
     @Builder.Default
     private List<CookingImage> coverImages = new ArrayList<>();
 
+
+    @OneToMany(mappedBy="recipe",fetch=FetchType.EAGER,cascade=CascadeType.REMOVE)
+    @OrderBy("id asc") //댓글 정렬
+    private List<Comment> comments;
+
     public CookingStep addStep(int stepIndex, String description) {
         CookingStep step = new CookingStep();
         step.setStepIndex(stepIndex);

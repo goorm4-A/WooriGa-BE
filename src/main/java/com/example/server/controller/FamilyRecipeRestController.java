@@ -6,6 +6,7 @@ import com.example.server.dto.familyRecipe.RecipeResponseDTO;
 import com.example.server.global.ApiResponse;
 import com.example.server.global.SwaggerBody;
 import com.example.server.global.status.SuccessStatus;
+import com.example.server.service.CommentService;
 import com.example.server.service.recipe.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -27,7 +28,7 @@ import java.util.List;
 public class FamilyRecipeRestController {
 
     private final RecipeService recipeService;
-
+    private final CommentService commentService;
     @SwaggerBody(content = @Content(
             encoding = @Encoding(name = "recipe", contentType = MediaType.APPLICATION_JSON_VALUE)
     ))
@@ -76,5 +77,17 @@ public class FamilyRecipeRestController {
     ) {
         recipeService.deleteRecipe(familyId, recipeId, user);
         return ApiResponse.onSuccess(SuccessStatus._OK);
+    }
+
+    @PostMapping("/{recipeId}/comments")
+    @Operation(summary = "가족 요리법 댓글 등록")
+    public ApiResponse<RecipeResponseDTO.recipeCommentDto> addRecipeComment(
+            @PathVariable Long familyId,
+            @PathVariable Long recipeId,
+            @RequestBody RecipeRequestDTO.addRecipeCommentRequest request,
+            @AuthenticationPrincipal User user
+    ) {
+        RecipeResponseDTO.recipeCommentDto result = commentService.save(familyId, recipeId, request, user);
+        return ApiResponse.onSuccess(SuccessStatus._OK, result);
     }
 }

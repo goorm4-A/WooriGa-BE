@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
-public class Comment {
+public class Comment extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class Comment {
     @Column(columnDefinition = "TEXT",nullable=false)
     private String content;
 
-    private LocalDateTime createdAt; //작성시간
+//    private LocalDateTime createdAt; //작성시간
 
     private String username; //작성자 이름 //✏️맞는지 확인
 
@@ -35,6 +35,10 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name="family_diary_id")
     private FamilyDiary familyDiary;
+
+    @ManyToOne
+    @JoinColumn(name="family_recipe_id")
+    private FamilyRecipe recipe;
     
     //부모 댓글
     @ManyToOne(fetch = FetchType.LAZY)
