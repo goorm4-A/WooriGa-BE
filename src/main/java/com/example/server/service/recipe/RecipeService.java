@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,28 +59,22 @@ public class RecipeService {
             }
 
         }
-        // 각 Step에 이미지 업로드 & CookingImage 생성
-        for (RecipeRequestDTO.cookingStepDTO stepDTO : requestDTO.getSteps()) {
-            CookingStep step = familyRecipe.addStep(stepDTO.getImageIndexes(), stepDTO.getDescription());
-            // step별 이미지 필터링: stepImages 리스트에서 stepDto.order 기준 분리
-            List<MultipartFile> imgFotStep = filterByOrder(stepImages, stepDTO.getImageIndexes());
-            if (!imgFotStep.isEmpty()) {
-                try {
-                    log.info(imgFotStep.get(0).getOriginalFilename());
-                    List<String> urls = s3Service.uploadImages(imgFotStep, "family-recipe/step-image");
-                    urls.forEach(url -> step.addImage(
-                            RecipeConverter.toCookingImage(url, step, familyRecipe)));
-                } catch (IOException e) {
-                    throw new ImageHandler(ErrorStatus.IMAGE_UPLOAD_ERROR);
-                }
+        // Step 이미지 순서대로 업로드 후 각 스텝에 할당
+        List<String> stepUrls = new ArrayList<>();
+        if (stepImages != null) {
+            try {
+                stepUrls = s3Service.uploadImages(stepImages, "family-recipe/step-image");
+            } catch (IOException e) {
+                throw new ImageHandler(ErrorStatus.IMAGE_UPLOAD_ERROR);
             }
         }
-    }
 
-    private List<MultipartFile> filterByOrder(List<MultipartFile> all, int order) {
-        // 파일명 규칙 등으로 order별 필터링 로직 구현
-        return all.stream()
-                .filter(f -> f.getOriginalFilename().startsWith(order + "_"))
-                .collect(Collectors.toList());
+        int urlIdx = 0;
+        for (RecipeRequestDTO.cookingStepDTO stepDTO : requestDTO.getSteps()) {
+            CookingStep step = familyRecipe.addStep(stepDTO.getImageIndexes(), stepDTO.getDescription());
+            if (urlIdx < stepUrls.size()) {
+                step.addImage(RecipeConverter.toCookingImage(stepUrls.get(urlIdx++), step, familyRecipe));
+            }
+        }
     }
 }
