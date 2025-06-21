@@ -66,4 +66,15 @@ public class FamilyRecipeRestController {
         RecipeResponseDTO.RecipeDetailDTO result = recipeService.getRecipeDetail(familyId, recipeId, user);
         return ApiResponse.onSuccess(SuccessStatus._OK, result);
     }
+
+    @DeleteMapping("/{recipeId}")
+    @Operation(summary = "가족 요리법 삭제")
+    public ApiResponse<?> deleteRecipe(
+            @PathVariable Long familyId,
+            @PathVariable Long recipeId,
+            @AuthenticationPrincipal User user
+    ) {
+        recipeService.deleteRecipe(familyId, recipeId, user);
+        return ApiResponse.onSuccess(SuccessStatus._OK);
+    }
 }

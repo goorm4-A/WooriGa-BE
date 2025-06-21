@@ -133,4 +133,36 @@ public class RecipeService {
 
         return RecipeConverter.toRecipeDetailDTO(recipe);
     }
+
+    @Transactional
+    public void deleteRecipe(Long familyId, Long recipeId, User user) {
+        Family family = familyRepository.findById(familyId)
+                .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
+
+        familyMemberRepository.findByUserIdAndFamily(user.getId(), family)
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+
+        FamilyRecipe recipe = familyRecipeRepository.findById(recipeId)
+                .orElseThrow(() -> new FamilyRecipeHandler(ErrorStatus.FAMILY_RECIPE_NOT_FOUND));
+
+        if (!recipe.getFamilyMember().getFamily().getId().equals(familyId)) {
+            throw new FamilyRecipeHandler(ErrorStatus.FAMILY_RECIPE_NOT_FOUND);
+        }
+
+        List<String> imageUrls = new ArrayList<>();
+        recipe.getCoverImages().forEach(img -> imageUrls.add(img.getImageUrl()));
+        recipe.getSteps().forEach(step ->
+                step.getImages().forEach(img -> imageUrls.add(img.getImageUrl())));
+
+        for (String url : imageUrls) {
+            if (url == null) continue;
+            int idx = url.indexOf(".com/");
+            if (idx != -1) {
+                String key = url.substring(idx + 5);
+                s3Service.deleteFile(key);
+            }
+        }
+
+        familyRecipeRepository.delete(recipe);
+    }
 }
