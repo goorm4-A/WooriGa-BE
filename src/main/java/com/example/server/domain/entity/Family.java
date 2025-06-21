@@ -11,7 +11,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Family {
 
     @Id
@@ -24,12 +23,23 @@ public class Family {
     private String motto;
     private String mood;
 
-    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FamilyMember> familyMembers = new ArrayList<>();
 
-    @OneToMany(mappedBy="family",cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="family",cascade=CascadeType.ALL, orphanRemoval = true)
     private List<FamilyDiary> familyDiaries = new ArrayList<>();
 
-    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "family", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FamilyMotto> familyMottos = new ArrayList<>();
+
+    public Family(String name, Integer inviteCode, String image) {
+        this.name = name;
+        this.inviteCode = inviteCode;
+        this.image = image;
+    }
+
+    public void updateFamilyGroup(String name, String image) {
+        this.name = name;
+        this.image = image;
+    }
 }

@@ -20,7 +20,11 @@ public enum SuccessStatus implements BaseCode {
 
     // 문화 API
     CREATE_MOTTO_SUCCESSFUL(HttpStatus.OK, "CULTURE_2001", "좌우명을 생성하였습니다."),
-    CREATE_RULE_SUCCESSFUL(HttpStatus.OK, "CULTURE_2002", "약속/규칙을 생성하였습니다.");
+    CREATE_RULE_SUCCESSFUL(HttpStatus.OK, "CULTURE_2002", "약속/규칙을 생성하였습니다."),
+
+    // 가족 관련 API
+    FAMILY_GROUP_UPDATE_SUCCESSFUL(HttpStatus.OK, "FAMILY_2001", "가족 그룹 정보 수정 성공입니다."),
+    FAMILY_MEMBER_UPDATE_SUCCESSFUL(HttpStatus.OK, "FAMILY_2002", "가족 구성원 정보 수정 성공입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
