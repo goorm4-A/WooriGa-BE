@@ -47,12 +47,17 @@ public class FamilyRecipe {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CookingImage> coverImages = new ArrayList<>();
 
-    public void addCoverImage(CookingImage coverImage) {
-
+    public CookingStep addStep(int stepIndex, String description) {
+        CookingStep step = new CookingStep();
+        step.setStepIndex(stepIndex);
+        step.setDescription(description);
+        step.setRecipe(this);       // 양방향 설정
+        this.steps.add(step);       // 리스트에 추가
+        return step;
     }
-    public void addStep(CookingStep step) {
-        steps.add(step);
-        step.setRecipe(this);
+
+    public void addCoverImage(CookingImage cookingImage) {
+        coverImages.add(cookingImage);
     }
 }
 

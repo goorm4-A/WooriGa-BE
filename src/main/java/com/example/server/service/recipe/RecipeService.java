@@ -16,9 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -36,37 +36,40 @@ public class RecipeService {
             User user,
             RecipeRequestDTO.createRecipeDTO requestDTO,
             List<MultipartFile> coverImages,
-            Map<Integer, List<MultipartFile>> stepImages
-    ) throws IOException {
+            List<MultipartFile> stepImages
+    ) {
         Family family = familyRepository.findById(familyId)
                 .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
-        // TODO : 유저가 해당 가족 구성원으로 포함되어 있는 지 확인
         FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(user.getId(), family)
                 .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
 
         FamilyRecipe familyRecipe = RecipeConverter.toFamilyRecipe(requestDTO, familyMember);
         familyRecipeRepository.save(familyRecipe);
 
-        // 1) 커버 이미지 업로드
-        List<String> coverUrls = s3Service.upload(coverImages);
-        for (String url : coverUrls) {
-            familyRecipe.addCoverImage(new CookingImage(url, null)); // step=null 이거나 별도 커버용 엔티티
-        }
+        //커버 이미지 업로드
+        if (coverImages != null) {
+            List<String> urls = s3Service.upload(coverImages);
+            urls.forEach(url ->
+                    familyRecipe.addCoverImage(RecipeConverter.toCookingImage(url, null))
+            );
 
+        }
         // 각 Step에 이미지 업로드 & CookingImage 생성
-        List<CookingStep> steps = RecipeConverter.toCookingSteps(requestDTO.getSteps());
-        for (CookingStep step : steps) {
-            step.setRecipe(familyRecipe);
-            List<MultipartFile> files = stepImages.get(step.getStepIndex());
-            if (files != null) {
-                List<String> urls = s3Service.upload(files);
-                for (String url : urls) {
-                    CookingImage img = RecipeConverter.toCookingImage(url, step);
-                    step.addImage(img);
-                }
+        for (RecipeRequestDTO.cookingStepDTO stepDTO : requestDTO.getSteps()) {
+            CookingStep step = familyRecipe.addStep(stepDTO.getImageIndexes(), stepDTO.getDescription());
+            // step별 이미지 필터링: stepImages 리스트에서 stepDto.order 기준 분리
+            List<MultipartFile> imgFotStep = filterByOrder(stepImages, stepDTO.getImageIndexes());
+            if (!imgFotStep.isEmpty()) {
+                List<String> urls = s3Service.upload(imgFotStep);
+                urls.forEach(url -> step.addImage(RecipeConverter.toCookingImage(url, step)));
             }
-            familyRecipe.addStep(step);
         }
+    }
 
+    private List<MultipartFile> filterByOrder(List<MultipartFile> all, int order) {
+        // 파일명 규칙 등으로 order별 필터링 로직 구현
+        return all.stream()
+                .filter(f -> f.getOriginalFilename().startsWith(order + "_"))
+                .collect(Collectors.toList());
     }
 }

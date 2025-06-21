@@ -18,6 +18,6 @@ public class RecipeRequestDTO {
     @Getter
     public static class cookingStepDTO {
         private String description;
-        private int stepIndex;
+        private Integer imageIndexes;
     }
 }

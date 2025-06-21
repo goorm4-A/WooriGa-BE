@@ -24,7 +24,7 @@ public class RecipeConverter {
         return stepDTOList.stream()
                 .map(dto -> CookingStep.builder()
                         .description(dto.getDescription())
-                        .stepIndex(dto.getStepIndex())
+                        .stepIndex(dto.getImageIndexes())
                         .build())
                 .collect(Collectors.toList());
 

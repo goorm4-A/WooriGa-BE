@@ -43,8 +43,6 @@ public class QUser extends EntityPathBase<User> {
 
     public final ListPath<FamilyMember, QFamilyMember> familyMembers = this.<FamilyMember, QFamilyMember>createList("familyMembers", FamilyMember.class, QFamilyMember.class, PathInits.DIRECT2);
 
-    public final ListPath<FamilyRecipe, QFamilyRecipe> familyRecipes = this.<FamilyRecipe, QFamilyRecipe>createList("familyRecipes", FamilyRecipe.class, QFamilyRecipe.class, PathInits.DIRECT2);
-
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final StringPath image = createString("image");

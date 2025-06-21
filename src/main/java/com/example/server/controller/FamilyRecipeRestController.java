@@ -3,6 +3,7 @@ package com.example.server.controller;
 import com.example.server.domain.entity.User;
 import com.example.server.dto.familyRecipe.RecipeRequestDTO;
 import com.example.server.global.ApiResponse;
+import com.example.server.global.status.SuccessStatus;
 import com.example.server.service.recipe.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -28,26 +29,13 @@ public class FamilyRecipeRestController {
     public ApiResponse<?> createRecipe(
             @PathVariable Long familyId,
             @RequestPart("recipe") RecipeRequestDTO.createRecipeDTO recipeDTO,
-            @RequestPart("coverImages") List<MultipartFile> coverImages,
-            @RequestPart Map<String, MultipartFile[]> stepImageParts,
+            @RequestPart(value = "coverImages", required = false) List<MultipartFile> coverImages,
+            @RequestPart(value = "stepImages", required = false) List<MultipartFile> stepImages,
             @AuthenticationPrincipal User user
     ) {
-        Map<Integer, List<MultipartFile>> stepImages = extractStepImages(stepImageParts);
         recipeService.createRecipe(familyId,user, recipeDTO, coverImages, stepImages);
-        return null;
+        return ApiResponse.onSuccess(SuccessStatus.CREATE_MOTTO_SUCCESSFUL);
     }
 
-    private Map<Integer, List<MultipartFile>> extractStepImages(Map<String, MultipartFile[]> parts) {
-        Map<Integer, List<MultipartFile>> result = new HashMap<>();
-
-        for (Map.Entry<String, MultipartFile[]> entry : parts.entrySet()) {
-            String key = entry.getKey(); // e.g., "stepImages_0"
-            if (key.startsWith("stepImages_")) {
-                int index = Integer.parseInt(key.replace("stepImages_", ""));
-                result.put(index, Arrays.asList(entry.getValue()));
-            }
-        }
-        return result;
-    }
 
 }

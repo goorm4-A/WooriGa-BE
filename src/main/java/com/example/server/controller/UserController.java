@@ -6,6 +6,7 @@ import com.example.server.global.ApiResponse;
 import com.example.server.global.status.SuccessStatus;
 import com.example.server.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Tag(name = "User", description = "유저 관련 기능")
 public class UserController {
 
     private final UserService userService;
@@ -55,7 +57,7 @@ public class UserController {
 
     // 사용자 상태 변결
     @PatchMapping("/me/status")
-    @Operation(summary = "사용자 status 변경",
+    @Operation(summary = "유저 status 변경 및 30일 후 삭제 API",
             description = """
                     응답 형식
                     - 변경된 status 상태: ACTIVE 또는 INACTIVE(30일 후 유저 삭제)

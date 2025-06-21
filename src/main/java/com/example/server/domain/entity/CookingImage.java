@@ -20,10 +20,14 @@ public class CookingImage {
     private String imageUrl;
 
     @ManyToOne
-    @JoinColumn(name = "step_id")
+    @JoinColumn(name = "family_recipe_id")
+    private FamilyRecipe recipe;
+
+    @ManyToOne
+    @JoinColumn(name = "cooking_step_id")
     private CookingStep step;
 
-    public void setStep(CookingStep step) {
-        this.step = step;
+    public void setStep(CookingStep cookingStep) {
+        this.step = cookingStep;
     }
 }

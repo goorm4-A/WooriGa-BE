@@ -36,6 +36,14 @@ public class QFamilyMember extends EntityPathBase<FamilyMember> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath Image = createString("Image");
+
+    public final BooleanPath isUserAdded = createBoolean("isUserAdded");
+
+    public final DatePath<java.time.LocalDate> memberBirthDate = createDate("memberBirthDate", java.time.LocalDate.class);
+
+    public final StringPath memberName = createString("memberName");
+
     public final StringPath relation = createString("relation");
 
     public final QUser user;
