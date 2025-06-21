@@ -40,10 +40,15 @@ public class RecipeConverter {
     }
 
     public static RecipeResponseDTO.RecipeInfoDTO toRecipeInfoDTO(FamilyRecipe recipe) {
+        FamilyMember familyMember = recipe.getFamilyMember();
+        String name = familyMember.getUser() != null
+                ? familyMember.getUser().getName()
+                : familyMember.getMemberName();
         String coverImage = recipe.getCoverImages().isEmpty() ? null :
                 recipe.getCoverImages().get(0).getImageUrl();
         return RecipeResponseDTO.RecipeInfoDTO.builder()
                 .id(recipe.getId())
+                .userName(name)
                 .title(recipe.getTitle())
                 .cookingTime(recipe.getCookingTime())
                 .coverImage(coverImage)
