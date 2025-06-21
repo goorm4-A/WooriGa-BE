@@ -55,4 +55,15 @@ public class FamilyRecipeRestController {
         RecipeResponseDTO.RecipeListResponse result = recipeService.getRecipeList(familyId, user, lastRecipeId, pageable);
         return ApiResponse.onSuccess(SuccessStatus._OK, result);
     }
+
+    @GetMapping("/{recipeId}")
+    @Operation(summary = "가족 요리법 상세 조회")
+    public ApiResponse<RecipeResponseDTO.RecipeDetailDTO> getRecipe(
+            @PathVariable Long familyId,
+            @PathVariable Long recipeId,
+            @AuthenticationPrincipal User user
+    ) {
+        RecipeResponseDTO.RecipeDetailDTO result = recipeService.getRecipeDetail(familyId, recipeId, user);
+        return ApiResponse.onSuccess(SuccessStatus._OK, result);
+    }
 }

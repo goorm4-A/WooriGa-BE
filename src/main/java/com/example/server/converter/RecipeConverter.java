@@ -54,4 +54,33 @@ public class RecipeConverter {
                 .coverImage(coverImage)
                 .build();
     }
+
+    public static RecipeResponseDTO.RecipeDetailDTO toRecipeDetailDTO(FamilyRecipe recipe) {
+        FamilyMember familyMember = recipe.getFamilyMember();
+        String name = familyMember.getUser() != null
+                ? familyMember.getUser().getName()
+                : familyMember.getMemberName();
+
+        List<String> covers = recipe.getCoverImages().stream()
+                .filter(coverImage -> coverImage.getStep() == null)
+                .map(CookingImage::getImageUrl)
+                .collect(Collectors.toList());
+
+        List<RecipeResponseDTO.RecipeStepDTO> steps = recipe.getSteps().stream()
+                .map(step -> RecipeResponseDTO.RecipeStepDTO.builder()
+                        .description(step.getDescription())
+                        .imageUrl(step.getImages().isEmpty() ? null : step.getImages().get(0).getImageUrl())
+                        .build())
+                .collect(Collectors.toList());
+
+        return RecipeResponseDTO.RecipeDetailDTO.builder()
+                .userName(name)
+                .title(recipe.getTitle())
+                .description(recipe.getDescription())
+                .cookingTime(recipe.getCookingTime())
+                .coverImages(covers)
+                .ingredients(recipe.getIngredients())
+                .steps(steps)
+                .build();
+    }
 }

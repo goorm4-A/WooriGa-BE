@@ -28,4 +28,27 @@ public class RecipeResponseDTO {
         private boolean hasNext;
         private String nextCursor;
     }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class RecipeStepDTO {
+        private String description;
+        private String imageUrl;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class RecipeDetailDTO {
+        private String userName;
+        private String title;
+        private String description;
+        private int cookingTime;
+        private List<String> coverImages;
+        private List<String> ingredients;
+        private List<RecipeStepDTO> steps;
+    }
 }

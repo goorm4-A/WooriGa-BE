@@ -6,6 +6,7 @@ import com.example.server.dto.familyRecipe.RecipeRequestDTO;
 import com.example.server.dto.familyRecipe.RecipeResponseDTO;
 import com.example.server.global.code.exception.handler.FamilyHandler;
 import com.example.server.global.code.exception.handler.FamilyMemberHandler;
+import com.example.server.global.code.exception.handler.FamilyRecipeHandler;
 import com.example.server.global.code.exception.handler.ImageHandler;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.repository.FamilyMemberRepository;
@@ -114,5 +115,22 @@ public class RecipeService {
                 .hasNext(hasNext)
                 .nextCursor(nextCursor != null ? nextCursor.toString() : null)
                 .build();
+    }
+
+    @Transactional(readOnly = true)
+    public RecipeResponseDTO.RecipeDetailDTO getRecipeDetail(
+            Long familyId,
+            Long recipeId,
+            User user
+    ) {
+        Family family = familyRepository.findById(familyId)
+                .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
+        familyMemberRepository.findByUserIdAndFamily(user.getId(), family)
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+
+        FamilyRecipe recipe = familyRecipeRepository.findById(recipeId)
+                .orElseThrow(() -> new FamilyRecipeHandler(ErrorStatus.FAMILY_RECIPE_NOT_FOUND));
+
+        return RecipeConverter.toRecipeDetailDTO(recipe);
     }
 }
