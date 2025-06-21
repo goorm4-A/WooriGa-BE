@@ -72,7 +72,7 @@ public class AnniversaryService {
     }
 
 
-    /// 가족 기념일 캘린더에서 보기 ///무한 스크롤 도입? ///d-day에 가까운 기념일부터 정렬
+    /// 가족 기념일 캘린더에서 보기 ///무한 스크롤 도입X
     public List<AnniversaryResponseList> getMonthSchedule(User user,int year,int month){
 
         List<FamilyAnniversary> anniversaries=user.getFamilyAnniversaries();
@@ -86,6 +86,11 @@ public class AnniversaryService {
         return filtered;
     }
 
+    /// 이번 달 기념일 한눈에 보기 ///D-DAY ///무한 스크롤 도입 O
+//    public AnniversaryScrollResponse getAnniversaryDday(User user,Long lastAnniversaryId,Integer size){
+//
+//    }
+
 
     /// 가족 기념일 상세 보기
     public AnniversaryResponse getAnniversaryDetail(Long anniversaryId){
@@ -95,7 +100,7 @@ public class AnniversaryService {
         return AnniversaryResponse.toDto(anniversary);
     }
 
-    ///기념일 타입으로 검색
+    /// 가족 기념일 전체 보기
     public AnniversaryScrollResponse getAllAnniversary(User user,Long lastAnniversaryId,Pageable pageable) {
         Long userId=user.getId();
 
@@ -111,7 +116,7 @@ public class AnniversaryService {
         return new AnniversaryScrollResponse(dtoList,hasNext);
     }
 
-    /// 가족 기념일 전체 보기
+     ///기념일 타입으로 검색
     public AnniversaryScrollResponse searchAnniversary(User user, String typeName, Long lastAnniversaryId, Pageable pageable) {
         Long userId=user.getId();
         AnniversaryType type = AnniversaryType.fromDisplayName(typeName);

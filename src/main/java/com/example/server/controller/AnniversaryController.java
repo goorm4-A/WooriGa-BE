@@ -34,7 +34,8 @@ public class AnniversaryController {
     }
 
     @GetMapping("/calendar")
-    @Operation(summary="이번 달 기념일 한 눈에 보기")
+    @Operation(summary="기념일 캘린더")
+    //무한스크롤 X
     public ApiResponse<List<AnniversaryResponseList>> getAnniversaryList(
             @AuthenticationPrincipal User user,
             @RequestParam int year,
@@ -78,6 +79,18 @@ public class AnniversaryController {
         return ApiResponse.onSuccess(SuccessStatus._OK,results);
 
     }
+
+//    @GetMapping("/this-month/list")
+//    @Operation(summary="이번 달 기념일 한 눈에 보기(D-DAY 함께 표시)")
+//    //무한 스크롤 존재
+//    public ApiResponse<AnniversaryResponseList> getThisMonthAnniversaryList(
+//            @AuthenticationPrincipal User user,
+//            @RequestParam(required=false)  Long lastAnniversaryId,
+//            @PageableDefault(size=6) Pageable pageable){
+//
+//        AnniversaryScrollResponse result=anniversaryService.getAnniversaryDday(user,lastAnniversaryId,pageable);
+//    }
+
 
 
 
