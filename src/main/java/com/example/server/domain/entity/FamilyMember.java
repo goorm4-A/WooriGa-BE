@@ -17,6 +17,7 @@ public class FamilyMember {
     private Long id;
 
     private String relation;
+    private String Image;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

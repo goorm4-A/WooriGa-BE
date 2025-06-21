@@ -5,6 +5,7 @@ import com.example.server.domain.entity.Family;
 import com.example.server.domain.entity.FamilyMember;
 import com.example.server.domain.entity.User;
 import com.example.server.dto.member.FamilyGroupResponse;
+import com.example.server.dto.member.FamilyResponse;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.repository.FamilyMemberRepository;
@@ -31,7 +32,7 @@ public class FamilyMemberService {
     private final S3Service s3Service;
 
     // 가족 그룹 생성
-    public FamilyGroupResponse createFamilyGroup(User principalUser, String name, MultipartFile image) {
+    public FamilyResponse createFamilyGroup(User principalUser, String name, MultipartFile image) {
         User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
@@ -75,4 +76,29 @@ public class FamilyMemberService {
         } while (familyRepository.existsByInviteCode(code));
         return code;
     }
+
+    // 가족 그룹 조회
+    public List<FamilyGroupResponse> getFamilyGroup(User principalUser) {
+        User user = userRepository.findById(principalUser.getId())
+                .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
+
+        List<FamilyMember> familyMembers = familyMemberRepository.findAllByUser(user);
+
+        List<Family> families = familyMembers.stream()
+                .map(FamilyMember::getFamily)
+                .distinct() // 중복 제거
+                .toList();
+
+        return FamilyConverter.toFamilyGroupListResponse(families);
+    }
+
+    // 가족 그룹 상세 조회
+//    public FamilyGroupListResponse getFamilyGroupDetail(User principalUser, Long groupId) {
+//        User user = userRepository.findById(principalUser.getId())
+//                .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
+//
+//        Family family = familyRepository.findById(groupId)
+//                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_NOT_FOUND));
+//        return null;
+//    }
 }
