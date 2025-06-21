@@ -60,6 +60,16 @@ public class S3Service {
         return imgUrlList;
     }
 
+    //
+    public String upload(MultipartFile file, String directory) throws IOException {
+        String fileName = directory + "/" + UUID.randomUUID();
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+
+        s3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
+        return s3Client.getUrl(bucket, fileName).toString();
+    }
+
     //이미지 파일명 중복 방지
     private String createFileName(String fileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));
@@ -99,6 +109,27 @@ public class S3Service {
         s3Client.putObject(putObjectRequest);
 
         return getPublicUrl(fileName);
+    }
+
+    // 다중 이미지 업로드 - 배열 순서대로 0,1,2.. 이름 부여
+    public List<String> uploadImages(List<MultipartFile> files, String directory) throws IOException {
+        List<String> imageUrls = new ArrayList<>();
+        if (files == null) {
+            return imageUrls;
+        }
+        for (int i = 0; i < files.size(); i++) {
+            MultipartFile file = files.get(i);
+            String fileName = directory + "/" + i + getFileExtension(file.getOriginalFilename());
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+
+            PutObjectRequest request = new PutObjectRequest(bucket, fileName, file.getInputStream(), metadata);
+            s3Client.putObject(request);
+            imageUrls.add(getPublicUrl(fileName));
+        }
+        return imageUrls;
     }
 
     /**

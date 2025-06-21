@@ -51,6 +51,21 @@ public class CommentQueryRepositoryImpl implements CommentQueryRepository {
         return results;
     }
 
+    @Override
+    public List<Comment> findByRecipeIdWithCursor(Long recipeId, Long lastCommentId, Pageable pageable) {
+        QComment comment = QComment.comment;
+        List<Comment> results = queryFactory
+                .selectFrom(comment)
+                .where(
+                        comment.recipe.id.eq(recipeId),
+                        gtCommentId(lastCommentId, comment)
+                )
+                .orderBy(comment.id.asc())
+                .limit(pageable.getPageSize() + 1)
+                .fetch();
+        return results;
+    }
+
     // 커서 기준으로 이후 댓글만 조회 (오래된 댓글 순으로 보기 위함)
     private BooleanExpression gtCommentId(Long lastCommentId,QComment comment) {
         return lastCommentId!=null?comment.id.gt(lastCommentId):null;

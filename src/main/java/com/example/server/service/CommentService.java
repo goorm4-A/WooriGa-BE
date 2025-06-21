@@ -1,17 +1,24 @@
 package com.example.server.service;
 
-import com.example.server.domain.entity.Comment;
-import com.example.server.domain.entity.FamilyDiary;
-import com.example.server.domain.entity.FamilyMember;
-import com.example.server.domain.entity.User;
+import com.example.server.converter.RecipeConverter;
+import com.example.server.domain.entity.*;
 import com.example.server.dto.AddCommentRequest;
 import com.example.server.dto.familyDiary.CommentDto;
 import com.example.server.dto.familyDiary.CommentResponse;
+import com.example.server.dto.familyRecipe.RecipeCommentResponse;
+import com.example.server.dto.familyRecipe.RecipeRequestDTO;
+import com.example.server.dto.familyRecipe.RecipeResponseDTO;
 import com.example.server.global.code.exception.CustomException;
+import com.example.server.global.code.exception.handler.FamilyHandler;
+import com.example.server.global.code.exception.handler.FamilyMemberHandler;
+import com.example.server.global.code.exception.handler.FamilyRecipeHandler;
 import com.example.server.global.status.ErrorStatus;
+import com.example.server.repository.FamilyRepository;
 import com.example.server.repository.comment.CommentRepository;
 import com.example.server.repository.FamilyMemberRepository;
 import com.example.server.repository.diary.FamilyDiaryRepository;
+import com.example.server.repository.recipe.FamilyRecipeRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +32,8 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final FamilyMemberRepository familyMemberRepository;
     private final FamilyDiaryRepository familyDiaryRepository;
+    private final FamilyRepository familyRepository;
+    private final FamilyRecipeRepository familyRecipeRepository;
 
     //댓글 추가 메서드
     public CommentDto save(AddCommentRequest request, Long diaryId, User user) {
@@ -49,6 +58,27 @@ public class CommentService {
                 .familyMemberId(member.getId())
                 .familyDiaryId(diary.getId())
                 .build();
+    }
+
+    @Transactional
+    public RecipeResponseDTO.recipeCommentDto save(Long familyId, Long recipeId, RecipeRequestDTO.addRecipeCommentRequest request, User user) {
+        Family family = familyRepository.findById(familyId)
+                .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
+
+        FamilyMember member = familyMemberRepository.findByUserIdAndFamily(user.getId(), family)
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+
+        FamilyRecipe recipe = familyRecipeRepository.findById(recipeId)
+                .orElseThrow(() -> new FamilyRecipeHandler(ErrorStatus.FAMILY_RECIPE_NOT_FOUND));
+
+        if (!recipe.getFamilyMember().getFamily().getId().equals(familyId)) {
+            throw new FamilyRecipeHandler(ErrorStatus.FAMILY_RECIPE_NOT_FOUND);
+        }
+
+        Comment comment = RecipeConverter.toComment(member, recipe, user.getName(), request);
+        commentRepository.save(comment);
+
+        return RecipeConverter.toRecipeCommentDto(comment);
     }
 
     //대댓글 추가 메서드
@@ -81,6 +111,35 @@ public class CommentService {
                 .familyDiaryId(diary.getId())
                 .build();
 
+    }
+    //대댓글 추가 메서드
+    public RecipeResponseDTO.recipeCommentDto saveRecipeRecomment(RecipeRequestDTO.addRecipeCommentRequest request, Long familyId, Long recipeId, Long commentId, User user) {
+
+        String username=user.getName();
+
+        FamilyRecipe recipe= familyRecipeRepository.findById(recipeId)
+                .orElseThrow(() -> new FamilyRecipeHandler(ErrorStatus.FAMILY_RECIPE_NOT_FOUND));
+
+        //Familymember 찾기
+        FamilyMember familyMember = recipe.getFamilyMember();
+        if (!familyMember.getFamily().getId().equals(familyId)) {
+            throw new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND);
+        }
+        Comment comment=commentRepository.findById(commentId)
+                .orElseThrow(()-> new CustomException(ErrorStatus.COMMENT_NOT_FOUND));
+
+        Comment childComment= RecipeConverter.toComment(familyMember,recipe,username,request);
+        childComment.setParentComment(comment); //부모 댓글 추가
+        commentRepository.save(childComment);
+
+        return RecipeResponseDTO.recipeCommentDto.builder()
+                .comment(childComment.getContent())
+                .author(username)
+                .commentDate(childComment.getCreatedAt())
+                .familyMemberId(familyMember.getId())
+                .recipeId(recipeId)
+                .parentCommentId(comment.getId())
+                .build();
     }
 
     //댓글 삭제 메서드
@@ -116,6 +175,19 @@ public class CommentService {
             dtoList.remove(pageable.getPageSize());
         }
         return new CommentResponse(dtoList,hasNext);
+
+    }
+
+    public RecipeCommentResponse showRecipeComments(Long recipeId, Long commentId, Pageable pageable){
+        List<Comment> commentList = commentRepository.findByRecipeIdWithCursor(recipeId, commentId, pageable);
+        List<RecipeResponseDTO.recipeCommentDto> dtoList = RecipeConverter.toRecipeCommentDtoList(commentList);
+
+        boolean hasNext = false;
+        if(dtoList.size() > pageable.getPageSize()) {
+            hasNext = true;
+            dtoList.remove(pageable.getPageSize());
+        }
+        return new RecipeCommentResponse(dtoList, hasNext);
 
     }
 }

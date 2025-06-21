@@ -52,7 +52,8 @@ public enum ErrorStatus implements BaseErrorCode {
 
     FAMILYMEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMEMBER_4001", "해당 가족 구성원을 찾을 수 없습니다."),
     FAMILY_MEMBER_INVALID(HttpStatus.NOT_FOUND, "FAMILY_MEMBER_4002", "해당 가족 구성원이 속한 가족 그룹이 아닙니다."),
-    FAMILYMOTTO_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMOTTO_4001", "좌우명을 찾을 수 없습니다.");
+    FAMILYMOTTO_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMOTTO_4001", "좌우명을 찾을 수 없습니다."),
+    FAMILY_RECIPE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_RECIPE_404", "해당 요리법을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

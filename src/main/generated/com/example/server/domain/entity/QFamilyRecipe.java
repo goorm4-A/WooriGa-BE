@@ -22,17 +22,23 @@ public class QFamilyRecipe extends EntityPathBase<FamilyRecipe> {
 
     public static final QFamilyRecipe familyRecipe = new QFamilyRecipe("familyRecipe");
 
+    public final ListPath<Comment, QComment> comments = this.<Comment, QComment>createList("comments", Comment.class, QComment.class, PathInits.DIRECT2);
+
+    public final NumberPath<Integer> cookingTime = createNumber("cookingTime", Integer.class);
+
+    public final ListPath<CookingImage, QCookingImage> coverImages = this.<CookingImage, QCookingImage>createList("coverImages", CookingImage.class, QCookingImage.class, PathInits.DIRECT2);
+
     public final StringPath description = createString("description");
 
     public final QFamilyMember familyMember;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath Ingredient = createString("Ingredient");
+    public final ListPath<String, StringPath> ingredients = this.<String, StringPath>createList("ingredients", String.class, StringPath.class, PathInits.DIRECT2);
+
+    public final ListPath<CookingStep, QCookingStep> steps = this.<CookingStep, QCookingStep>createList("steps", CookingStep.class, QCookingStep.class, PathInits.DIRECT2);
 
     public final StringPath title = createString("title");
-
-    public final QUser user;
 
     public QFamilyRecipe(String variable) {
         this(FamilyRecipe.class, forVariable(variable), INITS);
@@ -53,7 +59,6 @@ public class QFamilyRecipe extends EntityPathBase<FamilyRecipe> {
     public QFamilyRecipe(Class<? extends FamilyRecipe> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.familyMember = inits.isInitialized("familyMember") ? new QFamilyMember(forProperty("familyMember"), inits.get("familyMember")) : null;
-        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 
 }

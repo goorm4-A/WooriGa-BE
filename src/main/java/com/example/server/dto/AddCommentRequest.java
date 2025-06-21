@@ -19,14 +19,13 @@ public class AddCommentRequest {
 
 //    private Long id;
     private String content;
-    private LocalDateTime createdAt=LocalDateTime.now();
+//    private LocalDateTime createdAt=LocalDateTime.now();
 //    private Long familyMemberId;
 
 
     public Comment toEntity(FamilyMember member, FamilyDiary diary,String username){ //생성자를 사용해 객체 생성
         return Comment.builder()
                 .content(content)
-                .createdAt(createdAt)
                 .username(username)
                 .familyMember(member)
                 .familyDiary(diary)

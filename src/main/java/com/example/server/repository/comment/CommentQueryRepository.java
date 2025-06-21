@@ -9,4 +9,5 @@ public interface CommentQueryRepository {
 
     List<Comment> findByDiaryIdWithCursor(Long familyDiaryId, Long commentId, Pageable pageable);
     List<Comment> findByCommentIdWithCursor(Long commentId, Long lastReCommentId,Pageable pageable);
+    List<Comment> findByRecipeIdWithCursor(Long recipeId, Long commentId, Pageable pageable);
 }
