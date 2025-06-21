@@ -24,7 +24,5 @@ public class RecipeRequestDTO {
     @Getter
     public static class addRecipeCommentRequest {
         private String content;
-        private Long familyMemberId; //댓글 작성자
-        private Long familyRecipeId; //댓글의 원 게시글
     }
 }

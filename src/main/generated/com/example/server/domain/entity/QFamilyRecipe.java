@@ -22,6 +22,8 @@ public class QFamilyRecipe extends EntityPathBase<FamilyRecipe> {
 
     public static final QFamilyRecipe familyRecipe = new QFamilyRecipe("familyRecipe");
 
+    public final ListPath<Comment, QComment> comments = this.<Comment, QComment>createList("comments", Comment.class, QComment.class, PathInits.DIRECT2);
+
     public final NumberPath<Integer> cookingTime = createNumber("cookingTime", Integer.class);
 
     public final ListPath<CookingImage, QCookingImage> coverImages = this.<CookingImage, QCookingImage>createList("coverImages", CookingImage.class, QCookingImage.class, PathInits.DIRECT2);

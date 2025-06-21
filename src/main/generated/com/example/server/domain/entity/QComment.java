@@ -22,11 +22,14 @@ public class QComment extends EntityPathBase<Comment> {
 
     public static final QComment comment = new QComment("comment");
 
+    public final QBaseEntity _super = new QBaseEntity(this);
+
     public final ListPath<Comment, QComment> childComments = this.<Comment, QComment>createList("childComments", Comment.class, QComment.class, PathInits.DIRECT2);
 
     public final StringPath content = createString("content");
 
-    public final DateTimePath<java.time.LocalDateTime> createdAt = createDateTime("createdAt", java.time.LocalDateTime.class);
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final QFamilyDiary familyDiary;
 
@@ -35,6 +38,11 @@ public class QComment extends EntityPathBase<Comment> {
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final QComment parentComment;
+
+    public final QFamilyRecipe recipe;
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public final StringPath username = createString("username");
 
@@ -59,6 +67,7 @@ public class QComment extends EntityPathBase<Comment> {
         this.familyDiary = inits.isInitialized("familyDiary") ? new QFamilyDiary(forProperty("familyDiary"), inits.get("familyDiary")) : null;
         this.familyMember = inits.isInitialized("familyMember") ? new QFamilyMember(forProperty("familyMember"), inits.get("familyMember")) : null;
         this.parentComment = inits.isInitialized("parentComment") ? new QComment(forProperty("parentComment"), inits.get("parentComment")) : null;
+        this.recipe = inits.isInitialized("recipe") ? new QFamilyRecipe(forProperty("recipe"), inits.get("recipe")) : null;
     }
 
 }
