@@ -1,5 +1,6 @@
 package com.example.server.dto.mood;
 import com.example.server.domain.entity.FamilyMood;
+import com.example.server.domain.enums.MoodType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public class MoodResponseDTO {
     private Long id;
     private List<String> tags;
-
+    private MoodType moodType;
     public static MoodResponseDTO fromEntity(FamilyMood mood) {
         List<String> tagNames = mood.getMoodTags().stream()
                 .map(mt -> mt.getTag().getName())
@@ -23,6 +24,7 @@ public class MoodResponseDTO {
         return MoodResponseDTO.builder()
                 .id(mood.getId())
                 .tags(tagNames)
+                .moodType(mood.getMoodType())
                 .build();
     }
 }

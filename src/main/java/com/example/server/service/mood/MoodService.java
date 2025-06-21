@@ -41,6 +41,7 @@ public class MoodService {
         FamilyMood mood = new FamilyMood();
         mood.setUser(user);
         mood.setFamilyMember(member);
+        mood.setMoodType(dto.getMoodType());
         familyMoodRepository.save(mood);
 
         List<String> tagNames = parseTags(dto.getTags());
