@@ -77,10 +77,10 @@ public class FamilyConverter {
                 ).build();
     }
 
-    public static FamilyMemberDetailDTO toFamilyMemberDetailDTO(FamilyMember familyMember) {
+    public static FamilyMemberDetailResponse toFamilyMemberDetailResponse(FamilyMember familyMember) {
         User user = familyMember.getUser();
 
-        return FamilyMemberDetailDTO.builder()
+        return FamilyMemberDetailResponse.builder()
                 .memberName(user == null? familyMember.getMemberName() : user.getName())
                 .memberBirthDate(user == null? familyMember.getMemberBirthDate() : user.getBirthDate())
                 .memberImage(user == null? familyMember.getImage() : user.getImage())

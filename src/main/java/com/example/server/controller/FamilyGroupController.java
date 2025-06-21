@@ -102,7 +102,7 @@ public class FamilyGroupController {
                                             @PathVariable Long groupId,
                                             @RequestPart("name") String name,
                                             @RequestPart(value = "image", required = false) MultipartFile image) {
-        return ApiResponse.onSuccess(SuccessStatus._OK,
+        return ApiResponse.onSuccess(SuccessStatus.FAMILY_GROUP_UPDATE_SUCCESSFUL,
                 familyGroupService.updateFamilyGroup(principalUser, groupId, name, image));
     }
 
@@ -110,7 +110,7 @@ public class FamilyGroupController {
     @Operation(summary = "가족 그룹 삭제 API",
             description = """
                     가족 그룹 아래 가족 구성원(1), 가족 좌우명 및 규칙(2), 가족 일기(3) 모두 삭제 
-                    (삭제 후, 가족 그룹 조회 API 확인 가능)
+                    (삭제 후, 가족 그룹 조회 API 에서 확인 가능)
                     
                     요청
                     - groupId: 가족 그룹 아이디

@@ -7,7 +7,7 @@ import java.time.LocalDate;
 
 @Getter
 @Builder
-public class FamilyMemberDetailDTO {
+public class FamilyMemberDetailResponse {
     private String memberName;
     private String memberImage;
     private String relation;

@@ -144,7 +144,6 @@ public class FamilyGroupService {
             }
         }
 
-
         family.updateFamilyGroup(name, imageUrl);
         return FamilyConverter.toFamilyGroupResponse(family);
     }
