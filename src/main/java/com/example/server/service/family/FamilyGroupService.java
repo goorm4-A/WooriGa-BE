@@ -1,4 +1,4 @@
-package com.example.server.service.member;
+package com.example.server.service.family;
 
 import com.example.server.converter.FamilyConverter;
 import com.example.server.domain.entity.Family;
@@ -15,6 +15,7 @@ import com.example.server.service.S3Service;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -24,8 +25,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Tag(name = "User", description = "유저 관련 기능")
-public class FamilyMemberService {
+public class FamilyGroupService {
 
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
@@ -93,7 +93,7 @@ public class FamilyMemberService {
         return FamilyConverter.toFamilyGroupListResponse(families);
     }
 
-    // 가족 그룹 상세 조회
+    // 가족 그룹 상세 조회 (가계도)
     public FamilyGroupDetailResponse getFamilyGroupDetail(User principalUser, Long groupId) {
         User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
@@ -111,57 +111,58 @@ public class FamilyMemberService {
         return FamilyConverter.toFamilyGroupDetailResponse(familyMembers);
     }
 
-    // 가족 구성원 생성 (가계도)
-    public FamilyMemberResponse createFamilyMember(User principalUser, Long groupId,
-                                                   String name, String relation,
-                                                   LocalDate birthDate, MultipartFile image) {
-
+    // 가족 그룹 수정
+    @Transactional
+    public FamilyResponse updateFamilyGroup(User principalUser, Long groupId, String name, MultipartFile image) {
         User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
         Family family = familyRepository.findById(groupId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_NOT_FOUND));
 
-        // 자신의 가족 그룹이 맞는지 확인
+        // 자신이 속한 가족 그룹이 맞는지 확인
         familyMemberRepository.findByUserIdAndFamilyId(user.getId(), family.getId())
                 .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_INVALID));
 
-        // 이미지 업로드
+        // 기존 이미지 삭제 + 새 이미지 업로드
         String imageUrl = null;
         if (image != null && !image.isEmpty()) {
+            // 기존 이미지가 있다면 삭제
+            String existingImageUrl = family.getImage();
+            if (existingImageUrl != null && !existingImageUrl.isEmpty()) {
+
+                // 버킷, 확장자 제외한 파일명만 추출
+                String filename = existingImageUrl.substring(existingImageUrl.indexOf(".com/") + 5);
+                s3Service.deleteFile(filename);
+            }
+
+            // 새 이미지 업로드
             try {
-                imageUrl = s3Service.uploadImage(image, "family-members");
+                imageUrl = s3Service.uploadImage(image, "family-groups");
             } catch (IOException e) {
                 throw new CustomException(ErrorStatus.IMAGE_UPLOAD_ERROR);
             }
         }
 
-        // 사용자 지정 가족 구성원 생성
-        FamilyMember newFamilyMember = familyMemberRepository.save(new FamilyMember(family, name, birthDate, relation, imageUrl));
 
-        return FamilyConverter.toFamilyMemberResponse(newFamilyMember);
+        family.updateFamilyGroup(name, imageUrl);
+        return FamilyConverter.toFamilyGroupResponse(family);
     }
 
-    // 가족 구성원 상세 조회
-    public FamilyMemberDetailDTO getFamilyMemberDetail(User principalUser, Long groupId, Long memberId) {
+    // 가족 그룹 삭제
+    @Transactional
+    public String deleteFamilyGroup(User principalUser, Long groupId) {
         User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
         Family family = familyRepository.findById(groupId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_NOT_FOUND));
 
-        // 자신의 가족 그룹이 맞는지 확인
+        // 자신이 속한 가족 그룹이 맞는지 확인
         familyMemberRepository.findByUserIdAndFamilyId(user.getId(), family.getId())
-                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_INVALID));
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_INVALID));
 
-        FamilyMember familyMember = familyMemberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
-
-        // 구성원의 가족 그룹이 맞는지 확인
-        if (!familyMember.getFamily().getId().equals(groupId)) {
-            throw new CustomException(ErrorStatus.FAMILY_MEMBER_INVALID);
-        }
-
-        return FamilyConverter.toFamilyMemberDetailDTO(familyMember);
+        familyRepository.delete(family);
+        return "해당 가족 그룹이 삭제되었습니다.";
     }
 }
