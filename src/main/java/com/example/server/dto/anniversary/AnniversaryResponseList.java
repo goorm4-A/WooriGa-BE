@@ -31,7 +31,7 @@ public class AnniversaryResponseList {
                 .title(anniversary.getTitle())
                 .location(anniversary.getLocation())
                 .description(anniversary.getDescription())
-                .type(anniversary.getAnniversaryType().toString())
+                .type(anniversary.getAnniversaryType().getDisplayName())
                 .date(anniversary.getDate())
                 .build();
     }
@@ -44,7 +44,7 @@ public class AnniversaryResponseList {
                         .title(ani.getTitle())
                         .location(ani.getLocation())
                         .description(ani.getDescription())
-                        .type(ani.getAnniversaryType().toString())
+                        .type(ani.getAnniversaryType().getDisplayName())
                         .date(ani.getDate())
                         .build()
                 )
