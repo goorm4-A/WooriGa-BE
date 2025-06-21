@@ -92,12 +92,24 @@ public class RecipeConverter {
     }
 
     public static RecipeResponseDTO.recipeCommentDto toRecipeCommentDto(Comment comment) {
+        Long parentId = null;
+        if (comment.getParentComment() != null) {
+            parentId = comment.getParentComment().getId();
+        }
+
         return RecipeResponseDTO.recipeCommentDto.builder()
                 .comment(comment.getContent())
                 .author(comment.getUsername())
                 .commentDate(comment.getCreatedAt())
                 .recipeId(comment.getRecipe().getId())
+                .parentCommentId(parentId)
                 .familyMemberId(comment.getFamilyMember().getId())
                 .build();
+    }
+
+    public static List<RecipeResponseDTO.recipeCommentDto> toRecipeCommentDtoList(List<Comment> comments) {
+        return comments.stream()
+                .map(RecipeConverter::toRecipeCommentDto)
+                .collect(Collectors.toList());
     }
 }

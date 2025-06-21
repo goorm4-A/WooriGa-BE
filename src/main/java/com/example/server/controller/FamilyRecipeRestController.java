@@ -3,6 +3,7 @@ package com.example.server.controller;
 import com.example.server.domain.entity.User;
 import com.example.server.dto.AddCommentRequest;
 import com.example.server.dto.familyDiary.CommentDto;
+import com.example.server.dto.familyRecipe.RecipeCommentResponse;
 import com.example.server.dto.familyRecipe.RecipeRequestDTO;
 import com.example.server.dto.familyRecipe.RecipeResponseDTO;
 import com.example.server.global.ApiResponse;
@@ -102,5 +103,29 @@ public class FamilyRecipeRestController {
             @RequestBody RecipeRequestDTO.addRecipeCommentRequest request) {
         RecipeResponseDTO.recipeCommentDto response=commentService.saveRecipeRecomment(request,familyId,recipeId,commentId,user);
         return ApiResponse.onSuccess(SuccessStatus._OK,response);
+    }
+
+    @GetMapping("/{recipeId}/comments")
+    @Operation(summary = "가족 요리법 댓글 조회")
+    public ApiResponse<RecipeCommentResponse> getRecipeComments(
+            @PathVariable Long familyId,
+            @PathVariable Long recipeId,
+            @RequestParam(required = false) Long commentId,
+            @PageableDefault(size = 6) Pageable pageable,
+            @AuthenticationPrincipal User user
+    ) {
+        RecipeCommentResponse response = commentService.showRecipeComments(recipeId, commentId, pageable);
+        return ApiResponse.onSuccess(SuccessStatus._OK, response);
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    @Operation(summary = "가족 요리법 댓글 삭제")
+    public ApiResponse<?> deleteRecipeComment(
+            @PathVariable Long familyId,
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal User user
+    ) {
+        commentService.deleteComment(commentId);
+        return ApiResponse.onSuccess(SuccessStatus._OK);
     }
 }

@@ -5,6 +5,7 @@ import com.example.server.domain.entity.*;
 import com.example.server.dto.AddCommentRequest;
 import com.example.server.dto.familyDiary.CommentDto;
 import com.example.server.dto.familyDiary.CommentResponse;
+import com.example.server.dto.familyRecipe.RecipeCommentResponse;
 import com.example.server.dto.familyRecipe.RecipeRequestDTO;
 import com.example.server.dto.familyRecipe.RecipeResponseDTO;
 import com.example.server.global.code.exception.CustomException;
@@ -174,6 +175,19 @@ public class CommentService {
             dtoList.remove(pageable.getPageSize());
         }
         return new CommentResponse(dtoList,hasNext);
+
+    }
+
+    public RecipeCommentResponse showRecipeComments(Long recipeId, Long commentId, Pageable pageable){
+        List<Comment> commentList = commentRepository.findByRecipeIdWithCursor(recipeId, commentId, pageable);
+        List<RecipeResponseDTO.recipeCommentDto> dtoList = RecipeConverter.toRecipeCommentDtoList(commentList);
+
+        boolean hasNext = false;
+        if(dtoList.size() > pageable.getPageSize()) {
+            hasNext = true;
+            dtoList.remove(pageable.getPageSize());
+        }
+        return new RecipeCommentResponse(dtoList, hasNext);
 
     }
 }
