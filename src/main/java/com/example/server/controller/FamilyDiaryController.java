@@ -1,6 +1,7 @@
 package com.example.server.controller;
 
 
+import com.example.server.domain.entity.User;
 import com.example.server.dto.AddCommentRequest;
 import com.example.server.dto.familyDiary.*;
 import com.example.server.global.ApiResponse;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -33,8 +35,9 @@ public class FamilyDiaryController {
     @PostMapping(value="",consumes= MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary="가족 일기 등록")
     public ApiResponse<FamilyDiaryResponseDto> createDiary(@RequestPart FamilyDiaryDto familyDiaryDto,
-                                                           @RequestPart(value="image",required=false) List<MultipartFile> image) {
-        FamilyDiaryResponseDto result=familyDiaryService.createDiary(familyDiaryDto,image);
+                                                           @RequestPart(value="image",required=false) List<MultipartFile> image,
+                                                           @AuthenticationPrincipal User user) {
+        FamilyDiaryResponseDto result=familyDiaryService.createDiary(user,familyDiaryDto,image);
         return ApiResponse.onSuccess(SuccessStatus._OK,result);
 
     }
@@ -100,15 +103,15 @@ public class FamilyDiaryController {
 
     @PostMapping("/comment")
     @Operation(summary="가족 일기에 댓글 달기")
-    public ApiResponse<CommentDto> addComment(@RequestParam Long diaryId,@RequestParam Long familyMemberId, @RequestBody AddCommentRequest request) {
-        CommentDto response=commentService.save(request,diaryId,familyMemberId);
+    public ApiResponse<CommentDto> addComment(@RequestParam Long diaryId, @RequestBody AddCommentRequest request,@AuthenticationPrincipal User user) {
+        CommentDto response=commentService.save(request,diaryId,user);
         return ApiResponse.onSuccess(SuccessStatus._OK,response);
     }
 
     @PostMapping("/re-comment")
     @Operation(summary="대댓글 달기")
-    public ApiResponse addReComment(@RequestParam Long familyMemberId, @RequestParam Long commentId, @RequestBody AddCommentRequest request) {
-        CommentDto response=commentService.saveRecomment(request,commentId,familyMemberId);
+    public ApiResponse addReComment(@AuthenticationPrincipal User user, @RequestParam Long commentId,@RequestParam Long diaryId, @RequestBody AddCommentRequest request) {
+        CommentDto response=commentService.saveRecomment(request,diaryId,commentId,user);
         return ApiResponse.onSuccess(SuccessStatus._OK,response);
     }
 

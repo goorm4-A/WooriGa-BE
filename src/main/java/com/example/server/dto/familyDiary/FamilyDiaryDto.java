@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class FamilyDiaryDto {
     private Long familyId;
-    private Long userId;
+
 
 //    private List<MultipartFile> image;
     private String title;

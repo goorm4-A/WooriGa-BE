@@ -3,6 +3,7 @@ package com.example.server.service;
 import com.example.server.domain.entity.Comment;
 import com.example.server.domain.entity.FamilyDiary;
 import com.example.server.domain.entity.FamilyMember;
+import com.example.server.domain.entity.User;
 import com.example.server.dto.AddCommentRequest;
 import com.example.server.dto.familyDiary.CommentDto;
 import com.example.server.dto.familyDiary.CommentResponse;
@@ -26,15 +27,17 @@ public class CommentService {
     private final FamilyDiaryRepository familyDiaryRepository;
 
     //댓글 추가 메서드
-    public CommentDto save(AddCommentRequest request, Long diaryId, Long familyMemberId) {
-        FamilyMember member = familyMemberRepository.findById(familyMemberId)
-                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
+    public CommentDto save(AddCommentRequest request, Long diaryId, User user) {
 
         FamilyDiary diary = familyDiaryRepository.findById(diaryId)
                 .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_DIARY_NOT_FOUND));
 
-        //✏️Spring Security 이용 방식으로 변경해야. SecurityContext
-        String username=member.getUser().getName();
+        String username=user.getName();
+
+        //Familymember 찾기
+        Long familyId=diary.getFamily().getId();
+        FamilyMember member=familyMemberRepository.findByUserIdAndFamilyId(user.getId(), familyId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
         Comment comment = request.toEntity(member, diary,username);
         commentRepository.save(comment);
@@ -49,15 +52,22 @@ public class CommentService {
     }
 
     //대댓글 추가 메서드
-    public CommentDto saveRecomment(AddCommentRequest request, Long commentId, Long familyMemberId) {
-        FamilyMember member = familyMemberRepository.findById(familyMemberId)
-                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
-        String username=member.getUser().getName();
+    public CommentDto saveRecomment(AddCommentRequest request, Long diaryId,Long commentId,User user) {
 
+        String username=user.getName();
+//        Long diaryId=request.getFamilyDiaryId();
+
+        FamilyDiary diary = familyDiaryRepository.findById(diaryId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_DIARY_NOT_FOUND));
+
+        //Familymember 찾기
+        Long familyId=diary.getFamily().getId();
+        FamilyMember member=familyMemberRepository.findByUserIdAndFamilyId(user.getId(), familyId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
         Comment comment=commentRepository.findById(commentId)
                 .orElseThrow(()-> new CustomException(ErrorStatus.COMMENT_NOT_FOUND));
-        FamilyDiary diary=comment.getFamilyDiary();
+//        FamilyDiary diary=comment.getFamilyDiary();
 
         Comment childComment=request.toEntity(member,diary,username);
         childComment.setParentComment(comment); //부모 댓글 추가
