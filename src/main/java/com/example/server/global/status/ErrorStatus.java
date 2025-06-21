@@ -41,7 +41,7 @@ public enum ErrorStatus implements BaseErrorCode {
     //기념일 관련 에러
     ANNIVERSARY_NOT_FOUND(HttpStatus.NOT_FOUND,"ANNIVERSARY_404","해당 기념일을 찾을 수 없어요."),
 
-
+    MOOD_NOT_FOUND(HttpStatus.NOT_FOUND, "MOOD_404", "해당 분위기를 찾을 수 없습니다."),
 
     JWT_INVALID(HttpStatus.UNAUTHORIZED, "JWT4001", "유효하지 않은 JWT 토큰입니다."),
     JWT_EXPIRED(HttpStatus.UNAUTHORIZED, "JWT4002", "JWT 토큰이 만료되었습니다."),
