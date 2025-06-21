@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class FamilyResponse {
-    private Long familyId;
+    private Long familyGroupId;
     private String familyName;
     private String familyImage;
     private Integer inviteCode;

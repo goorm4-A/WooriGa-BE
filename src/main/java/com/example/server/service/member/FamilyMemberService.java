@@ -4,7 +4,9 @@ import com.example.server.converter.FamilyConverter;
 import com.example.server.domain.entity.Family;
 import com.example.server.domain.entity.FamilyMember;
 import com.example.server.domain.entity.User;
+import com.example.server.dto.member.FamilyGroupDetailResponse;
 import com.example.server.dto.member.FamilyGroupResponse;
+import com.example.server.dto.member.FamilyMemberResponse;
 import com.example.server.dto.member.FamilyResponse;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -72,7 +75,7 @@ public class FamilyMemberService {
     public int createInviteCode() {
         int code;
         do {
-            code = (int) (Math.random() * 900000) + 100000; // 6자리
+            code = (int) (Math.random() * 900000) + 100000; // 6자리 (100000 ~ 999999)
         } while (familyRepository.existsByInviteCode(code));
         return code;
     }
@@ -93,12 +96,42 @@ public class FamilyMemberService {
     }
 
     // 가족 그룹 상세 조회
-//    public FamilyGroupListResponse getFamilyGroupDetail(User principalUser, Long groupId) {
-//        User user = userRepository.findById(principalUser.getId())
-//                .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
-//
-//        Family family = familyRepository.findById(groupId)
-//                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_NOT_FOUND));
-//        return null;
-//    }
+    public FamilyGroupDetailResponse getFamilyGroupDetail(User principalUser, Long groupId) {
+        userRepository.findById(principalUser.getId())
+                .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
+
+        Family family = familyRepository.findById(groupId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_NOT_FOUND));
+
+        List<FamilyMember> familyMembers = family.getFamilyMembers();
+
+        return FamilyConverter.toFamilyGroupDetailResponse(familyMembers);
+    }
+
+    // 가족 구성원 생성 (가계도)
+    public FamilyMemberResponse createFamilyMember(User principalUser, Long groupId,
+                                                   String name, String relation,
+                                                   LocalDate birthDate, MultipartFile image) {
+
+        userRepository.findById(principalUser.getId())
+                .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
+
+        Family family = familyRepository.findById(groupId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_NOT_FOUND));
+
+        // 이미지 업로드
+        String imageUrl = null;
+        if (image != null && !image.isEmpty()) {
+            try {
+                imageUrl = s3Service.uploadImage(image, "family-members");
+            } catch (IOException e) {
+                throw new CustomException(ErrorStatus.IMAGE_UPLOAD_ERROR);
+            }
+        }
+
+        // 사용자 지정 가족 구성원 생성
+        FamilyMember newFamilyMember = familyMemberRepository.save(new FamilyMember(family, name, birthDate, relation, imageUrl));
+
+        return FamilyConverter.toFamilyMemberResponse(newFamilyMember);
+    }
 }

@@ -7,9 +7,6 @@ import java.util.List;
 
 @Getter
 @Builder
-public class FamilyGroupResponse {
-    private FamilyResponse familyGroup;
+public class FamilyGroupDetailResponse {
     private List<FamilyMemberResponse> familyMembers;
-    private Integer totalCnt;
 }
-
