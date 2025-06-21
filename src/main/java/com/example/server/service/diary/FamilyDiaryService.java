@@ -6,6 +6,7 @@ import com.example.server.dto.familyDiary.FamilyDiaryListDto;
 import com.example.server.dto.familyDiary.FamilyDiaryResponseDto;
 import com.example.server.dto.familyDiary.FamilyDiaryScrollResponse;
 import com.example.server.global.code.exception.CustomException;
+import com.example.server.global.code.exception.handler.FamilyHandler;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.domain.entity.FamilyDiary;
 import com.example.server.repository.*;
@@ -32,20 +33,20 @@ public class FamilyDiaryService {
     private final DiaryImgService diaryImgService;
     private final FamilyMemberRepository familyMemberRepository;
     private final DiaryParticipantRepository diaryParticipantRepository;
-    private final UserRepository userRepository;
+    private final FamilyRepository familyRepository;
     private final DiaryTagService diaryTagService;
 
 
     public FamilyDiaryService(FamilyDiaryRepository familyDiaryRepository, S3Service s3Service,
                               DiaryImgService diaryImgService, FamilyMemberRepository familyMemberRepository,
-                              DiaryParticipantRepository diaryParticipantRepository, UserRepository userRepository,
+                              DiaryParticipantRepository diaryParticipantRepository, FamilyRepository familyRepository,
                               DiaryTagService diaryTagService) {
         this.familyDiaryRepository = familyDiaryRepository;
         this.s3Service = s3Service;
         this.diaryImgService = diaryImgService;
         this.familyMemberRepository = familyMemberRepository;
         this.diaryParticipantRepository = diaryParticipantRepository;
-        this.userRepository = userRepository;
+        this.familyRepository = familyRepository;
 
         this.diaryTagService=diaryTagService;
     }
@@ -53,17 +54,21 @@ public class FamilyDiaryService {
 
 
     ///다이어리 생성
-    public FamilyDiaryResponseDto createDiary(FamilyDiaryDto dto, List<MultipartFile> image) {
+    public FamilyDiaryResponseDto createDiary(User user,FamilyDiaryDto dto, List<MultipartFile> image) {
 
-        
+        Long familyId=dto.getFamilyId();
+        Family family = familyRepository.findById(familyId)
+                .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
+
         //diaryTag, diaryParticipant 매핑하기
 
         //FamilyDiary 생성
         FamilyDiary familyDiary=FamilyDiaryDto.fromDto(dto);
         familyDiary.setWrittenDate(LocalDateTime.now());
         //FamilyMember 매핑 ⭐⭐
-        FamilyMember member=getFamilyMember(dto.getFamilyId(),dto.getUserId());
+        FamilyMember member=getFamilyMember(dto.getFamilyId(),user.getId());
         familyDiary.setFamilyMember(member);
+        familyDiary.setFamily(family);
 
 
         familyDiaryRepository.save(familyDiary); //ID 확보 위해 먼저 저장
@@ -73,7 +78,7 @@ public class FamilyDiaryService {
 
         //DiaryParticipant 매핑
         try{
-            List<DiaryParticipant> participants=getDiaryParticipants(dto,id);
+            List<DiaryParticipant> participants=getDiaryParticipants(user,dto,id);
             familyDiary.setDiaryParticipants(participants);
         }catch(Exception e){
             throw new CustomException(ErrorStatus.DIARY_PARTICIPANTS_ERROR);
@@ -103,7 +108,7 @@ public class FamilyDiaryService {
 
         //이미지 연관관계 반영 후 다시 저장
         familyDiaryRepository.save(familyDiary);
-        return FamilyDiary.toDto(familyDiary);
+        return FamilyDiary.toDto(familyDiary,user);
 
     }
 
@@ -146,13 +151,10 @@ public class FamilyDiaryService {
 
 
     //DiaryParticipant 객체 생성+저장
-    private List<DiaryParticipant> getDiaryParticipants(FamilyDiaryDto dto,Long diaryId){
+    private List<DiaryParticipant> getDiaryParticipants(User user,FamilyDiaryDto dto,Long diaryId){
 
         List<DiaryParticipant> participantList=new ArrayList<>();
         FamilyDiary diary=findDiary(diaryId);
-
-        User user = userRepository.findById(dto.getUserId())
-                .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
 
         //dto속 List<Long> DiaryParticipantsId 가져와서
@@ -197,14 +199,14 @@ public class FamilyDiaryService {
 
 
     //특정 가족일기 조회
-    public FamilyDiaryResponseDto getFamilyDiaryDto(Long diaryId){
+    public FamilyDiaryResponseDto getFamilyDiaryDto(Long diaryId,User user){
         FamilyDiary diary=familyDiaryRepository.findById(diaryId)
                 .orElseThrow(()-> new CustomException(ErrorStatus.FAMILY_DIARY_NOT_FOUND));
-        return FamilyDiary.toDto(diary);
+        return FamilyDiary.toDto(diary,user);
     }
 
     //추억 목록 조회
-    public FamilyDiaryScrollResponse getFamilyDiaryListDto(Long familyId, Long lastDiaryId, Pageable pageable){
+    public FamilyDiaryScrollResponse getFamilyDiaryListDto(User user,Long familyId, Long lastDiaryId, Pageable pageable){
 
         // 커서 기반 페이징
         List<FamilyDiary> results=familyDiaryRepository.findByFamilyIdWithCursor(familyId,lastDiaryId,pageable);

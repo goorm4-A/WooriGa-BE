@@ -21,7 +21,7 @@ public class AddCommentRequest {
     private String content;
     private LocalDateTime createdAt=LocalDateTime.now();
 //    private Long familyMemberId;
-//    private Long familyDiaryId;
+
 
     public Comment toEntity(FamilyMember member, FamilyDiary diary,String username){ //생성자를 사용해 객체 생성
         return Comment.builder()

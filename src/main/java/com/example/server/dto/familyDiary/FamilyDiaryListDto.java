@@ -16,6 +16,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class FamilyDiaryListDto {
 
+    //유저 닉네임
+    private String username;
+    //유저 프로필
+    private String profile;
+
     private Long id;
     private String imgUrl;
     private String title;
@@ -27,6 +32,8 @@ public class FamilyDiaryListDto {
                             ? null
                             : familydiary.getImages().get(0).getImgUrl();
                     return new FamilyDiaryListDto(
+                            familydiary.getFamilyMember().getUser().getName(),
+                            familydiary.getFamilyMember().getUser().getImage(),
                             familydiary.getId(),
                             firstImgUrl,
                             familydiary.getTitle()
