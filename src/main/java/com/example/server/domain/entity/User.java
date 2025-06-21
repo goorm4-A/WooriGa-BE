@@ -42,8 +42,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FamilyAnniversary> familyAnniversaries = new ArrayList<>();
 
+/*
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<FamilyRecipe> familyRecipes = new ArrayList<>();
+*/
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<DiaryParticipant> diaryParticipants = new ArrayList<>();

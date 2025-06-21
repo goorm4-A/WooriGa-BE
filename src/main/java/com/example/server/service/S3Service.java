@@ -60,6 +60,16 @@ public class S3Service {
         return imgUrlList;
     }
 
+    //
+    public String upload(MultipartFile file, String directory) throws IOException {
+        String fileName = directory + "/" + UUID.randomUUID();
+        ObjectMetadata metadata = new ObjectMetadata();
+        metadata.setContentLength(file.getSize());
+
+        s3Client.putObject(bucket, fileName, file.getInputStream(), metadata);
+        return s3Client.getUrl(bucket, fileName).toString();
+    }
+
     //이미지 파일명 중복 방지
     private String createFileName(String fileName) {
         return UUID.randomUUID().toString().concat(getFileExtension(fileName));

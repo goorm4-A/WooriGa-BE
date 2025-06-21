@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@RequestMapping("/culture")
+@RequestMapping("/cultures")
 @Slf4j
 @Tag(name = "Culture", description = "좌우명, 요리법, 약속, 가족 분위기 등이 포함된 기능")
 public class CultureRestController {

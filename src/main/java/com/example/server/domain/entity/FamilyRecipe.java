@@ -1,12 +1,20 @@
 package com.example.server.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Entity
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class FamilyRecipe {
 
     @Id
@@ -17,14 +25,34 @@ public class FamilyRecipe {
 
     private String description; // 설명
 
-    private String Ingredient; // 재료
+    private int cookingTime;
 
-    @ManyToOne
+//    private String Ingredient; // 재료
+    @ElementCollection
+    @CollectionTable(name = "family_recipe_ingredient", joinColumns = @JoinColumn(name = "recipe_id"))
+    @Column(name = "ingredient")
+    private List<String> ingredients = new ArrayList<>();
+
+/*    @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User user;*/
 
     @ManyToOne
     @JoinColumn(name = "family_member_id")
     private FamilyMember familyMember;
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CookingStep> steps = new ArrayList<>();
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CookingImage> coverImages = new ArrayList<>();
+
+    public void addCoverImage(CookingImage coverImage) {
+
+    }
+    public void addStep(CookingStep step) {
+        steps.add(step);
+        step.setRecipe(this);
+    }
 }
 
