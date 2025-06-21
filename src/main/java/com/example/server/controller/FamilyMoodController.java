@@ -53,4 +53,13 @@ public class FamilyMoodController {
         List<MoodResponseDTO> result = moodService.getFamilyMoods(familyId);
         return ApiResponse.onSuccess(SuccessStatus._OK, result);
     }
+
+    @DeleteMapping("/{moodId}")
+    @Operation(summary = "가족 분위기 삭제")
+    public ApiResponse<?> deleteMood(@PathVariable Long familyId,
+                                     @PathVariable Long moodId,
+                                     @AuthenticationPrincipal User user){
+        moodService.deleteMood(user, familyId, moodId);
+        return ApiResponse.onSuccess(SuccessStatus._OK);
+    }
 }

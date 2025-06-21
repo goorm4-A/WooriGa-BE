@@ -67,4 +67,18 @@ public class MoodService {
                 .map(MoodResponseDTO::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    public void deleteMood(User user, Long familyId, Long moodId){
+        FamilyMember member = familyMemberRepository.findByUserIdAndFamilyId(user.getId(), familyId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
+
+        FamilyMood mood = familyMoodRepository.findById(moodId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.MOOD_NOT_FOUND));
+
+        if(!mood.getFamilyMember().getId().equals(member.getId())){
+            throw new CustomException(ErrorStatus.MOOD_NOT_FOUND);
+        }
+
+        familyMoodRepository.delete(mood);
+    }
 }
