@@ -3,6 +3,7 @@ package com.example.server.controller;
 import com.example.server.domain.entity.User;
 import com.example.server.dto.familyEvent.FamilyEventRequest;
 import com.example.server.dto.familyEvent.FamilyEventResponse;
+import com.example.server.dto.familyEvent.FamilyEventTimelineDto;
 import com.example.server.global.ApiResponse;
 import com.example.server.global.status.SuccessStatus;
 import com.example.server.service.event.FamilyEventService;
@@ -11,10 +12,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/events")
@@ -33,5 +33,13 @@ public class FamilyEventController {
 
         FamilyEventResponse response = familyEventService.createFamilyEvent(user, request);
         return ApiResponse.onSuccess(SuccessStatus.CREATE_EVENT_SUCCESSFUL, response);
+    }
+
+    @GetMapping("")
+    @Operation(summary = "가족사 타임라인 조회")
+    public ApiResponse<List<FamilyEventTimelineDto>> getTimeline(
+            @AuthenticationPrincipal User user) {
+        List<FamilyEventTimelineDto> responses = familyEventService.getFamilyEventTimeline(user);
+        return ApiResponse.onSuccess(SuccessStatus._OK, responses);
     }
 }

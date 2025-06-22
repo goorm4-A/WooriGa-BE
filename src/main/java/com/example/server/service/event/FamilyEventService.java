@@ -7,6 +7,7 @@ import com.example.server.domain.entity.FamilyMember;
 import com.example.server.domain.entity.User;
 import com.example.server.dto.familyEvent.FamilyEventRequest;
 import com.example.server.dto.familyEvent.FamilyEventResponse;
+import com.example.server.dto.familyEvent.FamilyEventTimelineDto;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.repository.FamilyMemberRepository;
@@ -16,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -42,5 +46,15 @@ public class FamilyEventService {
         FamilyEvent event = FamilyEventConverter.toFamilyEvent(request,user,member);
         familyEventRepository.save(event);
         return FamilyEventConverter.toFamilyEventResponse(event);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<FamilyEventTimelineDto> getFamilyEventTimeline(User user) {
+        List<FamilyEvent> events = familyEventRepository
+                .findAllByUser_IdOrderByTimelineDesc(user.getId());
+        return events.stream()
+                .map(FamilyEventTimelineDto::fromEntity)
+                .collect(Collectors.toList());
     }
 }
