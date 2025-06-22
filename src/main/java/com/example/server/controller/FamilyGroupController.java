@@ -81,7 +81,7 @@ public class FamilyGroupController {
                     - 자세한 필드 설명은 가족 그룹 조회 참고
                     """)
     public ApiResponse<?> createFamilyGroup(@AuthenticationPrincipal User principalUser,
-                                            @RequestPart("name") String name,
+                                            @RequestParam("name") String name,
                                             @RequestPart(value = "image", required = false) MultipartFile image) {
         return ApiResponse.onSuccess(SuccessStatus._OK,
                 familyGroupService.createFamilyGroup(principalUser, name, image));
@@ -100,7 +100,7 @@ public class FamilyGroupController {
                     """)
     public ApiResponse<?> updateFamilyGroup(@AuthenticationPrincipal User principalUser,
                                             @PathVariable Long groupId,
-                                            @RequestPart("name") String name,
+                                            @RequestParam("name") String name,
                                             @RequestPart(value = "image", required = false) MultipartFile image) {
         return ApiResponse.onSuccess(SuccessStatus.FAMILY_GROUP_UPDATE_SUCCESSFUL,
                 familyGroupService.updateFamilyGroup(principalUser, groupId, name, image));
