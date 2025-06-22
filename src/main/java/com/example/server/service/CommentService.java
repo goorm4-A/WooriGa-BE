@@ -66,7 +66,7 @@ public class CommentService {
                 .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
 
         FamilyMember member = familyMemberRepository.findByUserIdAndFamily(user.getId(), family)
-                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
         FamilyRecipe recipe = familyRecipeRepository.findById(recipeId)
                 .orElseThrow(() -> new FamilyRecipeHandler(ErrorStatus.FAMILY_RECIPE_NOT_FOUND));

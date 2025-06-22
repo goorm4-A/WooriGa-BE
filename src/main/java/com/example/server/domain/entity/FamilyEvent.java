@@ -2,19 +2,25 @@ package com.example.server.domain.entity;
 
 import com.example.server.domain.enums.EventType;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class FamilyEvent {
+@AllArgsConstructor
+@Builder
+public class FamilyEvent extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String title;
 
     private String location;
     private String latitude;
@@ -25,7 +31,7 @@ public class FamilyEvent {
     @Enumerated(EnumType.STRING)
     private EventType eventType;
 
-    private LocalDateTime timeline;
+    private LocalDate timeline;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
