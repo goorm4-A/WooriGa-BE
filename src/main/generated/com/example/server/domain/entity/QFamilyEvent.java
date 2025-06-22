@@ -22,15 +22,29 @@ public class QFamilyEvent extends EntityPathBase<FamilyEvent> {
 
     public static final QFamilyEvent familyEvent = new QFamilyEvent("familyEvent");
 
+    public final QBaseEntity _super = new QBaseEntity(this);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
     public final StringPath description = createString("description");
 
     public final QFamilyMember familyMember;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final NumberPath<Double> latitude = createNumber("latitude", Double.class);
+
     public final StringPath location = createString("location");
 
-    public final DateTimePath<java.time.LocalDateTime> timeline = createDateTime("timeline", java.time.LocalDateTime.class);
+    public final NumberPath<Double> longitude = createNumber("longitude", Double.class);
+
+    public final DatePath<java.time.LocalDate> timeline = createDate("timeline", java.time.LocalDate.class);
+
+    public final StringPath title = createString("title");
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public final QUser user;
 

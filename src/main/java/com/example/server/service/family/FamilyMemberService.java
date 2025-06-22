@@ -74,7 +74,7 @@ public class FamilyMemberService {
 
         // 존재하는 가족 구성원인지 확인
         FamilyMember familyMember = familyMemberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
         // 구성원의 가족 그룹이 맞는지 확인
         if (!familyMember.getFamily().getId().equals(groupId)) {
@@ -100,7 +100,7 @@ public class FamilyMemberService {
 
         // 존재하는 가족 구성원인지 확인
         FamilyMember familyMember = familyMemberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
         // 구성원의 가족 그룹이 맞는지 확인
         if (!familyMember.getFamily().getId().equals(groupId)) {
@@ -146,7 +146,7 @@ public class FamilyMemberService {
 
         // 존재하는 가족 구성원인지 확인
         FamilyMember familyMember = familyMemberRepository.findById(memberId)
-                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
         // 구성원의 가족 그룹이 맞는지 확인
         if (!familyMember.getFamily().getId().equals(groupId)) {

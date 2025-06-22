@@ -27,7 +27,7 @@ public enum ErrorStatus implements BaseErrorCode {
     S3_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"IMAGE_4005","s3상에서 이미지를 삭제하는 중 오류가 발생했습니다."),
 
     //FamilyMember관련 에러
-    FAMILY_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_MEMBER_404", "해당 유저는 해당 가족의 구성원이 아닙니다."),
+   // FAMILY_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_MEMBER_404", "해당 유저는 해당 가족의 구성원이 아닙니다."),
     DIARY_PARTICIPANTS_ERROR(HttpStatus.BAD_REQUEST,"PARTICIPANTS_404","DiaryParticipants 필드 저장에 실패했어요"),
 
     //Family Diary 관련 에러
@@ -50,10 +50,13 @@ public enum ErrorStatus implements BaseErrorCode {
     // Family ERROR
     FAMILY_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_4001", "가족을 찾을 수 없습니다." ),
 
-    FAMILYMEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMEMBER_4001", "해당 가족 구성원을 찾을 수 없습니다."),
+    FAMILY_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMEMBER_4001", "해당 가족 구성원을 찾을 수 없습니다."),
     FAMILY_MEMBER_INVALID(HttpStatus.NOT_FOUND, "FAMILY_MEMBER_4002", "해당 가족 구성원이 속한 가족 그룹이 아닙니다."),
+
     FAMILYMOTTO_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILYMOTTO_4001", "좌우명을 찾을 수 없습니다."),
-    FAMILY_RECIPE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_RECIPE_404", "해당 요리법을 찾을 수 없습니다.");
+    FAMILY_RECIPE_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_RECIPE_404", "해당 요리법을 찾을 수 없습니다."),
+    // Family Event
+    FAMILY_EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "FAMILY_EVENT_404", "해당 가족사를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;

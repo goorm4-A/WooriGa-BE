@@ -36,7 +36,7 @@ public class MoodService {
 
     public MoodResponseDTO createMood(User user, Long familyId, MoodRequestDTO dto){
         FamilyMember member = familyMemberRepository.findByUserIdAndFamilyId(user.getId(), familyId)
-                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
         FamilyMood mood = new FamilyMood();
         mood.setUser(user);

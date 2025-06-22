@@ -23,6 +23,9 @@ public enum SuccessStatus implements BaseCode {
     CREATE_RULE_SUCCESSFUL(HttpStatus.OK, "CULTURE_2002", "약속/규칙을 생성하였습니다."),
     // 분위기 태그 API
     CREATE_MOOD_SUCCESSFUL(HttpStatus.OK, "MOOD_2001", "가족 분위기를 등록하였습니다."),
+    // 가족사 관련 API
+    CREATE_EVENT_SUCCESSFUL(HttpStatus.OK, "EVENT_2001", "가족사를 등록하였습니다."),
+    UPDATE_EVENT_SUCCESSFUL(HttpStatus.OK, "EVENT_2002", "가족사를 수정하였습니다."),
     // 가족 관련 API
     FAMILY_GROUP_UPDATE_SUCCESSFUL(HttpStatus.OK, "FAMILY_2001", "가족 그룹 정보 수정 성공입니다."),
     FAMILY_MEMBER_UPDATE_SUCCESSFUL(HttpStatus.OK, "FAMILY_2002", "가족 구성원 정보 수정 성공입니다.");

@@ -47,7 +47,7 @@ public class CultureService {
                 .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
         // TODO : 유저가 해당 가족 구성원으로 포함되어 있는 지 확인
         FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, family)
-                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
         FamilyMotto familyMotto = FamilyConverter.toFamilyMotto(mottoRequestDTO, familyMember, family);
         return familyMottoRepository.save(familyMotto);
@@ -60,7 +60,7 @@ public class CultureService {
                 .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
         // FamilyMotto가 현재 유저가 포함되어 있는지 확인
         FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, familyMotto.getFamily())
-                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
         familyMottoRepository.delete(familyMotto);
     }
@@ -92,7 +92,7 @@ public class CultureService {
             Family family = familyRepository.findById(familyId)
                     .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
             familyMemberRepository.findByUserIdAndFamily(userId, family)
-                    .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                    .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
             familyMottos = familyMottoRepository.findMottosByFamilyIdAndRuleTypeIsNull(familyId, lastId, pageable);
         }
 
@@ -114,7 +114,7 @@ public class CultureService {
         FamilyMotto familyMotto = familyMottoRepository.findById(mottoId)
                 .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
         FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, familyMotto.getFamily())
-                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
         // 만약 가족 정보를 수정한 경우
         if (!familyMotto.getFamily().getName().equals(requestDTO.getFamilyName())) {
             FamilyMotto newFamilyMotto = createMotto(requestDTO, userId);
@@ -132,7 +132,7 @@ public class CultureService {
                 .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
         // TODO : 유저가 해당 가족 구성원으로 포함되어 있는 지 확인
         FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, family)
-                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
         FamilyMotto familyMotto = FamilyConverter.toFamilyRule(requestDTO, familyMember, family);
         return familyMottoRepository.save(familyMotto);
@@ -163,7 +163,7 @@ public class CultureService {
             Family family = familyRepository.findById(familyId)
                     .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
             familyMemberRepository.findByUserIdAndFamily(userId, family)
-                    .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                    .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
             familyMottos = familyMottoRepository.findRulesByFamilyIdAndRuleTypeIsNotNull(familyId, lastId, pageable);
         }
 
@@ -191,7 +191,7 @@ public class CultureService {
         FamilyMotto familyRule = familyMottoRepository.findById(ruleId)
                 .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
         FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, familyRule.getFamily())
-                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
         // 만약 가족 정보를 수정한 경우
         if (!familyRule.getFamily().getName().equals(requestDTO.getFamilyName())) {
             FamilyMotto newFamilyRule = createRule(requestDTO, userId);
@@ -208,7 +208,7 @@ public class CultureService {
                 .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
         // FamilyMotto가 현재 유저가 포함되어 있는지 확인
         FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, familyRule.getFamily())
-                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILYMEMBER_NOT_FOUND));
+                .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
         familyMottoRepository.delete(familyRule);
     }
