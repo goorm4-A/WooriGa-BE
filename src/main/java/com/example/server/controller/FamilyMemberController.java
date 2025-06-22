@@ -45,9 +45,9 @@ public class FamilyMemberController {
                     """)
     public ApiResponse<?> createFamilyMember(@AuthenticationPrincipal User principalUser,
                                              @PathVariable Long groupId,
-                                             @RequestPart("name") String name,
-                                             @RequestPart("relation") String relation,
-                                             @RequestPart("birthDate") String birthDateStr,
+                                             @RequestParam("name") String name,
+                                             @RequestParam("relation") String relation,
+                                             @RequestParam("birthDate") String birthDateStr,
                                              @RequestPart(value = "image", required = false) MultipartFile image) {
         // LocalDate로 파싱
         LocalDate birthDate = LocalDate.parse(birthDateStr);
@@ -94,9 +94,9 @@ public class FamilyMemberController {
     public ApiResponse<?> updateFamilyMember(@AuthenticationPrincipal User principalUser,
                                              @PathVariable Long groupId,
                                              @PathVariable Long memberId,
-                                             @RequestPart("name") String name,
-                                             @RequestPart("relation") String relation,
-                                             @RequestPart("birthDate") String birthDateStr,
+                                             @RequestParam("name") String name,
+                                             @RequestParam("relation") String relation,
+                                             @RequestParam("birthDate") String birthDateStr,
                                              @RequestPart(value = "image", required = false) MultipartFile image) {
         // LocalDate로 파싱
         LocalDate birthDate = LocalDate.parse(birthDateStr);

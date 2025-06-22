@@ -45,6 +45,7 @@ public class Comment extends BaseEntity {
     @JoinColumn(name="parent_comment_id")
     Comment parentComment;
 
+    @Builder.Default
     @OneToMany(mappedBy="parentComment", orphanRemoval=true) //원 댓글 삭제 -> 자식 댓글 모두 삭제
     private List<Comment> childComments=new ArrayList<>();
 
