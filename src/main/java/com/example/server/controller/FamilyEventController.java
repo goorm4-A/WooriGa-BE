@@ -38,8 +38,9 @@ public class FamilyEventController {
     @GetMapping("")
     @Operation(summary = "가족사 타임라인 조회")
     public ApiResponse<List<FamilyEventTimelineDto>> getTimeline(
-            @AuthenticationPrincipal User user) {
-        List<FamilyEventTimelineDto> responses = familyEventService.getFamilyEventTimeline(user);
+            @AuthenticationPrincipal User user,
+            @RequestParam Long familyId) {
+        List<FamilyEventTimelineDto> responses = familyEventService.getFamilyEventTimeline(user, familyId);
         return ApiResponse.onSuccess(SuccessStatus._OK, responses);
     }
 }

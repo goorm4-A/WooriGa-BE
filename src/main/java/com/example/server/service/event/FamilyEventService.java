@@ -50,9 +50,11 @@ public class FamilyEventService {
 
 
     @Transactional(readOnly = true)
-    public List<FamilyEventTimelineDto> getFamilyEventTimeline(User user) {
+    public List<FamilyEventTimelineDto> getFamilyEventTimeline(User user, Long familyId) {
+        familyMemberRepository.findByUserIdAndFamilyId(user.getId(), familyId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
         List<FamilyEvent> events = familyEventRepository
-                .findAllByUser_IdOrderByTimelineDesc(user.getId());
+                .findAllByFamilyMember_Family_IdOrderByTimelineDesc(familyId);
         return events.stream()
                 .map(FamilyEventTimelineDto::fromEntity)
                 .collect(Collectors.toList());
