@@ -69,4 +69,12 @@ public class FamilyEventController {
         FamilyEventResponse response = familyEventService.updateFamilyEvent(user, eventId, request);
         return ApiResponse.onSuccess(SuccessStatus.UPDATE_EVENT_SUCCESSFUL, response);
     }
+    @DeleteMapping("/{eventId}")
+    @Operation(summary = "가족사 삭제")
+    public ApiResponse<?> deleteEvent(
+            @AuthenticationPrincipal User user,
+            @PathVariable Long eventId) {
+        familyEventService.deleteFamilyEvent(user, eventId);
+        return ApiResponse.onSuccess(SuccessStatus._OK);
+    }
 }

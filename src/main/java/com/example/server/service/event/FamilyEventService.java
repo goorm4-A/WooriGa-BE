@@ -95,4 +95,16 @@ public class FamilyEventService {
                 request.getLatitude(), request.getLongitude(), request.getDate());
         return FamilyEventConverter.toFamilyEventResponse(event);
     }
+
+    @Transactional
+    public void deleteFamilyEvent(User user, Long eventId) {
+        FamilyEvent event = familyEventRepository.findById(eventId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_EVENT_NOT_FOUND));
+
+        familyMemberRepository.findByUserIdAndFamilyId(user.getId(),
+                        event.getFamilyMember().getFamily().getId())
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
+
+        familyEventRepository.delete(event);
+    }
 }
