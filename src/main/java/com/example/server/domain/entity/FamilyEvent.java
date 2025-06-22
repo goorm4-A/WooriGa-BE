@@ -40,5 +40,14 @@ public class FamilyEvent extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "family_member_id")
     private FamilyMember familyMember;
+
+    public void updateEvent(String title, String location, String latitude,
+                            String longitude, LocalDate date) {
+        this.title = title;
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.timeline = date;
+    }
 }
 

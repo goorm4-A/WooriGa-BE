@@ -1,10 +1,7 @@
 package com.example.server.controller;
 
 import com.example.server.domain.entity.User;
-import com.example.server.dto.familyEvent.FamilyEventDetailDto;
-import com.example.server.dto.familyEvent.FamilyEventRequest;
-import com.example.server.dto.familyEvent.FamilyEventResponse;
-import com.example.server.dto.familyEvent.FamilyEventTimelineDto;
+import com.example.server.dto.familyEvent.*;
 import com.example.server.global.ApiResponse;
 import com.example.server.global.status.SuccessStatus;
 import com.example.server.service.event.FamilyEventService;
@@ -61,5 +58,15 @@ public class FamilyEventController {
             @PathVariable Long eventId) {
         FamilyEventDetailDto response = familyEventService.getFamilyEventDetail(user, eventId);
         return ApiResponse.onSuccess(SuccessStatus._OK, response);
+    }
+
+    @PutMapping("/{eventId}")
+    @Operation(summary = "가족사 수정")
+    public ApiResponse<FamilyEventResponse> updateEvent(
+            @AuthenticationPrincipal User user,
+            @PathVariable Long eventId,
+            @RequestBody FamilyEventUpdateRequest request) {
+        FamilyEventResponse response = familyEventService.updateFamilyEvent(user, eventId, request);
+        return ApiResponse.onSuccess(SuccessStatus.UPDATE_EVENT_SUCCESSFUL, response);
     }
 }

@@ -5,10 +5,7 @@ import com.example.server.domain.entity.Family;
 import com.example.server.domain.entity.FamilyEvent;
 import com.example.server.domain.entity.FamilyMember;
 import com.example.server.domain.entity.User;
-import com.example.server.dto.familyEvent.FamilyEventDetailDto;
-import com.example.server.dto.familyEvent.FamilyEventRequest;
-import com.example.server.dto.familyEvent.FamilyEventResponse;
-import com.example.server.dto.familyEvent.FamilyEventTimelineDto;
+import com.example.server.dto.familyEvent.*;
 import com.example.server.global.code.exception.CustomException;
 import com.example.server.global.status.ErrorStatus;
 import com.example.server.repository.FamilyMemberRepository;
@@ -87,5 +84,19 @@ public class FamilyEventService {
                         event.getFamilyMember().getFamily().getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
         return FamilyEventDetailDto.fromEntity(event);
+    }
+
+    @Transactional
+    public FamilyEventResponse updateFamilyEvent(User user, Long eventId, FamilyEventUpdateRequest request) {
+        FamilyEvent event = familyEventRepository.findById(eventId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_EVENT_NOT_FOUND));
+
+        familyMemberRepository.findByUserIdAndFamilyId(user.getId(),
+                        event.getFamilyMember().getFamily().getId())
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
+
+        event.updateEvent(request.getTitle(), request.getLocation(),
+                request.getLatitude(), request.getLongitude(), request.getDate());
+        return FamilyEventConverter.toFamilyEventResponse(event);
     }
 }
