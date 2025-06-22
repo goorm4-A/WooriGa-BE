@@ -1,6 +1,7 @@
 package com.example.server.controller;
 
 import com.example.server.domain.entity.User;
+import com.example.server.dto.member.FamilyMemberRequest;
 import com.example.server.global.ApiResponse;
 import com.example.server.global.status.SuccessStatus;
 import com.example.server.service.family.FamilyMemberService;
@@ -45,15 +46,10 @@ public class FamilyMemberController {
                     """)
     public ApiResponse<?> createFamilyMember(@AuthenticationPrincipal User principalUser,
                                              @PathVariable Long groupId,
-                                             @RequestParam("name") String name,
-                                             @RequestParam("relation") String relation,
-                                             @RequestParam("birthDate") String birthDateStr,
+                                             @RequestPart FamilyMemberRequest request,
                                              @RequestPart(value = "image", required = false) MultipartFile image) {
-        // LocalDate로 파싱
-        LocalDate birthDate = LocalDate.parse(birthDateStr);
-
         return ApiResponse.onSuccess(SuccessStatus._OK,
-                familyMemberService.createFamilyMember(principalUser, groupId, name, relation, birthDate, image));
+                familyMemberService.createFamilyMember(principalUser, groupId, request, image));
     }
 
     // 가족 구성원 상세 조회
@@ -94,16 +90,11 @@ public class FamilyMemberController {
     public ApiResponse<?> updateFamilyMember(@AuthenticationPrincipal User principalUser,
                                              @PathVariable Long groupId,
                                              @PathVariable Long memberId,
-                                             @RequestParam("name") String name,
-                                             @RequestParam("relation") String relation,
-                                             @RequestParam("birthDate") String birthDateStr,
+                                             @RequestPart FamilyMemberRequest request,
                                              @RequestPart(value = "image", required = false) MultipartFile image) {
-        // LocalDate로 파싱
-        LocalDate birthDate = LocalDate.parse(birthDateStr);
-
         return ApiResponse.onSuccess(SuccessStatus.FAMILY_MEMBER_UPDATE_SUCCESSFUL,
-                familyMemberService.updateFamilyMember(principalUser, groupId, memberId,
-                        name, relation, birthDate, image));
+                familyMemberService.updateFamilyMember(principalUser, groupId,
+                        memberId, request, image));
     }
 
     // 가족 구성원 삭제

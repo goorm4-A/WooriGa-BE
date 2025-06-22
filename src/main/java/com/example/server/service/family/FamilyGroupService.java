@@ -33,7 +33,7 @@ public class FamilyGroupService {
     private final S3Service s3Service;
 
     // 가족 그룹 생성
-    public FamilyResponse createFamilyGroup(User principalUser, String name, MultipartFile image) {
+    public FamilyResponse createFamilyGroup(User principalUser, FamilyGroupRequest request, MultipartFile image) {
         User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
@@ -51,7 +51,7 @@ public class FamilyGroupService {
         }
 
         // 가족 그룹 생성
-        Family newFamily = familyRepository.save(new Family(name, inviteCode, imageUrl));
+        Family newFamily = familyRepository.save(new Family(request.getName(), inviteCode, imageUrl));
 
         // 가족 멤버 생성(= 나 포함 기본 6명)
         List<String> defaultRelations = List.of(
@@ -113,7 +113,7 @@ public class FamilyGroupService {
 
     // 가족 그룹 수정
     @Transactional
-    public FamilyResponse updateFamilyGroup(User principalUser, Long groupId, String name, MultipartFile image) {
+    public FamilyResponse updateFamilyGroup(User principalUser, Long groupId, FamilyGroupRequest request, MultipartFile image) {
         User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
@@ -144,7 +144,7 @@ public class FamilyGroupService {
             }
         }
 
-        family.updateFamilyGroup(name, imageUrl);
+        family.updateFamilyGroup(request.getName(), imageUrl);
         return FamilyConverter.toFamilyGroupResponse(family);
     }
 

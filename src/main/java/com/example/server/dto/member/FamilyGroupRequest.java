@@ -6,5 +6,4 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 public class FamilyGroupRequest {
     private String name;
-    private MultipartFile image;
 }

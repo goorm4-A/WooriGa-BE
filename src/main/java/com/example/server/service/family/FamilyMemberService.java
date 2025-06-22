@@ -31,8 +31,7 @@ public class FamilyMemberService {
 
     // 가족 구성원 생성
     public FamilyMemberResponse createFamilyMember(User principalUser, Long groupId,
-                                                   String name, String relation,
-                                                   LocalDate birthDate, MultipartFile image) {
+                                                   FamilyMemberRequest request, MultipartFile image) {
 
         User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
@@ -55,7 +54,8 @@ public class FamilyMemberService {
         }
 
         // 사용자 지정 가족 구성원 생성
-        FamilyMember newFamilyMember = familyMemberRepository.save(new FamilyMember(family, name, birthDate, relation, imageUrl));
+        FamilyMember newFamilyMember = familyMemberRepository.save(
+                new FamilyMember(family, request.getName(), request.getBirthDate(), request.getRelation(), imageUrl));
 
         return FamilyConverter.toFamilyMemberResponse(newFamilyMember);
     }
@@ -87,7 +87,7 @@ public class FamilyMemberService {
     // 가족 구성원 수정
     @Transactional
     public FamilyMemberDetailResponse updateFamilyMember(User principalUser, Long groupId, Long memberId,
-                                                         String name, String relation, LocalDate birthDate, MultipartFile image) {
+                                                         FamilyMemberRequest request, MultipartFile image) {
         User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
@@ -127,7 +127,7 @@ public class FamilyMemberService {
             }
         }
 
-        familyMember.updateFamilyMember(name, relation, birthDate, imageUrl);
+        familyMember.updateFamilyMember(request.getName(), request.getRelation(), request.getBirthDate(), imageUrl);
         return FamilyConverter.toFamilyMemberDetailResponse(familyMember);
     }
 

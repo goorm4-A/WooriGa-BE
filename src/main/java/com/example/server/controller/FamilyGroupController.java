@@ -1,6 +1,7 @@
 package com.example.server.controller;
 
 import com.example.server.domain.entity.User;
+import com.example.server.dto.member.FamilyGroupRequest;
 import com.example.server.global.ApiResponse;
 import com.example.server.global.status.SuccessStatus;
 import com.example.server.service.family.FamilyGroupService;
@@ -81,10 +82,10 @@ public class FamilyGroupController {
                     - 자세한 필드 설명은 가족 그룹 조회 참고
                     """)
     public ApiResponse<?> createFamilyGroup(@AuthenticationPrincipal User principalUser,
-                                            @RequestParam("name") String name,
+                                            @RequestPart("request") FamilyGroupRequest request,
                                             @RequestPart(value = "image", required = false) MultipartFile image) {
         return ApiResponse.onSuccess(SuccessStatus._OK,
-                familyGroupService.createFamilyGroup(principalUser, name, image));
+                familyGroupService.createFamilyGroup(principalUser, request, image));
     }
 
     // 가족 그룹 수정
@@ -100,10 +101,10 @@ public class FamilyGroupController {
                     """)
     public ApiResponse<?> updateFamilyGroup(@AuthenticationPrincipal User principalUser,
                                             @PathVariable Long groupId,
-                                            @RequestParam("name") String name,
+                                            @RequestPart("request") FamilyGroupRequest request,
                                             @RequestPart(value = "image", required = false) MultipartFile image) {
         return ApiResponse.onSuccess(SuccessStatus.FAMILY_GROUP_UPDATE_SUCCESSFUL,
-                familyGroupService.updateFamilyGroup(principalUser, groupId, name, image));
+                familyGroupService.updateFamilyGroup(principalUser, groupId, request, image));
     }
 
     @DeleteMapping("/{groupId}")
