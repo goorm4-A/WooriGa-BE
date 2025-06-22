@@ -5,6 +5,7 @@ import com.example.server.domain.entity.Family;
 import com.example.server.domain.entity.FamilyEvent;
 import com.example.server.domain.entity.FamilyMember;
 import com.example.server.domain.entity.User;
+import com.example.server.dto.familyEvent.FamilyEventDetailDto;
 import com.example.server.dto.familyEvent.FamilyEventRequest;
 import com.example.server.dto.familyEvent.FamilyEventResponse;
 import com.example.server.dto.familyEvent.FamilyEventTimelineDto;
@@ -58,5 +59,33 @@ public class FamilyEventService {
         return events.stream()
                 .map(FamilyEventTimelineDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<FamilyEventResponse> getFamilyEventsForMap(User user, Long familyId) {
+        List<FamilyEvent> events;
+        if (familyId == null) {
+            events = familyEventRepository.findAllByUser_IdOrderByTimelineDesc(user.getId());
+        } else {
+            familyMemberRepository.findByUserIdAndFamilyId(user.getId(), familyId)
+                    .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
+            events = familyEventRepository.findAllByFamilyMember_Family_IdOrderByTimelineDesc(familyId);
+        }
+
+        return events.stream()
+                .map(FamilyEventConverter::toFamilyEventResponse)
+                .collect(Collectors.toList());
+    }
+
+
+    @Transactional(readOnly = true)
+    public FamilyEventDetailDto getFamilyEventDetail(User user, Long eventId) {
+        FamilyEvent event = familyEventRepository.findById(eventId)
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_EVENT_NOT_FOUND));
+        familyMemberRepository.findByUserIdAndFamilyId(user.getId(),
+                        event.getFamilyMember().getFamily().getId())
+                .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
+        return FamilyEventDetailDto.fromEntity(event);
     }
 }

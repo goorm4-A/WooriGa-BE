@@ -1,6 +1,7 @@
 package com.example.server.controller;
 
 import com.example.server.domain.entity.User;
+import com.example.server.dto.familyEvent.FamilyEventDetailDto;
 import com.example.server.dto.familyEvent.FamilyEventRequest;
 import com.example.server.dto.familyEvent.FamilyEventResponse;
 import com.example.server.dto.familyEvent.FamilyEventTimelineDto;
@@ -42,5 +43,23 @@ public class FamilyEventController {
             @RequestParam Long familyId) {
         List<FamilyEventTimelineDto> responses = familyEventService.getFamilyEventTimeline(user, familyId);
         return ApiResponse.onSuccess(SuccessStatus._OK, responses);
+    }
+
+    @GetMapping("/map")
+    @Operation(summary = "지도 가족사 조회")
+    public ApiResponse<List<FamilyEventResponse>> getEventsForMap(
+            @AuthenticationPrincipal User user,
+            @RequestParam(required = false) Long familyId) {
+        List<FamilyEventResponse> responses = familyEventService.getFamilyEventsForMap(user, familyId);
+        return ApiResponse.onSuccess(SuccessStatus._OK, responses);
+    }
+
+    @GetMapping("/{eventId}")
+    @Operation(summary = "가족사 상세 조회")
+    public ApiResponse<FamilyEventDetailDto> getEventDetail(
+            @AuthenticationPrincipal User user,
+            @PathVariable Long eventId) {
+        FamilyEventDetailDto response = familyEventService.getFamilyEventDetail(user, eventId);
+        return ApiResponse.onSuccess(SuccessStatus._OK, response);
     }
 }
