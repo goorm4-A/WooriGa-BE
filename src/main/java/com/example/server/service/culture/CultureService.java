@@ -37,15 +37,14 @@ public class CultureService {
     private final UserRepository userRepository;
     private static final int PAGE_SIZE = 8; // 한 번에 조회할 데이터 수
     @Transactional
-    public FamilyMotto createMotto(CultureRequestDTO.MottoRequestDTO mottoRequestDTO, Long userId) {
+    public FamilyMotto createMotto(CultureRequestDTO.MottoRequestDTO mottoRequestDTO, Long userId, Long familyId) {
         /*
         * TODO
         *  유저 사용자 조회 = 가족 구성원 조회
         *  가족 구성원 조회
         * */
-        Family family = familyRepository.findByName(mottoRequestDTO.getFamilyName())
+        Family family = familyRepository.findById(familyId)
                 .orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
-        // TODO : 유저가 해당 가족 구성원으로 포함되어 있는 지 확인
         FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, family)
                 .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
@@ -58,7 +57,6 @@ public class CultureService {
 
         FamilyMotto familyMotto = familyMottoRepository.findById(mottoId)
                 .orElseThrow(() -> new FamilyMottoHandler(ErrorStatus.FAMILYMOTTO_NOT_FOUND));
-        // FamilyMotto가 현재 유저가 포함되어 있는지 확인
         FamilyMember familyMember = familyMemberRepository.findByUserIdAndFamily(userId, familyMotto.getFamily())
                 .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
 
@@ -117,7 +115,8 @@ public class CultureService {
                 .orElseThrow(() -> new FamilyMemberHandler(ErrorStatus.FAMILY_MEMBER_NOT_FOUND));
         // 만약 가족 정보를 수정한 경우
         if (!familyMotto.getFamily().getName().equals(requestDTO.getFamilyName())) {
-            FamilyMotto newFamilyMotto = createMotto(requestDTO, userId);
+            Family family = familyRepository.findByName(requestDTO.getFamilyName()).orElseThrow(() -> new FamilyHandler(ErrorStatus.FAMILY_NOT_FOUND));
+            FamilyMotto newFamilyMotto = createMotto(requestDTO, userId, family.getId());
             deleteMotto(mottoId, userId);
             return CultureConverter.toMottoResponseDTO(newFamilyMotto);
         } else {
