@@ -29,17 +29,15 @@ public class QFamilyEvent extends EntityPathBase<FamilyEvent> {
 
     public final StringPath description = createString("description");
 
-    public final EnumPath<com.example.server.domain.enums.EventType> eventType = createEnum("eventType", com.example.server.domain.enums.EventType.class);
-
     public final QFamilyMember familyMember;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath latitude = createString("latitude");
+    public final NumberPath<Double> latitude = createNumber("latitude", Double.class);
 
     public final StringPath location = createString("location");
 
-    public final StringPath longitude = createString("longitude");
+    public final NumberPath<Double> longitude = createNumber("longitude", Double.class);
 
     public final DatePath<java.time.LocalDate> timeline = createDate("timeline", java.time.LocalDate.class);
 

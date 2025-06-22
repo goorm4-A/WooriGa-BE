@@ -13,6 +13,6 @@ public class FamilyEventUpdateRequest {
     private String title;
     private LocalDate date;
     private String location;
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
 }

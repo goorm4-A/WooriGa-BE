@@ -30,10 +30,6 @@ public class FamilyEventService {
 
     @Transactional
     public FamilyEventResponse createFamilyEvent(User user, FamilyEventRequest request) {
-        log.info(request.getFamilyName());
-        log.info(request.getTitle());
-        log.info(request.getLatitude());
-        log.info(request.getLongitude());
         log.info(request.toString());
         Family family = familyRepository.findByName(request.getFamilyName())
                 .orElseThrow(() -> new CustomException(ErrorStatus.FAMILY_NOT_FOUND));

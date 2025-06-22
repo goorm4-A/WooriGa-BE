@@ -23,13 +23,15 @@ public class FamilyEvent extends BaseEntity {
     private String title;
 
     private String location;
-    private String latitude;
-    private String longitude;
+    private Double latitude;
+    private Double longitude;
 
     private String description;
 
+/*
     @Enumerated(EnumType.STRING)
     private EventType eventType;
+*/
 
     private LocalDate timeline;
 
@@ -41,8 +43,8 @@ public class FamilyEvent extends BaseEntity {
     @JoinColumn(name = "family_member_id")
     private FamilyMember familyMember;
 
-    public void updateEvent(String title, String location, String latitude,
-                            String longitude, LocalDate date) {
+    public void updateEvent(String title, String location, Double latitude,
+                            Double longitude, LocalDate date) {
         this.title = title;
         this.location = location;
         this.latitude = latitude;
