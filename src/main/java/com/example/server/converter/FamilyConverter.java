@@ -47,11 +47,24 @@ public class FamilyConverter {
                         .familyGroup(toFamilyGroupResponse(family))
                         .familyMembers(family.getFamilyMembers().stream()
                                 .limit(3)
-                                .map(FamilyConverter::toFamilyMemberResponse)
+                                .map(FamilyConverter::toFamilyNotPositionResponse)
                                 .collect(Collectors.toList()))
                         .totalCnt(family.getFamilyMembers().size())
                         .build())
                 .toList();
+    }
+
+    public static FamilyNotPositionResponse toFamilyNotPositionResponse (FamilyMember familyMember) {
+        User user = familyMember.getUser();
+
+        return FamilyNotPositionResponse.builder()
+                .familyMemberId(familyMember.getId())
+                .familyMemberName(user == null? familyMember.getMemberName() : user.getName())
+                .birthDate(user == null? familyMember.getMemberBirthDate() : user.getBirthDate())
+                .familyMemberImage(user == null? familyMember.getImage() : user.getImage())
+                .relation(familyMember.getRelation())
+                .isUserAdded(familyMember.getIsUserAdded())
+                .build();
     }
 
     // FamilyMember > FamilyMemberResponse : 가족 그룹 조회 후 각 familyMember 변환 시

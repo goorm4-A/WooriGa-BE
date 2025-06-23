@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 public class FamilyGroupResponse {
     private FamilyResponse familyGroup;
-    private List<FamilyMemberResponse> familyMembers;
+    private List<FamilyNotPositionResponse> familyMembers;
     private Integer totalCnt;
 }
 
