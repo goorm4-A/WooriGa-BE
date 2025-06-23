@@ -80,7 +80,8 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
         // 유저가 속한 가족 그룹
-        List<Family> families = user.getFamilyMembers().stream()
+        List<FamilyMember> familyMembers = familyMemberRepository.findAllByUser(user);
+        List<Family> families = familyMembers.stream()
                 .map(FamilyMember::getFamily)
                 .distinct()
                 .toList();

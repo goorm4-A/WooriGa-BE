@@ -64,6 +64,7 @@ public class UserConverter {
 
         // 최신 등록된 가족 그룹 이미지
         String latestFamilyImage = user.getFamilyMembers().stream()
+                .filter(fm -> fm.getFamily() != null && fm.getFamily().getImage() != null)
                 .sorted(Comparator.comparing(fm -> fm.getFamily().getId(), Comparator.reverseOrder()))
                 .map(fm -> fm.getFamily().getImage())
                 .findFirst()
