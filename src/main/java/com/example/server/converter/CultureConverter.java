@@ -45,6 +45,7 @@ public class CultureConverter {
         return CultureResponseDTO.RuleResponseDTO.builder()
                 .id(familyMotto.getId())
                 .title(familyMotto.getTitle())
+                .description(familyMotto.getDescription())
                 .familyName(familyMotto.getFamily().getName())
                 .ruleType(familyMotto.getRuleType())
                 .createdAt(familyMotto.getCreatedAt())
