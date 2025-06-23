@@ -22,6 +22,11 @@ public class QFamilyMember extends EntityPathBase<FamilyMember> {
 
     public static final QFamilyMember familyMember = new QFamilyMember("familyMember");
 
+    public final QBaseEntity _super = new QBaseEntity(this);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
+
     public final QFamily family;
 
     public final ListPath<FamilyAnniversary, QFamilyAnniversary> familyAnniversaries = this.<FamilyAnniversary, QFamilyAnniversary>createList("familyAnniversaries", FamilyAnniversary.class, QFamilyAnniversary.class, PathInits.DIRECT2);
@@ -36,7 +41,7 @@ public class QFamilyMember extends EntityPathBase<FamilyMember> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath Image = createString("Image");
+    public final StringPath image = createString("image");
 
     public final BooleanPath isUserAdded = createBoolean("isUserAdded");
 
@@ -45,6 +50,9 @@ public class QFamilyMember extends EntityPathBase<FamilyMember> {
     public final StringPath memberName = createString("memberName");
 
     public final StringPath relation = createString("relation");
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public final QUser user;
 

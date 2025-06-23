@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @Builder
 public class FamilyGroupDetailResponse {
-    private List<FamilyMemberResponse> familyMembers;
+    private List<FamilyMemberDetailResponse> familyMembers;
 }

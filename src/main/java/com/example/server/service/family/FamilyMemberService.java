@@ -61,7 +61,7 @@ public class FamilyMemberService {
     }
 
     // 가족 구성원 상세 조회
-    public FamilyMemberDetailResponse getFamilyMemberDetail(User principalUser, Long groupId, Long memberId) {
+    public FamilyMemberResponse getFamilyMemberDetail(User principalUser, Long groupId, Long memberId) {
         User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
@@ -81,13 +81,13 @@ public class FamilyMemberService {
             throw new CustomException(ErrorStatus.FAMILY_MEMBER_INVALID);
         }
 
-        return FamilyConverter.toFamilyMemberDetailResponse(familyMember);
+        return FamilyConverter.toFamilyMemberResponse(familyMember);
     }
 
     // 가족 구성원 수정
     @Transactional
-    public FamilyMemberDetailResponse updateFamilyMember(User principalUser, Long groupId, Long memberId,
-                                                         String name, String relation, LocalDate birthDate, MultipartFile image) {
+    public FamilyMemberResponse updateFamilyMember(User principalUser, Long groupId, Long memberId,
+                                                   String name, String relation, LocalDate birthDate, MultipartFile image) {
         User user = userRepository.findById(principalUser.getId())
                 .orElseThrow(() -> new CustomException(ErrorStatus.USER_NOT_FOUND));
 
@@ -128,7 +128,7 @@ public class FamilyMemberService {
         }
 
         familyMember.updateFamilyMember(name, relation, birthDate, imageUrl);
-        return FamilyConverter.toFamilyMemberDetailResponse(familyMember);
+        return FamilyConverter.toFamilyMemberResponse(familyMember);
     }
 
     // 가족 구성원 삭제

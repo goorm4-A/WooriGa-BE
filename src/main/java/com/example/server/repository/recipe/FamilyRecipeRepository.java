@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -24,4 +25,15 @@ public interface FamilyRecipeRepository extends JpaRepository<FamilyRecipe, Long
             @Param("lastId") Long lastId,
             Pageable pageable
     );
+
+    @Query("""
+    SELECT ci.imageUrl
+      FROM FamilyRecipe fr
+      JOIN fr.coverImages ci
+      JOIN fr.familyMember fm
+     WHERE fm.user.id = :userId
+       AND DATE(fr.createdAt) = :today
+       AND ci.imageUrl IS NOT NULL AND ci.imageUrl <> ''
+    """)
+    List<String> findTodayRecipeImages(@Param("userId") Long userId, @Param("today") LocalDate today);
 }

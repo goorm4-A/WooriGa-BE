@@ -55,7 +55,7 @@ public class UserController {
         return ApiResponse.onSuccess(SuccessStatus.USER_UPDATE_SUCCESSFUL, userService.updateUserInfo(principalUser, request));
     }
 
-    // 사용자 상태 변결
+    // 사용자 상태 변경
     @PatchMapping("/me/status")
     @Operation(summary = "유저 status 변경 및 30일 후 삭제 API",
             description = """
@@ -65,5 +65,20 @@ public class UserController {
                     INACTIVE의 경우 30일 후 자동 삭제""")
     public ApiResponse<?> updateUserStatus(@AuthenticationPrincipal User principalUser) {
         return ApiResponse.onSuccess(SuccessStatus.USER_UPDATE_SUCCESSFUL, userService.updateUserStatus(principalUser));
+    }
+
+    @GetMapping("/main")
+    @Operation(summary = "메인 화면 조회 API",
+            description = """
+                    응답
+                    
+                    - "userName": 로그인 유저 이름
+                    - "userImage": 프로필 이미지
+                    - "familyNames": [ 가족 그룹명 이름 리스트 ]
+                    - "latestFamilyImage": 등록한 가족 그룹 중 이미지가 있는 최근 그룹
+                    - "todayImages": [ 오늘 등록한 이미지 (from 가족 구성원 이미지 + 가족 일기 이미지 + 가족 요리법 이미지) ]
+                    """)
+    public ApiResponse<?> getMain(@AuthenticationPrincipal User principalUser) {
+        return ApiResponse.onSuccess(SuccessStatus.USER_UPDATE_SUCCESSFUL, userService.getMain(principalUser));
     }
 }

@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class FamilyRecipe {
+public class FamilyRecipe extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,8 @@ public class FamilyRecipe {
 
     private int cookingTime;
 
-//    private String Ingredient; // 재료
+    private String coverImage; // 대표 레시피 이미지
+
     @ElementCollection
     @CollectionTable(name = "family_recipe_ingredient", joinColumns = @JoinColumn(name = "recipe_id"))
     @Column(name = "ingredient")
