@@ -15,11 +15,12 @@ import java.time.LocalDate;
 public class FamilyEventTimelineDto {
     private String title;
     private LocalDate date;
-
+    private String location;
     public static FamilyEventTimelineDto fromEntity(FamilyEvent event) {
         return FamilyEventTimelineDto.builder()
                 .title(event.getTitle())
                 .date(event.getTimeline())
+                .location(event.getLocation())
                 .build();
     }
 }
