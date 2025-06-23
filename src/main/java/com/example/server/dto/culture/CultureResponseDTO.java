@@ -47,6 +47,7 @@ public class CultureResponseDTO {
     public static class RuleResponseDTO {
         private Long id;
         private String title;
+        private String description;
         private String familyName;
         private RuleType ruleType;
         private LocalDateTime createdAt;
