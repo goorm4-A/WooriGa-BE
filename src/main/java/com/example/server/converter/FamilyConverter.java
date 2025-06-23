@@ -59,12 +59,10 @@ public class FamilyConverter {
         User user = familyMember.getUser(); // 초반 user가 null인 경우 존재
 
         return FamilyMemberResponse.builder()
-                .familyMemberId(familyMember.getId())
-                .familyMemberName(user == null? familyMember.getMemberName() : user.getName())
-                .birthDate(user == null? familyMember.getMemberBirthDate() : user.getBirthDate())
-                .familyMemberImage(user == null? familyMember.getImage() : user.getImage())
+                .memberName(user == null? familyMember.getMemberName() : user.getName())
+                .memberBirthDate(user == null? familyMember.getMemberBirthDate() : user.getBirthDate())
+                .memberImage(user == null? familyMember.getImage() : user.getImage())
                 .relation(familyMember.getRelation())
-                .isUserAdded(familyMember.getIsUserAdded())
                 .build();
     }
 
@@ -72,7 +70,7 @@ public class FamilyConverter {
     public static FamilyGroupDetailResponse toFamilyGroupDetailResponse(List<FamilyMember> familyMembers) {
         return FamilyGroupDetailResponse.builder()
                 .familyMembers(familyMembers.stream()
-                        .map(FamilyConverter::toFamilyMemberResponse)
+                        .map(FamilyConverter::toFamilyMemberDetailResponse)
                         .collect(Collectors.toList())
                 ).build();
     }
@@ -81,10 +79,14 @@ public class FamilyConverter {
         User user = familyMember.getUser();
 
         return FamilyMemberDetailResponse.builder()
-                .memberName(user == null? familyMember.getMemberName() : user.getName())
-                .memberBirthDate(user == null? familyMember.getMemberBirthDate() : user.getBirthDate())
-                .memberImage(user == null? familyMember.getImage() : user.getImage())
+                .familyMemberId(familyMember.getId())
+                .familyMemberName(user == null? familyMember.getMemberName() : user.getName())
+                .birthDate(user == null? familyMember.getMemberBirthDate() : user.getBirthDate())
+                .familyMemberImage(user == null? familyMember.getImage() : user.getImage())
                 .relation(familyMember.getRelation())
+                .x(null)
+                .y(null)
+                .isUserAdded(familyMember.getIsUserAdded())
                 .build();
     }
 }

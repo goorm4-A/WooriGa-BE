@@ -11,14 +11,14 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-public class FamilyMember {
+public class FamilyMember extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String relation;
-    private String Image;
+    private String image;
 
     private LocalDate memberBirthDate;  // 사용자 지정 생년월일
     private String memberName;          // 사용자 지정 이름
@@ -63,7 +63,7 @@ public class FamilyMember {
         this.memberName = memberName;
         this.memberBirthDate = memberBirthDate;
         this.relation = relation;
-        this.Image = image;
+        this.image = image;
         this.isUserAdded = true;
     }
 
@@ -72,6 +72,6 @@ public class FamilyMember {
         this.memberName = name;
         this.memberBirthDate = birthDate;
         this.relation = relation;
-        this.Image = imageUrl;
+        this.image = imageUrl;
     }
 }

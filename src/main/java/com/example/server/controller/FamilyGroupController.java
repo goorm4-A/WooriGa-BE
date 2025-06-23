@@ -58,6 +58,8 @@ public class FamilyGroupController {
             - "familyMemberImage": 가족 멤버 이미지 (null 가능)
             - "relation": 관계 (나, 엄마, 아빠, ...)
             - "birthDate": 생년월일 (null 가능)
+            - "x": 초기 null
+            - "y": 초기 null
             - "isUserAdded": 유저 직접 추가 여부 (false는 기본 구성원)
             """)
     public ApiResponse<?> getFamilyGroupDetail(@AuthenticationPrincipal User principalUser,

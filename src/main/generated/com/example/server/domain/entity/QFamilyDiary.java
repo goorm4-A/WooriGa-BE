@@ -22,9 +22,14 @@ public class QFamilyDiary extends EntityPathBase<FamilyDiary> {
 
     public static final QFamilyDiary familyDiary = new QFamilyDiary("familyDiary");
 
+    public final QBaseEntity _super = new QBaseEntity(this);
+
     public final ListPath<Comment, QComment> comments = this.<Comment, QComment>createList("comments", Comment.class, QComment.class, PathInits.DIRECT2);
 
     public final EnumPath<com.example.server.domain.enums.FromType> contentType = createEnum("contentType", com.example.server.domain.enums.FromType.class);
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final StringPath description = createString("description");
 
@@ -43,6 +48,9 @@ public class QFamilyDiary extends EntityPathBase<FamilyDiary> {
     public final StringPath location = createString("location");
 
     public final StringPath title = createString("title");
+
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
     public final DateTimePath<java.time.LocalDateTime> writtenDate = createDateTime("writtenDate", java.time.LocalDateTime.class);
 

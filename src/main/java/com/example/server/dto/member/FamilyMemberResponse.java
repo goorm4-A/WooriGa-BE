@@ -8,10 +8,8 @@ import java.time.LocalDate;
 @Getter
 @Builder
 public class FamilyMemberResponse {
-    private Long familyMemberId;
-    private String familyMemberName;
-    private String familyMemberImage;
+    private String memberName;
+    private String memberImage;
     private String relation;
-    private LocalDate birthDate;
-    private Boolean isUserAdded;
+    private LocalDate memberBirthDate;
 }
