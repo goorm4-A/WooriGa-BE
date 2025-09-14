@@ -30,7 +30,7 @@ kakao:
 cloud:
   aws:
     s3:
-      bucket: wooriga-s3
+      bucket: wooriga2-bucket
     region:
       static: ap-northeast-2
     stack:
