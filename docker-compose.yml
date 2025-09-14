@@ -11,5 +11,14 @@ services:
     env_file:
       - .env
 
+  nginx:
+    image: nginx:latest
+    container_name: wooriga-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./data/nginx/app.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - wooriga-app
 volumes:
   db_data:
